@@ -1,0 +1,5 @@
+query GetRecipes {
+    recipes(order_by: { created_at: desc }) {
+        ...recipe
+    }
+}

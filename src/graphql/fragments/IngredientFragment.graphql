@@ -1,0 +1,6 @@
+fragment RecipeIngredient on recipe_ingredients {
+    ingredient {
+        name
+    }
+    amount
+}

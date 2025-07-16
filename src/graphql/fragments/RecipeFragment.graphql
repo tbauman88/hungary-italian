@@ -1,0 +1,16 @@
+fragment recipe on recipes {
+    id
+    title
+    type
+    notes
+    recipe_ingredients {
+        ...ingredientDetails
+    }
+    steps
+    portion_size
+    cooking_time
+    video_url
+    image_url
+    created_at
+    updated_at
+}

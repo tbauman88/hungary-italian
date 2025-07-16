@@ -1,0 +1,41 @@
+fragment ingredientDetails on recipe_ingredients {
+    ingredient {
+        name
+    }
+    amount
+}
+
+fragment recipe on recipes {
+    id
+    title
+    type
+    notes
+    recipe_ingredients {
+        ...ingredientDetails
+    }
+    steps
+    portion_size
+    cooking_time
+    video_url
+    image_url
+    created_at
+    updated_at
+}
+
+query GetRecipes {
+    recipes(order_by: { created_at: desc }) {
+        ...recipe
+    }
+}
+
+query GetRecipeById($id: uuid!) {
+    recipes_by_pk(id: $id) {
+        ...recipe
+    }
+}
+
+mutation AddRecipe($recipe: recipes_insert_input!) {
+    insert_recipes_one(object: $recipe) {
+        ...recipe
+    }
+}
