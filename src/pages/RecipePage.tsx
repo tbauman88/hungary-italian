@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom'
 import { LoadingSpinner } from '../components/LoadingSpinner'
 import { useGetRecipeByIdQuery } from '../generated/graphql'
 
-export function RecipePage() {
+export const RecipePage = () => {
   const { id } = useParams<{ id: string }>()
   const { loading, error, data } = useGetRecipeByIdQuery({
     variables: { id: id || '' },

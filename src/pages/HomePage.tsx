@@ -2,7 +2,7 @@ import { LoadingSpinner } from '../components/LoadingSpinner'
 import { RecipeCard } from '../components/RecipeCard'
 import { useGetRecipesQuery } from '../generated/graphql'
 
-export function HomePage() {
+export const HomePage = () => {
   const { loading, error, data } = useGetRecipesQuery()
 
   if (loading) return <LoadingSpinner />

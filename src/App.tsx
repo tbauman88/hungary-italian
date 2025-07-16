@@ -4,7 +4,7 @@ import { AddRecipePage } from './pages/AddRecipePage'
 import { HomePage } from './pages/HomePage'
 import { RecipePage } from './pages/RecipePage'
 
-function App() {
+const App = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />

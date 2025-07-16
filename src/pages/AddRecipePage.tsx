@@ -14,7 +14,7 @@ import { RecipeComplexity, RecipeSchema, RecipeType } from '../types'
 
 type RecipeFormData = z.infer<typeof RecipeSchema>
 
-export function AddRecipePage() {
+export const AddRecipePage = () => {
   const navigate = useNavigate()
   const [error, setError] = useState<string | null>(null)
 
