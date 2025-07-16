@@ -26,11 +26,11 @@ export function RecipePage() {
 
         <div className="p-6">
           <div className="flex items-center justify-between mb-4">
-            <span className="text-sm text-primary-600 font-medium">
-              {recipe.cuisine_type}
+            <span className="text-sm text-primary-600 font-medium uppercase">
+              {recipe.type}
             </span>
             <span className="text-sm text-gray-500 capitalize">
-              {recipe.difficulty_level}
+              {recipe.complexity}
             </span>
           </div>
 
@@ -39,22 +39,21 @@ export function RecipePage() {
           </h1>
 
           <p className="text-gray-600 mb-6">
-            {recipe.description}
+            {recipe.notes}
           </p>
 
           <div className="flex items-center space-x-6 mb-8 text-sm text-gray-500">
             <div className="flex items-center space-x-1">
               <ClockIcon className="w-5 h-5" />
-              <span>Prep: {recipe.prep_time} min</span>
+              <span>Time: {recipe.cooking_time}</span>
             </div>
-            <div className="flex items-center space-x-1">
-              <ClockIcon className="w-5 h-5" />
-              <span>Cook: {recipe.cooking_time} min</span>
-            </div>
-            <div className="flex items-center space-x-1">
-              <UserGroupIcon className="w-5 h-5" />
-              <span>{recipe.servings} servings</span>
-            </div>
+
+            {recipe.portion_size && (
+              <div className="flex items-center space-x-1">
+                <UserGroupIcon className="w-5 h-5" />
+                <span>{recipe.portion_size} servings</span>
+              </div>
+            )}
           </div>
 
           <div className="grid md:grid-cols-2 gap-8">
@@ -63,10 +62,10 @@ export function RecipePage() {
                 Ingredients
               </h2>
               <ul className="space-y-2">
-                {recipe.ingredients?.map((ingredient: string, index: number) => (
+                {recipe.recipe_ingredients?.map((ingredient, index) => (
                   <li key={index} className="flex items-start">
                     <span className="text-primary-500 mr-2">•</span>
-                    <span>{ingredient}</span>
+                    <span>{ingredient.amount} {ingredient.ingredient.name}</span>
                   </li>
                 ))}
               </ul>
@@ -77,7 +76,7 @@ export function RecipePage() {
                 Instructions
               </h2>
               <ol className="space-y-3">
-                {recipe.instructions?.map((instruction: string, index: number) => (
+                {recipe.steps?.map((instruction: string, index: number) => (
                   <li key={index} className="flex items-start">
                     <span className="bg-primary-500 text-white text-sm rounded-full w-6 h-6 flex items-center justify-center mr-3 mt-0.5 flex-shrink-0">
                       {index + 1}

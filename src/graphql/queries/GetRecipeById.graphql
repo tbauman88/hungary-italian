@@ -1,0 +1,5 @@
+query GetRecipeById($id: uuid!) {
+    recipes_by_pk(id: $id) {
+        ...Recipe
+    }
+}

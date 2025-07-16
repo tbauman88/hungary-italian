@@ -1,0 +1,11 @@
+fragment BaseRecipe on recipes {
+    id
+    title
+    type
+    notes
+    complexity
+    portion_size
+    cooking_time
+    video_url
+    image_url
+}

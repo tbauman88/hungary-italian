@@ -10,62 +10,64 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
   const recipeLink = `/recipe/${recipe.id}`
 
   return (
-    <article className="recipe-card">
-      <Link to={recipeLink}>
-        <div className="aspect-w-16 aspect-h-9">
+    <article className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md active:shadow-lg transition-all duration-200 border border-gray-100">
+      <Link to={recipeLink} className="block relative group">
+        <div className="aspect-[4/3] sm:aspect-[16/10] overflow-hidden">
           <img
             src={recipe.image_url || 'https://cdn.loveandlemons.com/wp-content/uploads/2023/05/bbq-sauce.jpg'}
             alt={recipe.title}
-            className="w-full h-48 object-cover"
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
           />
         </div>
+
+        {recipe.video_url && (
+          <Link
+            to={recipe.video_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="absolute top-3 right-3 bg-black/70 hover:bg-black/80 text-white px-2 py-1 rounded-lg text-xs font-medium flex items-center space-x-1 transition-colors z-10"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <VideoCameraIcon className="w-3 h-3" />
+            <span>Video</span>
+          </Link>
+        )}
       </Link>
 
-      <div className="p-4">
-        <div className="flex items-center justify-between mb-2">
-          <div className="flex flex-col">
-            <span className="text-sm text-primary-600 font-medium uppercase">
-              {recipe.type}
-
-            </span>
-            <span className="text-sm text-gray-500 capitalize">
-              Medium {/* Easy {recipe.difficulty_level} */}
-            </span>
-          </div>
-
-          {recipe.video_url && (
-            <Link to={recipe.video_url} target="_blank">
-              <div className="flex items-center space-x-2 text-sm text-gray-500">
-                <span>Watch video</span>
-                <VideoCameraIcon className="w-4 h-4" />
-              </div>
-            </Link>
-          )}
+      <div className="p-4 sm:p-5">
+        <div className="flex items-center justify-between mb-3">
+          <span className="text-xs sm:text-sm text-primary-600 font-semibold uppercase tracking-wide">
+            {recipe.type || 'Recipe'}
+          </span>
+          <span className="text-xs text-gray-500 capitalize">
+            {recipe.complexity}
+          </span>
         </div>
 
-        <h3 className="text-lg font-semibold text-gray-900 mb-2">
-          {recipe.title}
-        </h3>
+        <Link to={recipeLink}>
+          <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-3 line-clamp-2 leading-tight hover:text-primary-600 transition-colors">
+            {recipe.title}
+          </h3>
+        </Link>
 
-        <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-          {recipe.notes}
+        <p className="text-gray-600 text-sm sm:text-base mb-4 line-clamp-2 leading-relaxed">
+          {recipe.notes || 'A delicious fusion recipe combining Hungarian and Italian flavors.'}
         </p>
 
-        <div className="flex items-center justify-between text-sm text-gray-500">
-          <div className="flex items-center space-x-1">
-            <ClockIcon className="w-4 h-4" />
-            <span>{recipe.cooking_time}</span>
+        <div className="flex items-center justify-between pt-3 border-t border-gray-100">
+          <div className="flex items-center space-x-1 text-gray-500">
+            <ClockIcon className="w-4 h-4 flex-shrink-0" />
+            <span className="text-sm font-medium">{recipe.cooking_time || '30 min'}</span>
           </div>
 
           {recipe.portion_size && (
-            <div className="flex items-center space-x-1">
-              <UserGroupIcon className="w-4 h-4" />
-              <span>{recipe.portion_size} servings</span>
+            <div className="flex items-center space-x-1 text-gray-500">
+              <UserGroupIcon className="w-4 h-4 flex-shrink-0" />
+              <span className="text-sm font-medium">{recipe.portion_size}</span>
             </div>
           )}
         </div>
       </div>
     </article>
-
   )
 } 

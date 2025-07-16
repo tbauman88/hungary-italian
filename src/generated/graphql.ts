@@ -15,6 +15,7 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
+  recipe_complexity: { input: any; output: any; }
   recipe_tag: { input: any; output: any; }
   recipe_type: { input: any; output: any; }
   timestamptz: { input: string; output: string; }
@@ -659,6 +660,19 @@ export type QueryRootUsersByPkArgs = {
   id: Scalars['uuid']['input'];
 };
 
+/** Boolean expression to compare columns of type "recipe_complexity". All fields are combined with logical 'AND'. */
+export type RecipeComplexityComparisonExp = {
+  _eq?: InputMaybe<Scalars['recipe_complexity']['input']>;
+  _gt?: InputMaybe<Scalars['recipe_complexity']['input']>;
+  _gte?: InputMaybe<Scalars['recipe_complexity']['input']>;
+  _in?: InputMaybe<Array<Scalars['recipe_complexity']['input']>>;
+  _is_null?: InputMaybe<Scalars['Boolean']['input']>;
+  _lt?: InputMaybe<Scalars['recipe_complexity']['input']>;
+  _lte?: InputMaybe<Scalars['recipe_complexity']['input']>;
+  _neq?: InputMaybe<Scalars['recipe_complexity']['input']>;
+  _nin?: InputMaybe<Array<Scalars['recipe_complexity']['input']>>;
+};
+
 /** columns and relationships of "recipe_ingredients" */
 export type RecipeIngredients = {
   __typename?: 'recipe_ingredients';
@@ -888,6 +902,7 @@ export type RecipeTypeComparisonExp = {
 /** columns and relationships of "recipes" */
 export type Recipes = {
   __typename?: 'recipes';
+  complexity: Scalars['recipe_complexity']['output'];
   cooking_time?: Maybe<Scalars['String']['output']>;
   created_at: Scalars['timestamptz']['output'];
   has_protein: Scalars['Boolean']['output'];
@@ -998,6 +1013,7 @@ export type RecipesBoolExp = {
   _and?: InputMaybe<Array<RecipesBoolExp>>;
   _not?: InputMaybe<RecipesBoolExp>;
   _or?: InputMaybe<Array<RecipesBoolExp>>;
+  complexity?: InputMaybe<RecipeComplexityComparisonExp>;
   cooking_time?: InputMaybe<StringComparisonExp>;
   created_at?: InputMaybe<TimestamptzComparisonExp>;
   has_protein?: InputMaybe<BooleanComparisonExp>;
@@ -1027,6 +1043,7 @@ export enum RecipesConstraint {
 
 /** input type for inserting data into table "recipes" */
 export type RecipesInsertInput = {
+  complexity?: InputMaybe<Scalars['recipe_complexity']['input']>;
   cooking_time?: InputMaybe<Scalars['String']['input']>;
   created_at?: InputMaybe<Scalars['timestamptz']['input']>;
   has_protein?: InputMaybe<Scalars['Boolean']['input']>;
@@ -1048,6 +1065,7 @@ export type RecipesInsertInput = {
 /** aggregate max on columns */
 export type RecipesMaxFields = {
   __typename?: 'recipes_max_fields';
+  complexity?: Maybe<Scalars['recipe_complexity']['output']>;
   cooking_time?: Maybe<Scalars['String']['output']>;
   created_at?: Maybe<Scalars['timestamptz']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
@@ -1065,6 +1083,7 @@ export type RecipesMaxFields = {
 
 /** order by max() on columns of table "recipes" */
 export type RecipesMaxOrderBy = {
+  complexity?: InputMaybe<OrderBy>;
   cooking_time?: InputMaybe<OrderBy>;
   created_at?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
@@ -1083,6 +1102,7 @@ export type RecipesMaxOrderBy = {
 /** aggregate min on columns */
 export type RecipesMinFields = {
   __typename?: 'recipes_min_fields';
+  complexity?: Maybe<Scalars['recipe_complexity']['output']>;
   cooking_time?: Maybe<Scalars['String']['output']>;
   created_at?: Maybe<Scalars['timestamptz']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
@@ -1100,6 +1120,7 @@ export type RecipesMinFields = {
 
 /** order by min() on columns of table "recipes" */
 export type RecipesMinOrderBy = {
+  complexity?: InputMaybe<OrderBy>;
   cooking_time?: InputMaybe<OrderBy>;
   created_at?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
@@ -1140,6 +1161,7 @@ export type RecipesOnConflict = {
 
 /** Ordering options when selecting data from "recipes". */
 export type RecipesOrderBy = {
+  complexity?: InputMaybe<OrderBy>;
   cooking_time?: InputMaybe<OrderBy>;
   created_at?: InputMaybe<OrderBy>;
   has_protein?: InputMaybe<OrderBy>;
@@ -1165,6 +1187,8 @@ export type RecipesPkColumnsInput = {
 
 /** select columns of table "recipes" */
 export enum RecipesSelectColumn {
+  /** column name */
+  COMPLEXITY = 'complexity',
   /** column name */
   COOKING_TIME = 'cooking_time',
   /** column name */
@@ -1209,6 +1233,7 @@ export enum RecipesSelectColumnRecipesAggregateBoolExpBoolOrArgumentsColumns {
 
 /** input type for updating data in table "recipes" */
 export type RecipesSetInput = {
+  complexity?: InputMaybe<Scalars['recipe_complexity']['input']>;
   cooking_time?: InputMaybe<Scalars['String']['input']>;
   created_at?: InputMaybe<Scalars['timestamptz']['input']>;
   has_protein?: InputMaybe<Scalars['Boolean']['input']>;
@@ -1235,6 +1260,7 @@ export type RecipesStreamCursorInput = {
 
 /** Initial value of the column from where the streaming should start */
 export type RecipesStreamCursorValueInput = {
+  complexity?: InputMaybe<Scalars['recipe_complexity']['input']>;
   cooking_time?: InputMaybe<Scalars['String']['input']>;
   created_at?: InputMaybe<Scalars['timestamptz']['input']>;
   has_protein?: InputMaybe<Scalars['Boolean']['input']>;
@@ -1253,6 +1279,8 @@ export type RecipesStreamCursorValueInput = {
 
 /** update columns of table "recipes" */
 export enum RecipesUpdateColumn {
+  /** column name */
+  COMPLEXITY = 'complexity',
   /** column name */
   COOKING_TIME = 'cooking_time',
   /** column name */
@@ -1680,31 +1708,44 @@ export type UuidComparisonExp = {
   _nin?: InputMaybe<Array<Scalars['uuid']['input']>>;
 };
 
+export type BaseRecipeFragment = { __typename?: 'recipes', id: string, title: string, type: any, notes?: string | null, complexity: any, portion_size?: string | null, cooking_time?: string | null, video_url?: string | null, image_url?: string | null };
+
 export type RecipeIngredientFragment = { __typename?: 'recipe_ingredients', amount?: string | null, ingredient: { __typename?: 'ingredients', name: string } };
 
-export type RecipeFragment = { __typename?: 'recipes', id: string, title: string, type: any, notes?: string | null, steps: Array<string>, portion_size?: string | null, cooking_time?: string | null, video_url?: string | null, image_url?: string | null, created_at: string, updated_at: string, recipe_ingredients: Array<{ __typename?: 'recipe_ingredients', amount?: string | null, ingredient: { __typename?: 'ingredients', name: string } }> };
+export type RecipeFragment = { __typename?: 'recipes', steps: Array<string>, id: string, title: string, type: any, notes?: string | null, complexity: any, portion_size?: string | null, cooking_time?: string | null, video_url?: string | null, image_url?: string | null, recipe_ingredients: Array<{ __typename?: 'recipe_ingredients', amount?: string | null, ingredient: { __typename?: 'ingredients', name: string } }> };
 
 export type AddRecipeMutationVariables = Exact<{
   recipe: RecipesInsertInput;
 }>;
 
 
-export type AddRecipeMutation = { __typename?: 'mutation_root', insert_recipes_one?: { __typename?: 'recipes', id: string, title: string, type: any, notes?: string | null, steps: Array<string>, portion_size?: string | null, cooking_time?: string | null, video_url?: string | null, image_url?: string | null, created_at: string, updated_at: string, recipe_ingredients: Array<{ __typename?: 'recipe_ingredients', amount?: string | null, ingredient: { __typename?: 'ingredients', name: string } }> } | null };
-
-export type IngredientDetailsFragment = { __typename?: 'recipe_ingredients', amount?: string | null, ingredient: { __typename?: 'ingredients', name: string } };
-
-export type GetRecipesQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type GetRecipesQuery = { __typename?: 'query_root', recipes: Array<{ __typename?: 'recipes', id: string, title: string, type: any, notes?: string | null, steps: Array<string>, portion_size?: string | null, cooking_time?: string | null, video_url?: string | null, image_url?: string | null, created_at: string, updated_at: string, recipe_ingredients: Array<{ __typename?: 'recipe_ingredients', amount?: string | null, ingredient: { __typename?: 'ingredients', name: string } }> }> };
+export type AddRecipeMutation = { __typename?: 'mutation_root', insert_recipes_one?: { __typename?: 'recipes', steps: Array<string>, id: string, title: string, type: any, notes?: string | null, complexity: any, portion_size?: string | null, cooking_time?: string | null, video_url?: string | null, image_url?: string | null, recipe_ingredients: Array<{ __typename?: 'recipe_ingredients', amount?: string | null, ingredient: { __typename?: 'ingredients', name: string } }> } | null };
 
 export type GetRecipeByIdQueryVariables = Exact<{
   id: Scalars['uuid']['input'];
 }>;
 
 
-export type GetRecipeByIdQuery = { __typename?: 'query_root', recipes_by_pk?: { __typename?: 'recipes', id: string, title: string, type: any, notes?: string | null, steps: Array<string>, portion_size?: string | null, cooking_time?: string | null, video_url?: string | null, image_url?: string | null, created_at: string, updated_at: string, recipe_ingredients: Array<{ __typename?: 'recipe_ingredients', amount?: string | null, ingredient: { __typename?: 'ingredients', name: string } }> } | null };
+export type GetRecipeByIdQuery = { __typename?: 'query_root', recipes_by_pk?: { __typename?: 'recipes', steps: Array<string>, id: string, title: string, type: any, notes?: string | null, complexity: any, portion_size?: string | null, cooking_time?: string | null, video_url?: string | null, image_url?: string | null, recipe_ingredients: Array<{ __typename?: 'recipe_ingredients', amount?: string | null, ingredient: { __typename?: 'ingredients', name: string } }> } | null };
 
+export type GetRecipesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetRecipesQuery = { __typename?: 'query_root', recipes: Array<{ __typename?: 'recipes', steps: Array<string>, id: string, title: string, type: any, notes?: string | null, complexity: any, portion_size?: string | null, cooking_time?: string | null, video_url?: string | null, image_url?: string | null, recipe_ingredients: Array<{ __typename?: 'recipe_ingredients', amount?: string | null, ingredient: { __typename?: 'ingredients', name: string } }> }> };
+
+export const BaseRecipeFragmentDoc = gql`
+    fragment BaseRecipe on recipes {
+  id
+  title
+  type
+  notes
+  complexity
+  portion_size
+  cooking_time
+  video_url
+  image_url
+}
+    `;
 export const RecipeIngredientFragmentDoc = gql`
     fragment RecipeIngredient on recipe_ingredients {
   ingredient {
@@ -1713,36 +1754,20 @@ export const RecipeIngredientFragmentDoc = gql`
   amount
 }
     `;
-export const IngredientDetailsFragmentDoc = gql`
-    fragment ingredientDetails on recipe_ingredients {
-  ingredient {
-    name
-  }
-  amount
-}
-    `;
 export const RecipeFragmentDoc = gql`
-    fragment recipe on recipes {
-  id
-  title
-  type
-  notes
+    fragment Recipe on recipes {
+  ...BaseRecipe
   recipe_ingredients {
-    ...ingredientDetails
+    ...RecipeIngredient
   }
   steps
-  portion_size
-  cooking_time
-  video_url
-  image_url
-  created_at
-  updated_at
 }
-    ${IngredientDetailsFragmentDoc}`;
+    ${BaseRecipeFragmentDoc}
+${RecipeIngredientFragmentDoc}`;
 export const AddRecipeDocument = gql`
     mutation AddRecipe($recipe: recipes_insert_input!) {
   insert_recipes_one(object: $recipe) {
-    ...recipe
+    ...Recipe
   }
 }
     ${RecipeFragmentDoc}`;
@@ -1772,49 +1797,10 @@ export function useAddRecipeMutation(baseOptions?: Apollo.MutationHookOptions<Ad
 export type AddRecipeMutationHookResult = ReturnType<typeof useAddRecipeMutation>;
 export type AddRecipeMutationResult = Apollo.MutationResult<AddRecipeMutation>;
 export type AddRecipeMutationOptions = Apollo.BaseMutationOptions<AddRecipeMutation, AddRecipeMutationVariables>;
-export const GetRecipesDocument = gql`
-    query GetRecipes {
-  recipes(order_by: {created_at: desc}) {
-    ...recipe
-  }
-}
-    ${RecipeFragmentDoc}`;
-
-/**
- * __useGetRecipesQuery__
- *
- * To run a query within a React component, call `useGetRecipesQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetRecipesQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetRecipesQuery({
- *   variables: {
- *   },
- * });
- */
-export function useGetRecipesQuery(baseOptions?: Apollo.QueryHookOptions<GetRecipesQuery, GetRecipesQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetRecipesQuery, GetRecipesQueryVariables>(GetRecipesDocument, options);
-      }
-export function useGetRecipesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetRecipesQuery, GetRecipesQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetRecipesQuery, GetRecipesQueryVariables>(GetRecipesDocument, options);
-        }
-export function useGetRecipesSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetRecipesQuery, GetRecipesQueryVariables>) {
-          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<GetRecipesQuery, GetRecipesQueryVariables>(GetRecipesDocument, options);
-        }
-export type GetRecipesQueryHookResult = ReturnType<typeof useGetRecipesQuery>;
-export type GetRecipesLazyQueryHookResult = ReturnType<typeof useGetRecipesLazyQuery>;
-export type GetRecipesSuspenseQueryHookResult = ReturnType<typeof useGetRecipesSuspenseQuery>;
-export type GetRecipesQueryResult = Apollo.QueryResult<GetRecipesQuery, GetRecipesQueryVariables>;
 export const GetRecipeByIdDocument = gql`
     query GetRecipeById($id: uuid!) {
   recipes_by_pk(id: $id) {
-    ...recipe
+    ...Recipe
   }
 }
     ${RecipeFragmentDoc}`;
@@ -1851,3 +1837,42 @@ export type GetRecipeByIdQueryHookResult = ReturnType<typeof useGetRecipeByIdQue
 export type GetRecipeByIdLazyQueryHookResult = ReturnType<typeof useGetRecipeByIdLazyQuery>;
 export type GetRecipeByIdSuspenseQueryHookResult = ReturnType<typeof useGetRecipeByIdSuspenseQuery>;
 export type GetRecipeByIdQueryResult = Apollo.QueryResult<GetRecipeByIdQuery, GetRecipeByIdQueryVariables>;
+export const GetRecipesDocument = gql`
+    query GetRecipes {
+  recipes(order_by: {created_at: desc}) {
+    ...Recipe
+  }
+}
+    ${RecipeFragmentDoc}`;
+
+/**
+ * __useGetRecipesQuery__
+ *
+ * To run a query within a React component, call `useGetRecipesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetRecipesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetRecipesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetRecipesQuery(baseOptions?: Apollo.QueryHookOptions<GetRecipesQuery, GetRecipesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetRecipesQuery, GetRecipesQueryVariables>(GetRecipesDocument, options);
+      }
+export function useGetRecipesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetRecipesQuery, GetRecipesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetRecipesQuery, GetRecipesQueryVariables>(GetRecipesDocument, options);
+        }
+export function useGetRecipesSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetRecipesQuery, GetRecipesQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetRecipesQuery, GetRecipesQueryVariables>(GetRecipesDocument, options);
+        }
+export type GetRecipesQueryHookResult = ReturnType<typeof useGetRecipesQuery>;
+export type GetRecipesLazyQueryHookResult = ReturnType<typeof useGetRecipesLazyQuery>;
+export type GetRecipesSuspenseQueryHookResult = ReturnType<typeof useGetRecipesSuspenseQuery>;
+export type GetRecipesQueryResult = Apollo.QueryResult<GetRecipesQuery, GetRecipesQueryVariables>;

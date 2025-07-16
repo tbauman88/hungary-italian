@@ -3,21 +3,53 @@
 @tailwind utilities;
 
 @layer base {
-  body {
-    @apply font-sans antialiased;
-  }
+    body {
+        @apply font-sans antialiased;
+    }
+
+    /* Mobile-first line clamping utilities */
+    .line-clamp-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .line-clamp-3 {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
 }
 
 @layer components {
-  .recipe-card {
-    @apply bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow;
-  }
+    /* Enhanced recipe card with mobile-first design */
+    .recipe-card {
+        @apply bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-all duration-200 border border-gray-100;
+    }
 
-  .btn-primary {
-    @apply bg-primary-500 hover:bg-primary-600 text-white font-medium px-4 py-2 rounded-md transition-colors;
-  }
+    /* Mobile-first button styles with better touch targets */
+    .btn-primary {
+        @apply bg-primary-500 hover:bg-primary-600 active:bg-primary-700 text-white font-medium px-4 py-3 sm:px-6 sm:py-3 rounded-lg transition-all duration-200 text-sm sm:text-base touch-manipulation;
+    }
 
-  .btn-secondary {
-    @apply bg-secondary-500 hover:bg-secondary-600 text-white font-medium px-4 py-2 rounded-md transition-colors;
-  }
+    .btn-secondary {
+        @apply bg-white border-2 border-gray-200 hover:border-primary-300 hover:bg-primary-50 active:bg-primary-100 text-gray-700 font-medium px-4 py-3 sm:px-6 sm:py-3 rounded-lg transition-all duration-200 text-sm sm:text-base touch-manipulation;
+    }
+
+    /* Mobile-optimized input styles */
+    .form-input {
+        @apply w-full px-3 py-3 sm:py-2.5 text-base sm:text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors touch-manipulation;
+    }
+
+    /* Mobile-first loading spinner */
+    .loading-spinner {
+        @apply animate-spin rounded-full h-8 w-8 sm:h-12 sm:w-12 border-b-2 border-primary-500;
+    }
+
+    /* Touch-friendly links */
+    .touch-link {
+        @apply p-2 rounded-lg hover:bg-gray-50 active:bg-gray-100 transition-colors touch-manipulation;
+    }
 }
