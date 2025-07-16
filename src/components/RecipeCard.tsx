@@ -9,28 +9,31 @@ interface RecipeCardProps {
 export function RecipeCard({ recipe }: RecipeCardProps) {
   const recipeLink = `/recipe/${recipe.id}`
 
+  const handleVideoClick = (e: React.MouseEvent, videoUrl: string) => {
+    e.preventDefault()
+    e.stopPropagation()
+    window.open(videoUrl, '_blank', 'noopener,noreferrer')
+  }
+
   return (
     <article className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md active:shadow-lg transition-all duration-200 border border-gray-100">
       <Link to={recipeLink} className="block relative group">
         <div className="aspect-[4/3] sm:aspect-[16/10] overflow-hidden">
           <img
-            src={recipe.image_url || 'https://cdn.loveandlemons.com/wp-content/uploads/2023/05/bbq-sauce.jpg'}
+            src={recipe.image_url ?? ""}
             alt={recipe.title}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
           />
         </div>
 
         {recipe.video_url && (
-          <Link
-            to={recipe.video_url}
-            target="_blank"
-            rel="noopener noreferrer"
+          <button
+            onClick={(e) => handleVideoClick(e, recipe.video_url!)}
             className="absolute top-3 right-3 bg-black/70 hover:bg-black/80 text-white px-2 py-1 rounded-lg text-xs font-medium flex items-center space-x-1 transition-colors z-10"
-            onClick={(e) => e.stopPropagation()}
           >
             <VideoCameraIcon className="w-3 h-3" />
             <span>Video</span>
-          </Link>
+          </button>
         )}
       </Link>
 

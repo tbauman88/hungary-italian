@@ -19,38 +19,35 @@ export function RecipePage() {
     <div className="max-w-4xl mx-auto">
       <div className="bg-white rounded-lg shadow-md overflow-hidden">
         <img
-          src={recipe.image_url || '/placeholder-recipe.jpg'}
+          src={recipe.image_url || ''}
           alt={recipe.title}
           className="w-full h-64 object-cover"
         />
 
         <div className="p-6">
-          <div className="flex items-center justify-between mb-4">
-            <span className="text-sm text-primary-600 font-medium uppercase">
-              {recipe.type}
-            </span>
-            <span className="text-sm text-gray-500 capitalize">
-              {recipe.complexity}
-            </span>
+          <div className="flex flex-wrap items-start justify-between mb-6">
+            <div className="flex-1 min-w-0">
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+                {recipe.title}
+              </h1>
+              {recipe.notes && (
+                <p className="text-gray-600 text-base sm:text-lg leading-relaxed">
+                  {recipe.notes}
+                </p>
+              )}
+            </div>
           </div>
 
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">
-            {recipe.title}
-          </h1>
-
-          <p className="text-gray-600 mb-6">
-            {recipe.notes}
-          </p>
-
-          <div className="flex items-center space-x-6 mb-8 text-sm text-gray-500">
-            <div className="flex items-center space-x-1">
-              <ClockIcon className="w-5 h-5" />
-              <span>Time: {recipe.cooking_time}</span>
-            </div>
-
+          <div className="flex flex-wrap items-center gap-4 sm:gap-6 mb-8 text-sm text-gray-500">
+            {recipe.cooking_time && (
+              <div className="flex items-center space-x-1">
+                <ClockIcon className="w-4 h-4 flex-shrink-0" />
+                <span>{recipe.cooking_time}</span>
+              </div>
+            )}
             {recipe.portion_size && (
               <div className="flex items-center space-x-1">
-                <UserGroupIcon className="w-5 h-5" />
+                <UserGroupIcon className="w-4 h-4 flex-shrink-0" />
                 <span>{recipe.portion_size} servings</span>
               </div>
             )}
