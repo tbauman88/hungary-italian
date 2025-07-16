@@ -1,12 +1,8 @@
 import { ClockIcon, UserGroupIcon, VideoCameraIcon } from '@heroicons/react/24/outline'
 import { Link } from 'react-router-dom'
-import { Recipes } from '../generated/graphql'
+import { type Recipes } from '../generated/graphql'
 
-interface RecipeCardProps {
-  recipe: Recipes
-}
-
-export function RecipeCard({ recipe }: RecipeCardProps) {
+export function RecipeCard({ recipe }: { recipe: Recipes }) {
   const recipeLink = `/recipe/${recipe.id}`
 
   const handleVideoClick = (e: React.MouseEvent, videoUrl: string) => {
