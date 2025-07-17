@@ -9,5 +9,7 @@ export { LoadingSpinner } from './LoadingSpinner'
 export { ProtectedRoute } from './ProtectedRoute'
 export { RecipeCard } from './RecipeCard'
 export { RecipeForm } from './RecipeForm'
+export { RecipeSearch } from './RecipeSearch'
+export { RecipeSort } from './RecipeSort'
 export { TagSelector } from './TagSelector'
 
