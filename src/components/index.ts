@@ -8,4 +8,6 @@ export { Header } from './Header'
 export { LoadingSpinner } from './LoadingSpinner'
 export { ProtectedRoute } from './ProtectedRoute'
 export { RecipeCard } from './RecipeCard'
+export { RecipeForm } from './RecipeForm'
 export { TagSelector } from './TagSelector'
+

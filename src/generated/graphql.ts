@@ -1724,7 +1724,7 @@ export type BaseRecipeFragment = { __typename?: 'recipes', id: string, title: st
 
 export type RecipeIngredientFragment = { __typename?: 'recipe_ingredients', amount?: string | null, ingredient: { __typename?: 'ingredients', name: string } };
 
-export type RecipeFragment = { __typename?: 'recipes', steps: Array<string>, id: string, title: string, type: any, notes?: string | null, complexity: any, portion_size?: string | null, cooking_time?: string | null, video_url?: string | null, image_url?: string | null, recipe_ingredients: Array<{ __typename?: 'recipe_ingredients', amount?: string | null, ingredient: { __typename?: 'ingredients', name: string } }> };
+export type RecipeFragment = { __typename?: 'recipes', steps: Array<string>, tags: Array<any>, owner_id?: string | null, id: string, title: string, type: any, notes?: string | null, complexity: any, portion_size?: string | null, cooking_time?: string | null, video_url?: string | null, image_url?: string | null, recipe_ingredients: Array<{ __typename?: 'recipe_ingredients', amount?: string | null, ingredient: { __typename?: 'ingredients', name: string } }> };
 
 export type UserFragment = { __typename?: 'users', id: string, email: string, name: string, created_at: string };
 
@@ -1733,7 +1733,7 @@ export type AddRecipeMutationVariables = Exact<{
 }>;
 
 
-export type AddRecipeMutation = { __typename?: 'mutation_root', insert_recipes_one?: { __typename?: 'recipes', steps: Array<string>, id: string, title: string, type: any, notes?: string | null, complexity: any, portion_size?: string | null, cooking_time?: string | null, video_url?: string | null, image_url?: string | null, recipe_ingredients: Array<{ __typename?: 'recipe_ingredients', amount?: string | null, ingredient: { __typename?: 'ingredients', name: string } }> } | null };
+export type AddRecipeMutation = { __typename?: 'mutation_root', insert_recipes_one?: { __typename?: 'recipes', steps: Array<string>, tags: Array<any>, owner_id?: string | null, id: string, title: string, type: any, notes?: string | null, complexity: any, portion_size?: string | null, cooking_time?: string | null, video_url?: string | null, image_url?: string | null, recipe_ingredients: Array<{ __typename?: 'recipe_ingredients', amount?: string | null, ingredient: { __typename?: 'ingredients', name: string } }> } | null };
 
 export type CreateUserMutationVariables = Exact<{
   user: UsersInsertInput;
@@ -1742,19 +1742,27 @@ export type CreateUserMutationVariables = Exact<{
 
 export type CreateUserMutation = { __typename?: 'mutation_root', insert_users_one?: { __typename?: 'users', id: string, email: string, name: string, created_at: string } | null };
 
+export type UpdateRecipeMutationVariables = Exact<{
+  id: Scalars['uuid']['input'];
+  recipe: RecipesSetInput;
+}>;
+
+
+export type UpdateRecipeMutation = { __typename?: 'mutation_root', update_recipes_by_pk?: { __typename?: 'recipes', steps: Array<string>, tags: Array<any>, owner_id?: string | null, id: string, title: string, type: any, notes?: string | null, complexity: any, portion_size?: string | null, cooking_time?: string | null, video_url?: string | null, image_url?: string | null, recipe_ingredients: Array<{ __typename?: 'recipe_ingredients', amount?: string | null, ingredient: { __typename?: 'ingredients', name: string } }> } | null };
+
 export type GetRecipeByIdQueryVariables = Exact<{
   id: Scalars['uuid']['input'];
 }>;
 
 
-export type GetRecipeByIdQuery = { __typename?: 'query_root', recipes_by_pk?: { __typename?: 'recipes', steps: Array<string>, id: string, title: string, type: any, notes?: string | null, complexity: any, portion_size?: string | null, cooking_time?: string | null, video_url?: string | null, image_url?: string | null, recipe_ingredients: Array<{ __typename?: 'recipe_ingredients', amount?: string | null, ingredient: { __typename?: 'ingredients', name: string } }> } | null };
+export type GetRecipeByIdQuery = { __typename?: 'query_root', recipes_by_pk?: { __typename?: 'recipes', steps: Array<string>, tags: Array<any>, owner_id?: string | null, id: string, title: string, type: any, notes?: string | null, complexity: any, portion_size?: string | null, cooking_time?: string | null, video_url?: string | null, image_url?: string | null, recipe_ingredients: Array<{ __typename?: 'recipe_ingredients', amount?: string | null, ingredient: { __typename?: 'ingredients', name: string } }> } | null };
 
 export type GetRecipesQueryVariables = Exact<{
   owner_id: Scalars['uuid']['input'];
 }>;
 
 
-export type GetRecipesQuery = { __typename?: 'query_root', recipes: Array<{ __typename?: 'recipes', steps: Array<string>, id: string, title: string, type: any, notes?: string | null, complexity: any, portion_size?: string | null, cooking_time?: string | null, video_url?: string | null, image_url?: string | null, recipe_ingredients: Array<{ __typename?: 'recipe_ingredients', amount?: string | null, ingredient: { __typename?: 'ingredients', name: string } }> }> };
+export type GetRecipesQuery = { __typename?: 'query_root', recipes: Array<{ __typename?: 'recipes', steps: Array<string>, tags: Array<any>, owner_id?: string | null, id: string, title: string, type: any, notes?: string | null, complexity: any, portion_size?: string | null, cooking_time?: string | null, video_url?: string | null, image_url?: string | null, recipe_ingredients: Array<{ __typename?: 'recipe_ingredients', amount?: string | null, ingredient: { __typename?: 'ingredients', name: string } }> }> };
 
 export type GetUserByEmailQueryVariables = Exact<{
   email: Scalars['String']['input'];
@@ -1798,6 +1806,8 @@ export const RecipeFragmentDoc = gql`
     ...RecipeIngredient
   }
   steps
+  tags
+  owner_id
 }
     ${BaseRecipeFragmentDoc}
 ${RecipeIngredientFragmentDoc}`;
@@ -1875,6 +1885,40 @@ export function useCreateUserMutation(baseOptions?: Apollo.MutationHookOptions<C
 export type CreateUserMutationHookResult = ReturnType<typeof useCreateUserMutation>;
 export type CreateUserMutationResult = Apollo.MutationResult<CreateUserMutation>;
 export type CreateUserMutationOptions = Apollo.BaseMutationOptions<CreateUserMutation, CreateUserMutationVariables>;
+export const UpdateRecipeDocument = gql`
+    mutation UpdateRecipe($id: uuid!, $recipe: recipes_set_input!) {
+  update_recipes_by_pk(pk_columns: {id: $id}, _set: $recipe) {
+    ...Recipe
+  }
+}
+    ${RecipeFragmentDoc}`;
+export type UpdateRecipeMutationFn = Apollo.MutationFunction<UpdateRecipeMutation, UpdateRecipeMutationVariables>;
+
+/**
+ * __useUpdateRecipeMutation__
+ *
+ * To run a mutation, you first call `useUpdateRecipeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateRecipeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateRecipeMutation, { data, loading, error }] = useUpdateRecipeMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      recipe: // value for 'recipe'
+ *   },
+ * });
+ */
+export function useUpdateRecipeMutation(baseOptions?: Apollo.MutationHookOptions<UpdateRecipeMutation, UpdateRecipeMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateRecipeMutation, UpdateRecipeMutationVariables>(UpdateRecipeDocument, options);
+      }
+export type UpdateRecipeMutationHookResult = ReturnType<typeof useUpdateRecipeMutation>;
+export type UpdateRecipeMutationResult = Apollo.MutationResult<UpdateRecipeMutation>;
+export type UpdateRecipeMutationOptions = Apollo.BaseMutationOptions<UpdateRecipeMutation, UpdateRecipeMutationVariables>;
 export const GetRecipeByIdDocument = gql`
     query GetRecipeById($id: uuid!) {
   recipes_by_pk(id: $id) {

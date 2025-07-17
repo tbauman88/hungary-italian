@@ -2,6 +2,7 @@ import { Route, Routes } from 'react-router-dom'
 import { Header } from './components/Header'
 import { ProtectedRoute } from './components/ProtectedRoute'
 import { AddRecipePage } from './pages/AddRecipePage'
+import { EditRecipePage } from './pages/EditRecipePage'
 import { HomePage } from './pages/HomePage'
 import { LoginPage } from './pages/LoginPage'
 import { RecipePage } from './pages/RecipePage'
@@ -22,6 +23,14 @@ const App = () => {
             element={
               <ProtectedRoute>
                 <AddRecipePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/recipe/:id/edit"
+            element={
+              <ProtectedRoute>
+                <EditRecipePage />
               </ProtectedRoute>
             }
           />

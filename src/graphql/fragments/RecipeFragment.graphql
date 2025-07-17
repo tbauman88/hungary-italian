@@ -4,4 +4,6 @@ fragment Recipe on recipes {
         ...RecipeIngredient
     }
     steps
+    tags
+    owner_id
 }

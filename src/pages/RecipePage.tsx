@@ -1,10 +1,12 @@
-import { ClockIcon, UserGroupIcon } from '@heroicons/react/24/outline'
-import { useParams } from 'react-router-dom'
+import { ClockIcon, PencilIcon, UserGroupIcon } from '@heroicons/react/24/outline'
+import { Link, useParams } from 'react-router-dom'
 import { LoadingSpinner } from '../components/LoadingSpinner'
+import { useAuth } from '../contexts/AuthContext'
 import { useGetRecipeByIdQuery } from '../generated/graphql'
 
 export const RecipePage = () => {
   const { id } = useParams<{ id: string }>()
+  const { currentUserId } = useAuth()
   const { loading, error, data } = useGetRecipeByIdQuery({
     variables: { id: id || '' },
   })
@@ -36,6 +38,15 @@ export const RecipePage = () => {
                 </p>
               )}
             </div>
+            {currentUserId === recipe.owner_id && (
+              <Link
+                to={`/recipe/${id}/edit`}
+                className="inline-flex items-center px-4 py-2 bg-primary-600 text-white text-sm font-medium rounded-md hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors"
+              >
+                <PencilIcon className="w-4 h-4 mr-2" />
+                Edit Recipe
+              </Link>
+            )}
           </div>
 
           <div className="flex flex-wrap items-center gap-4 sm:gap-6 mb-8 text-sm text-gray-500">
