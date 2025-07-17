@@ -1,4 +1,4 @@
-import { ArrowRightOnRectangleIcon, HomeIcon, PlusIcon, UserIcon } from '@heroicons/react/24/outline'
+import { ArrowRightEndOnRectangleIcon, HomeIcon, PlusIcon, UserCircleIcon, UserIcon } from '@heroicons/react/24/outline'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 
@@ -26,16 +26,28 @@ export const Header = () => {
           </Link>
 
           <nav className="flex items-center space-x-2 sm:space-x-4">
-            <Link
-              to="/"
-              className="flex items-center space-x-1 text-gray-600 hover:text-primary-600 transition-colors p-2 rounded-lg hover:bg-gray-50 active:bg-gray-100"
-            >
-              <HomeIcon className="w-5 h-5 sm:w-5 sm:h-5" />
-              <span className="hidden sm:inline text-sm">Home</span>
-            </Link>
-
             {currentUser ? (
               <>
+                <Link
+                  to="/"
+                  className="flex items-center space-x-1 text-gray-600 hover:text-primary-600 transition-colors p-2 rounded-lg hover:bg-gray-50 active:bg-gray-100"
+                >
+                  <HomeIcon className="w-5 h-5 sm:w-5 sm:h-5" />
+                </Link>
+
+                <div className="flex items-center space-x-2">
+                  <div className="hidden sm:flex items-center space-x-2 text-gray-600">
+                    <UserCircleIcon className="w-5 h-5" />
+                  </div>
+
+                  <button
+                    onClick={handleLogout}
+                    className="flex items-center space-x-1 text-gray-600 hover:text-red-600 transition-colors p-2 rounded-lg hover:bg-gray-50 active:bg-gray-100"
+                  >
+                    <ArrowRightEndOnRectangleIcon className="w-5 h-5" />
+                  </button>
+                </div>
+
                 <Link
                   to="/add-recipe"
                   className="flex items-center space-x-1 bg-primary-500 hover:bg-primary-600 active:bg-primary-700 text-white font-medium px-3 py-2 sm:px-4 sm:py-2 rounded-lg transition-colors text-sm"
@@ -44,23 +56,6 @@ export const Header = () => {
                   <span className="hidden sm:inline">Add Recipe</span>
                   <span className="sm:hidden">Add</span>
                 </Link>
-
-                <div className="flex items-center space-x-2">
-                  <div className="hidden sm:flex items-center space-x-2 text-gray-600">
-                    <UserIcon className="w-4 h-4" />
-                    <span className="text-sm truncate max-w-32">
-                      {currentUser.email}
-                    </span>
-                  </div>
-
-                  <button
-                    onClick={handleLogout}
-                    className="flex items-center space-x-1 text-gray-600 hover:text-red-600 transition-colors p-2 rounded-lg hover:bg-gray-50 active:bg-gray-100"
-                  >
-                    <ArrowRightOnRectangleIcon className="w-5 h-5" />
-                    <span className="hidden sm:inline text-sm">Logout</span>
-                  </button>
-                </div>
               </>
             ) : (
               <>
