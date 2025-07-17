@@ -1,4 +1,4 @@
-import { ClockIcon, PencilIcon, UserGroupIcon } from '@heroicons/react/24/outline'
+import { ClockIcon, PencilIcon, UserGroupIcon, VideoCameraIcon } from '@heroicons/react/24/outline'
 import { Link, useParams } from 'react-router-dom'
 import { LoadingSpinner } from '../components/LoadingSpinner'
 import { useAuth } from '../contexts/AuthContext'
@@ -10,6 +10,12 @@ export const RecipePage = () => {
   const { loading, error, data } = useGetRecipeByIdQuery({
     variables: { id: id || '' },
   })
+
+  const handleVideoClick = (e: React.MouseEvent, videoUrl: string) => {
+    e.preventDefault()
+    e.stopPropagation()
+    window.open(videoUrl, '_blank', 'noopener,noreferrer')
+  }
 
   if (loading) return <LoadingSpinner />
   if (error) return <div className="text-red-600">Error: {error.message}</div>
@@ -32,53 +38,52 @@ export const RecipePage = () => {
               <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
                 {recipe.title}
               </h1>
+
+              <div className="flex flex-wrap items-center gap-4 sm:gap-6 mb-4 text-sm text-gray-500">
+                {recipe.cooking_time && (
+                  <div className="flex items-center space-x-1">
+                    <ClockIcon className="w-4 h-4 flex-shrink-0" />
+                    <span>{recipe.cooking_time}</span>
+                  </div>
+                )}
+                {recipe.portion_size && (
+                  <div className="flex items-center space-x-1">
+                    <UserGroupIcon className="w-4 h-4 flex-shrink-0" />
+                    <span>{recipe.portion_size} servings</span>
+                  </div>
+                )}
+              </div>
+
               {recipe.notes && (
                 <p className="text-gray-600 text-base sm:text-lg leading-relaxed">
                   {recipe.notes}
                 </p>
               )}
-            </div>
-            {currentUserId === recipe.owner_id && (
-              <Link
-                to={`/recipe/${id}/edit`}
-                className="inline-flex items-center px-4 py-2 bg-primary-600 text-white text-sm font-medium rounded-md hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors"
-              >
-                <PencilIcon className="w-4 h-4 mr-2" />
-                Edit Recipe
-              </Link>
-            )}
-          </div>
 
-          <div className="flex flex-wrap items-center gap-4 sm:gap-6 mb-8 text-sm text-gray-500">
-            {recipe.cooking_time && (
-              <div className="flex items-center space-x-1">
-                <ClockIcon className="w-4 h-4 flex-shrink-0" />
-                <span>{recipe.cooking_time}</span>
-              </div>
-            )}
-            {recipe.portion_size && (
-              <div className="flex items-center space-x-1">
-                <UserGroupIcon className="w-4 h-4 flex-shrink-0" />
-                <span>{recipe.portion_size} servings</span>
-              </div>
-            )}
+            </div>
+            <div className="flex gap-2">
+              {recipe.video_url && (
+                <button
+                  onClick={(e) => handleVideoClick(e, recipe.video_url!)}
+                  className="inline-flex items-center px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors"
+                >
+                  <VideoCameraIcon className="w-4 h-4 mr-2" />
+                  Watch
+                </button>
+              )}
+              {currentUserId === recipe.owner_id && (
+                <Link
+                  to={`/recipe/${id}/edit`}
+                  className="inline-flex items-center px-4 py-2 bg-primary-600 text-white text-sm font-medium rounded-md hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors"
+                >
+                  <PencilIcon className="w-4 h-4 mr-2" />
+                  Edit Recipe
+                </Link>
+              )}
+            </div>
           </div>
 
           <div className="grid md:grid-cols-2 gap-8">
-            <div>
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">
-                Ingredients
-              </h2>
-              <ul className="space-y-2">
-                {recipe.recipe_ingredients?.map((ingredient, index) => (
-                  <li key={index} className="flex items-start">
-                    <span className="text-primary-500 mr-2">•</span>
-                    <span>{ingredient.amount} {ingredient.ingredient.name}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
             <div>
               <h2 className="text-xl font-semibold text-gray-900 mb-4">
                 Instructions
@@ -94,6 +99,21 @@ export const RecipePage = () => {
                 ))}
               </ol>
             </div>
+
+            <div>
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">
+                Ingredients
+              </h2>
+              <ul className="space-y-2">
+                {recipe.recipe_ingredients?.map((ingredient, index) => (
+                  <li key={index} className="flex items-start">
+                    <span className="text-primary-500 mr-2">•</span>
+                    <span>{ingredient.amount} {ingredient.ingredient.name}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
           </div>
         </div>
       </div>
