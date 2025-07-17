@@ -1,7 +1,7 @@
 import { useApolloClient } from '@apollo/client'
 import type { User } from 'firebase/auth'
 import React, { createContext, useContext, useEffect, useState } from 'react'
-import { logout, onAuthStateChange, signIn, signUp } from '../lib/firebase'
+import { logout, onAuthStateChange, reauthenticateUser, signIn, signUp, updateUserEmail, updateUserPassword } from '../lib/firebase'
 import { UserService } from '../lib/userService'
 
 interface AuthContextType {
@@ -10,6 +10,8 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<void>
   register: (email: string, password: string) => Promise<void>
   logout: () => Promise<void>
+  updateEmail: (newEmail: string, currentPassword: string) => Promise<void>
+  updatePassword: (newPassword: string, currentPassword: string) => Promise<void>
   loading: boolean
 }
 
@@ -48,6 +50,29 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     await logout()
   }
 
+  const updateEmail = async (newEmail: string, currentPassword: string) => {
+    if (!currentUser) {
+      throw new Error('No user is currently logged in')
+    }
+
+    await reauthenticateUser(currentUser, currentPassword)
+
+    await updateUserEmail(currentUser, newEmail)
+
+    if (currentUserId) {
+      await userService.updateUser(currentUserId, { email: newEmail })
+    }
+  }
+
+  const updatePassword = async (newPassword: string, currentPassword: string) => {
+    if (!currentUser) {
+      throw new Error('No user is currently logged in')
+    }
+
+    await reauthenticateUser(currentUser, currentPassword)
+    await updateUserPassword(currentUser, newPassword)
+  }
+
   useEffect(() => {
     const unsubscribe = onAuthStateChange(async (user) => {
       setCurrentUser(user)
@@ -76,6 +101,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     login,
     register,
     logout: handleLogout,
+    updateEmail,
+    updatePassword,
     loading,
   }
 

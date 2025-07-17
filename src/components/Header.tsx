@@ -30,15 +30,19 @@ export const Header = () => {
               <>
                 <Link
                   to="/"
-                  className="flex items-center space-x-1 text-gray-600 hover:text-primary-600 transition-colors p-2 rounded-lg hover:bg-gray-50 active:bg-gray-100"
+                  className="flex items-center space-x-2 text-gray-600 hover:text-primary-600 transition-colors rounded-lg hover:bg-gray-50 active:bg-gray-100"
                 >
                   <HomeIcon className="w-5 h-5 sm:w-5 sm:h-5" />
                 </Link>
 
+
                 <div className="flex items-center space-x-2">
-                  <div className="hidden sm:flex items-center space-x-2 text-gray-600">
+                  <Link
+                    to="/profile/settings"
+                    className="flex items-center space-x-2 text-gray-600 hover:text-primary-600 transition-colors rounded-lg hover:bg-gray-50 active:bg-gray-100"
+                  >
                     <UserCircleIcon className="w-5 h-5" />
-                  </div>
+                  </Link>
 
                   <button
                     onClick={handleLogout}

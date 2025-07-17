@@ -1,6 +1,6 @@
 import { ApolloClient } from '@apollo/client'
 import type { User } from 'firebase/auth'
-import { CreateUserDocument, GetUserByEmailDocument } from '../generated/graphql'
+import { CreateUserDocument, GetUserByEmailDocument, UpdateUserDocument } from '../generated/graphql'
 
 export class UserService {
   constructor(private apolloClient: ApolloClient<any>) { }
@@ -42,6 +42,23 @@ export class UserService {
       return newUserData.insert_users_one.id
     } catch (error) {
       console.error('Error syncing user with Hasura:', error)
+      throw error
+    }
+  }
+
+  async updateUser(userId: string, updates: { email?: string; name?: string }): Promise<void> {
+    try {
+      await this.apolloClient.mutate({
+        mutation: UpdateUserDocument,
+        variables: {
+          user: {
+            id: userId,
+            ...updates,
+          },
+        },
+      })
+    } catch (error) {
+      console.error('Error updating user in Hasura:', error)
       throw error
     }
   }

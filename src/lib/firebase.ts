@@ -1,10 +1,14 @@
 import { initializeApp } from 'firebase/app';
 import {
   createUserWithEmailAndPassword,
+  EmailAuthProvider,
   getAuth,
   onAuthStateChanged,
+  reauthenticateWithCredential,
   signInWithEmailAndPassword,
   signOut,
+  updateEmail,
+  updatePassword,
   type User,
   type UserCredential,
 } from 'firebase/auth';
@@ -36,6 +40,23 @@ export const logout = async (): Promise<void> => {
 
 export const onAuthStateChange = (callback: (user: User | null) => void) => {
   return onAuthStateChanged(auth, callback)
+}
+
+export const updateUserEmail = async (user: User, newEmail: string): Promise<void> => {
+  return updateEmail(user, newEmail)
+}
+
+export const updateUserPassword = async (user: User, newPassword: string): Promise<void> => {
+  return updatePassword(user, newPassword)
+}
+
+export const reauthenticateUser = async (user: User, currentPassword: string): Promise<UserCredential> => {
+  if (!user.email) {
+    throw new Error('User email is required for reauthentication')
+  }
+
+  const credential = EmailAuthProvider.credential(user.email, currentPassword)
+  return reauthenticateWithCredential(user, credential)
 }
 
 export default app 

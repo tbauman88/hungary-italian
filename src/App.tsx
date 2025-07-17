@@ -5,6 +5,7 @@ import { AddRecipePage } from './pages/AddRecipePage'
 import { EditRecipePage } from './pages/EditRecipePage'
 import { HomePage } from './pages/HomePage'
 import { LoginPage } from './pages/LoginPage'
+import { ProfileSettingsPage } from './pages/ProfileSettingsPage'
 import { RecipePage } from './pages/RecipePage'
 import { SignupPage } from './pages/SignupPage'
 
@@ -31,6 +32,14 @@ const App = () => {
             element={
               <ProtectedRoute>
                 <EditRecipePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile/settings"
+            element={
+              <ProtectedRoute>
+                <ProfileSettingsPage />
               </ProtectedRoute>
             }
           />
