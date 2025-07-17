@@ -1,13 +1,22 @@
 import { ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
+import { auth } from './firebase'
 
 const httpLink = createHttpLink({
   uri: import.meta.env.VITE_HASURA_GRAPHQL_URL || 'https://your-hasura-endpoint.hasura.app/v1/graphql',
 })
 
-const authLink = setContext((_, { headers }) => {
-  // Get the authentication token from local storage if it exists
-  const token = localStorage.getItem('token')
+const authLink = setContext(async (_, { headers }) => {
+  const currentUser = auth.currentUser
+  let token = ''
+
+  if (currentUser) {
+    try {
+      token = await currentUser.getIdToken()
+    } catch (error) {
+      console.error('Failed to get Firebase ID token:', error)
+    }
+  }
 
   return {
     headers: {

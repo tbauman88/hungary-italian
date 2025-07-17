@@ -1,0 +1,6 @@
+fragment User on users {
+    id
+    email
+    name
+    created_at
+}

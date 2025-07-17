@@ -1,5 +1,8 @@
-query GetRecipes {
-    recipes(order_by: { created_at: desc }) {
+query GetRecipes($owner_id: uuid!) {
+    recipes(
+        where: { owner_id: { _eq: $owner_id } }
+        order_by: { created_at: desc }
+    ) {
         ...Recipe
     }
 }

@@ -9,6 +9,7 @@ import { FormInput } from '../components/FormInput'
 import { FormSelect } from '../components/FormSelect'
 import { FormTextarea } from '../components/FormTextarea'
 import { TagSelector } from '../components/TagSelector'
+import { useAuth } from '../contexts/AuthContext'
 import { IngredientsConstraint, IngredientsUpdateColumn, useAddRecipeMutation, type RecipesInsertInput } from '../generated/graphql'
 import { RecipeComplexity, RecipeSchema, RecipeType } from '../types'
 
@@ -16,6 +17,7 @@ type RecipeFormData = z.infer<typeof RecipeSchema>
 
 export const AddRecipePage = () => {
   const navigate = useNavigate()
+  const { currentUserId } = useAuth()
   const [error, setError] = useState<string | null>(null)
 
   const [addRecipe, { loading }] = useAddRecipeMutation({
@@ -69,6 +71,7 @@ export const AddRecipePage = () => {
     try {
       const recipe: RecipesInsertInput = {
         ...data,
+        owner_id: currentUserId,
         cooking_time: data.cooking_time ? String(data.cooking_time) : null,
         portion_size: String(data.portion_size),
         recipe_ingredients: {

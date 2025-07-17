@@ -1493,6 +1493,7 @@ export type Users = {
   __typename?: 'users';
   created_at: Scalars['timestamptz']['output'];
   email: Scalars['String']['output'];
+  firebase_uid?: Maybe<Scalars['String']['output']>;
   id: Scalars['uuid']['output'];
   name: Scalars['String']['output'];
   password_hash?: Maybe<Scalars['String']['output']>;
@@ -1551,6 +1552,7 @@ export type UsersBoolExp = {
   _or?: InputMaybe<Array<UsersBoolExp>>;
   created_at?: InputMaybe<TimestamptzComparisonExp>;
   email?: InputMaybe<StringComparisonExp>;
+  firebase_uid?: InputMaybe<StringComparisonExp>;
   id?: InputMaybe<UuidComparisonExp>;
   name?: InputMaybe<StringComparisonExp>;
   password_hash?: InputMaybe<StringComparisonExp>;
@@ -1570,6 +1572,7 @@ export enum UsersConstraint {
 export type UsersInsertInput = {
   created_at?: InputMaybe<Scalars['timestamptz']['input']>;
   email?: InputMaybe<Scalars['String']['input']>;
+  firebase_uid?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   password_hash?: InputMaybe<Scalars['String']['input']>;
@@ -1581,6 +1584,7 @@ export type UsersMaxFields = {
   __typename?: 'users_max_fields';
   created_at?: Maybe<Scalars['timestamptz']['output']>;
   email?: Maybe<Scalars['String']['output']>;
+  firebase_uid?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
   name?: Maybe<Scalars['String']['output']>;
   password_hash?: Maybe<Scalars['String']['output']>;
@@ -1591,6 +1595,7 @@ export type UsersMinFields = {
   __typename?: 'users_min_fields';
   created_at?: Maybe<Scalars['timestamptz']['output']>;
   email?: Maybe<Scalars['String']['output']>;
+  firebase_uid?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
   name?: Maybe<Scalars['String']['output']>;
   password_hash?: Maybe<Scalars['String']['output']>;
@@ -1623,6 +1628,7 @@ export type UsersOnConflict = {
 export type UsersOrderBy = {
   created_at?: InputMaybe<OrderBy>;
   email?: InputMaybe<OrderBy>;
+  firebase_uid?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
   name?: InputMaybe<OrderBy>;
   password_hash?: InputMaybe<OrderBy>;
@@ -1641,6 +1647,8 @@ export enum UsersSelectColumn {
   /** column name */
   EMAIL = 'email',
   /** column name */
+  FIREBASE_UID = 'firebase_uid',
+  /** column name */
   ID = 'id',
   /** column name */
   NAME = 'name',
@@ -1652,6 +1660,7 @@ export enum UsersSelectColumn {
 export type UsersSetInput = {
   created_at?: InputMaybe<Scalars['timestamptz']['input']>;
   email?: InputMaybe<Scalars['String']['input']>;
+  firebase_uid?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   password_hash?: InputMaybe<Scalars['String']['input']>;
@@ -1669,6 +1678,7 @@ export type UsersStreamCursorInput = {
 export type UsersStreamCursorValueInput = {
   created_at?: InputMaybe<Scalars['timestamptz']['input']>;
   email?: InputMaybe<Scalars['String']['input']>;
+  firebase_uid?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   password_hash?: InputMaybe<Scalars['String']['input']>;
@@ -1680,6 +1690,8 @@ export enum UsersUpdateColumn {
   CREATED_AT = 'created_at',
   /** column name */
   EMAIL = 'email',
+  /** column name */
+  FIREBASE_UID = 'firebase_uid',
   /** column name */
   ID = 'id',
   /** column name */
@@ -1714,12 +1726,21 @@ export type RecipeIngredientFragment = { __typename?: 'recipe_ingredients', amou
 
 export type RecipeFragment = { __typename?: 'recipes', steps: Array<string>, id: string, title: string, type: any, notes?: string | null, complexity: any, portion_size?: string | null, cooking_time?: string | null, video_url?: string | null, image_url?: string | null, recipe_ingredients: Array<{ __typename?: 'recipe_ingredients', amount?: string | null, ingredient: { __typename?: 'ingredients', name: string } }> };
 
+export type UserFragment = { __typename?: 'users', id: string, email: string, name: string, created_at: string };
+
 export type AddRecipeMutationVariables = Exact<{
   recipe: RecipesInsertInput;
 }>;
 
 
 export type AddRecipeMutation = { __typename?: 'mutation_root', insert_recipes_one?: { __typename?: 'recipes', steps: Array<string>, id: string, title: string, type: any, notes?: string | null, complexity: any, portion_size?: string | null, cooking_time?: string | null, video_url?: string | null, image_url?: string | null, recipe_ingredients: Array<{ __typename?: 'recipe_ingredients', amount?: string | null, ingredient: { __typename?: 'ingredients', name: string } }> } | null };
+
+export type CreateUserMutationVariables = Exact<{
+  user: UsersInsertInput;
+}>;
+
+
+export type CreateUserMutation = { __typename?: 'mutation_root', insert_users_one?: { __typename?: 'users', id: string, email: string, name: string, created_at: string } | null };
 
 export type GetRecipeByIdQueryVariables = Exact<{
   id: Scalars['uuid']['input'];
@@ -1728,10 +1749,26 @@ export type GetRecipeByIdQueryVariables = Exact<{
 
 export type GetRecipeByIdQuery = { __typename?: 'query_root', recipes_by_pk?: { __typename?: 'recipes', steps: Array<string>, id: string, title: string, type: any, notes?: string | null, complexity: any, portion_size?: string | null, cooking_time?: string | null, video_url?: string | null, image_url?: string | null, recipe_ingredients: Array<{ __typename?: 'recipe_ingredients', amount?: string | null, ingredient: { __typename?: 'ingredients', name: string } }> } | null };
 
-export type GetRecipesQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetRecipesQueryVariables = Exact<{
+  owner_id: Scalars['uuid']['input'];
+}>;
 
 
 export type GetRecipesQuery = { __typename?: 'query_root', recipes: Array<{ __typename?: 'recipes', steps: Array<string>, id: string, title: string, type: any, notes?: string | null, complexity: any, portion_size?: string | null, cooking_time?: string | null, video_url?: string | null, image_url?: string | null, recipe_ingredients: Array<{ __typename?: 'recipe_ingredients', amount?: string | null, ingredient: { __typename?: 'ingredients', name: string } }> }> };
+
+export type GetUserByEmailQueryVariables = Exact<{
+  email: Scalars['String']['input'];
+}>;
+
+
+export type GetUserByEmailQuery = { __typename?: 'query_root', users: Array<{ __typename?: 'users', id: string, email: string, name: string, created_at: string }> };
+
+export type GetUserByIdQueryVariables = Exact<{
+  id: Scalars['uuid']['input'];
+}>;
+
+
+export type GetUserByIdQuery = { __typename?: 'query_root', users_by_pk?: { __typename?: 'users', id: string, email: string, name: string, created_at: string } | null };
 
 export const BaseRecipeFragmentDoc = gql`
     fragment BaseRecipe on recipes {
@@ -1764,6 +1801,14 @@ export const RecipeFragmentDoc = gql`
 }
     ${BaseRecipeFragmentDoc}
 ${RecipeIngredientFragmentDoc}`;
+export const UserFragmentDoc = gql`
+    fragment User on users {
+  id
+  email
+  name
+  created_at
+}
+    `;
 export const AddRecipeDocument = gql`
     mutation AddRecipe($recipe: recipes_insert_input!) {
   insert_recipes_one(object: $recipe) {
@@ -1797,6 +1842,39 @@ export function useAddRecipeMutation(baseOptions?: Apollo.MutationHookOptions<Ad
 export type AddRecipeMutationHookResult = ReturnType<typeof useAddRecipeMutation>;
 export type AddRecipeMutationResult = Apollo.MutationResult<AddRecipeMutation>;
 export type AddRecipeMutationOptions = Apollo.BaseMutationOptions<AddRecipeMutation, AddRecipeMutationVariables>;
+export const CreateUserDocument = gql`
+    mutation CreateUser($user: users_insert_input!) {
+  insert_users_one(object: $user) {
+    ...User
+  }
+}
+    ${UserFragmentDoc}`;
+export type CreateUserMutationFn = Apollo.MutationFunction<CreateUserMutation, CreateUserMutationVariables>;
+
+/**
+ * __useCreateUserMutation__
+ *
+ * To run a mutation, you first call `useCreateUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createUserMutation, { data, loading, error }] = useCreateUserMutation({
+ *   variables: {
+ *      user: // value for 'user'
+ *   },
+ * });
+ */
+export function useCreateUserMutation(baseOptions?: Apollo.MutationHookOptions<CreateUserMutation, CreateUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateUserMutation, CreateUserMutationVariables>(CreateUserDocument, options);
+      }
+export type CreateUserMutationHookResult = ReturnType<typeof useCreateUserMutation>;
+export type CreateUserMutationResult = Apollo.MutationResult<CreateUserMutation>;
+export type CreateUserMutationOptions = Apollo.BaseMutationOptions<CreateUserMutation, CreateUserMutationVariables>;
 export const GetRecipeByIdDocument = gql`
     query GetRecipeById($id: uuid!) {
   recipes_by_pk(id: $id) {
@@ -1838,8 +1916,8 @@ export type GetRecipeByIdLazyQueryHookResult = ReturnType<typeof useGetRecipeByI
 export type GetRecipeByIdSuspenseQueryHookResult = ReturnType<typeof useGetRecipeByIdSuspenseQuery>;
 export type GetRecipeByIdQueryResult = Apollo.QueryResult<GetRecipeByIdQuery, GetRecipeByIdQueryVariables>;
 export const GetRecipesDocument = gql`
-    query GetRecipes {
-  recipes(order_by: {created_at: desc}) {
+    query GetRecipes($owner_id: uuid!) {
+  recipes(where: {owner_id: {_eq: $owner_id}}, order_by: {created_at: desc}) {
     ...Recipe
   }
 }
@@ -1857,10 +1935,11 @@ export const GetRecipesDocument = gql`
  * @example
  * const { data, loading, error } = useGetRecipesQuery({
  *   variables: {
+ *      owner_id: // value for 'owner_id'
  *   },
  * });
  */
-export function useGetRecipesQuery(baseOptions?: Apollo.QueryHookOptions<GetRecipesQuery, GetRecipesQueryVariables>) {
+export function useGetRecipesQuery(baseOptions: Apollo.QueryHookOptions<GetRecipesQuery, GetRecipesQueryVariables> & ({ variables: GetRecipesQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<GetRecipesQuery, GetRecipesQueryVariables>(GetRecipesDocument, options);
       }
@@ -1876,3 +1955,83 @@ export type GetRecipesQueryHookResult = ReturnType<typeof useGetRecipesQuery>;
 export type GetRecipesLazyQueryHookResult = ReturnType<typeof useGetRecipesLazyQuery>;
 export type GetRecipesSuspenseQueryHookResult = ReturnType<typeof useGetRecipesSuspenseQuery>;
 export type GetRecipesQueryResult = Apollo.QueryResult<GetRecipesQuery, GetRecipesQueryVariables>;
+export const GetUserByEmailDocument = gql`
+    query GetUserByEmail($email: String!) {
+  users(where: {email: {_eq: $email}}) {
+    ...User
+  }
+}
+    ${UserFragmentDoc}`;
+
+/**
+ * __useGetUserByEmailQuery__
+ *
+ * To run a query within a React component, call `useGetUserByEmailQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserByEmailQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUserByEmailQuery({
+ *   variables: {
+ *      email: // value for 'email'
+ *   },
+ * });
+ */
+export function useGetUserByEmailQuery(baseOptions: Apollo.QueryHookOptions<GetUserByEmailQuery, GetUserByEmailQueryVariables> & ({ variables: GetUserByEmailQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetUserByEmailQuery, GetUserByEmailQueryVariables>(GetUserByEmailDocument, options);
+      }
+export function useGetUserByEmailLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserByEmailQuery, GetUserByEmailQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetUserByEmailQuery, GetUserByEmailQueryVariables>(GetUserByEmailDocument, options);
+        }
+export function useGetUserByEmailSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetUserByEmailQuery, GetUserByEmailQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetUserByEmailQuery, GetUserByEmailQueryVariables>(GetUserByEmailDocument, options);
+        }
+export type GetUserByEmailQueryHookResult = ReturnType<typeof useGetUserByEmailQuery>;
+export type GetUserByEmailLazyQueryHookResult = ReturnType<typeof useGetUserByEmailLazyQuery>;
+export type GetUserByEmailSuspenseQueryHookResult = ReturnType<typeof useGetUserByEmailSuspenseQuery>;
+export type GetUserByEmailQueryResult = Apollo.QueryResult<GetUserByEmailQuery, GetUserByEmailQueryVariables>;
+export const GetUserByIdDocument = gql`
+    query GetUserById($id: uuid!) {
+  users_by_pk(id: $id) {
+    ...User
+  }
+}
+    ${UserFragmentDoc}`;
+
+/**
+ * __useGetUserByIdQuery__
+ *
+ * To run a query within a React component, call `useGetUserByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUserByIdQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetUserByIdQuery(baseOptions: Apollo.QueryHookOptions<GetUserByIdQuery, GetUserByIdQueryVariables> & ({ variables: GetUserByIdQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetUserByIdQuery, GetUserByIdQueryVariables>(GetUserByIdDocument, options);
+      }
+export function useGetUserByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserByIdQuery, GetUserByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetUserByIdQuery, GetUserByIdQueryVariables>(GetUserByIdDocument, options);
+        }
+export function useGetUserByIdSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetUserByIdQuery, GetUserByIdQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetUserByIdQuery, GetUserByIdQueryVariables>(GetUserByIdDocument, options);
+        }
+export type GetUserByIdQueryHookResult = ReturnType<typeof useGetUserByIdQuery>;
+export type GetUserByIdLazyQueryHookResult = ReturnType<typeof useGetUserByIdLazyQuery>;
+export type GetUserByIdSuspenseQueryHookResult = ReturnType<typeof useGetUserByIdSuspenseQuery>;
+export type GetUserByIdQueryResult = Apollo.QueryResult<GetUserByIdQuery, GetUserByIdQueryVariables>;

@@ -9,8 +9,8 @@ import { client } from './lib/apollo-client'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <AuthProvider>
-      <ApolloProvider client={client}>
+    <ApolloProvider client={client}>
+      <AuthProvider>
         <BrowserRouter
           future={{
             v7_startTransition: true,
@@ -19,7 +19,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         >
           <App />
         </BrowserRouter>
-      </ApolloProvider>
-    </AuthProvider>
+      </AuthProvider>
+    </ApolloProvider>
   </React.StrictMode>,
 )

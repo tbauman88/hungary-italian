@@ -1,0 +1,5 @@
+query GetUserByEmail($email: String!) {
+    users(where: { email: { _eq: $email } }) {
+        ...User
+    }
+}

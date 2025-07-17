@@ -1,9 +1,15 @@
 import { LoadingSpinner } from '../components/LoadingSpinner'
 import { RecipeCard } from '../components/RecipeCard'
+import { useAuth } from '../contexts/AuthContext'
 import { useGetRecipesQuery } from '../generated/graphql'
 
 export const HomePage = () => {
-  const { loading, error, data } = useGetRecipesQuery()
+  const { currentUser, currentUserId } = useAuth()
+
+  const { loading, error, data } = useGetRecipesQuery({
+    variables: { owner_id: currentUserId! },
+    skip: !currentUser || !currentUserId,
+  })
 
   if (loading) return <LoadingSpinner />
   if (error) return <div className="text-red-600 p-4 text-center">Error: {error.message}</div>
