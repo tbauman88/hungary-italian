@@ -1,8 +1,11 @@
 import { Route, Routes } from 'react-router-dom'
 import { Header } from './components/Header'
+import { ProtectedRoute } from './components/ProtectedRoute'
 import { AddRecipePage } from './pages/AddRecipePage'
 import { HomePage } from './pages/HomePage'
+import { LoginPage } from './pages/LoginPage'
 import { RecipePage } from './pages/RecipePage'
+import { SignupPage } from './pages/SignupPage'
 
 const App = () => {
   return (
@@ -12,7 +15,16 @@ const App = () => {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/recipe/:id" element={<RecipePage />} />
-          <Route path="/add-recipe" element={<AddRecipePage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} />
+          <Route
+            path="/add-recipe"
+            element={
+              <ProtectedRoute>
+                <AddRecipePage />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </main>
     </div>
