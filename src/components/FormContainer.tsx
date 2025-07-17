@@ -1,6 +1,9 @@
+import { useFormStatus } from 'react-dom'
+
 interface FormContainerProps {
   title: string
-  onSubmit: (e: React.FormEvent) => void
+  onSubmit?: (e: React.FormEvent) => void
+  action?: (formData: FormData) => void | Promise<void>
   children: React.ReactNode
   submitText: string
   isLoading?: boolean
@@ -8,9 +11,30 @@ interface FormContainerProps {
   error?: string | null
 }
 
+// Submit button component that uses useFormStatus
+const SubmitButton = ({ submitText, isLoading, isValid }: {
+  submitText: string
+  isLoading?: boolean
+  isValid?: boolean
+}) => {
+  const { pending } = useFormStatus()
+  const isPending = pending || isLoading
+
+  return (
+    <button
+      type="submit"
+      disabled={isPending || !isValid}
+      className="w-full py-4 px-6 bg-primary-600 hover:bg-primary-700 disabled:bg-gray-400 text-white font-semibold text-lg rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
+    >
+      {isPending ? `${submitText}...` : submitText}
+    </button>
+  )
+}
+
 export const FormContainer = ({
   title,
   onSubmit,
+  action,
   children,
   submitText,
   isLoading = false,
@@ -23,20 +47,22 @@ export const FormContainer = ({
         {title}
       </h1>
 
-      <form onSubmit={onSubmit} className="bg-white sm:rounded-lg sm:shadow-md p-4 sm:p-6 space-y-6 min-h-screen sm:min-h-0">
+      <form
+        onSubmit={onSubmit}
+        action={action}
+        className="bg-white sm:rounded-lg sm:shadow-md p-4 sm:p-6 space-y-6 min-h-screen sm:min-h-0"
+      >
         {children}
 
         {error && (
           <p className="mt-2 text-sm text-red-600">{error}</p>
         )}
 
-        <button
-          type="submit"
-          disabled={isLoading || !isValid}
-          className="w-full py-4 px-6 bg-primary-600 hover:bg-primary-700 disabled:bg-gray-400 text-white font-semibold text-lg rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
-        >
-          {isLoading ? `${submitText}...` : submitText}
-        </button>
+        <SubmitButton
+          submitText={submitText}
+          isLoading={isLoading}
+          isValid={isValid}
+        />
       </form>
     </div>
   )

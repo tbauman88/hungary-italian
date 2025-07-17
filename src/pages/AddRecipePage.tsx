@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useState } from 'react'
+import { useActionState } from 'react'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
@@ -18,19 +18,15 @@ type RecipeFormData = z.infer<typeof RecipeSchema>
 export const AddRecipePage = () => {
   const navigate = useNavigate()
   const { currentUserId } = useAuth()
-  const [error, setError] = useState<string | null>(null)
 
-  const [addRecipe, { loading }] = useAddRecipeMutation({
-    onError: (error) => {
-      setError(error.message)
-    }
-  })
+  const [addRecipe] = useAddRecipeMutation()
 
   const {
     register,
     control,
     handleSubmit,
-    formState: { errors, isValid }
+    formState: { errors, isValid },
+    getValues
   } = useForm<RecipeFormData>({
     resolver: zodResolver(RecipeSchema),
     defaultValues: {
@@ -67,48 +63,69 @@ export const AddRecipePage = () => {
     name: 'steps'
   })
 
-  const onSubmit = async (data: RecipeFormData) => {
-    try {
-      const recipe: RecipesInsertInput = {
-        ...data,
-        owner_id: currentUserId,
-        cooking_time: data.cooking_time ? String(data.cooking_time) : null,
-        portion_size: String(data.portion_size),
-        recipe_ingredients: {
-          data: data.ingredients.map(ingredient => ({
-            ingredient: {
-              data: { name: ingredient.name },
-              on_conflict: {
-                constraint: IngredientsConstraint.INGREDIENTS_NAME_KEY,
-                update_columns: [IngredientsUpdateColumn.NAME]
+  // React 19's useActionState for form submission
+  const [error, submitAction, isPending] = useActionState(
+    async (previousState: string | null, formData: FormData) => {
+      try {
+        // Get current form values for validation
+        const currentValues = getValues()
+
+        // Validate the current form state
+        const validation = RecipeSchema.safeParse(currentValues)
+        if (!validation.success) {
+          return 'Please fix the validation errors before submitting.'
+        }
+
+        const data = validation.data
+
+        // Transform data for GraphQL mutation - exclude ingredients, only use recipe_ingredients
+        const { ingredients, steps, ...recipeData } = data
+
+        const recipe: RecipesInsertInput = {
+          ...recipeData,
+          owner_id: currentUserId,
+          cooking_time: data.cooking_time ? String(data.cooking_time) : null,
+          portion_size: String(data.portion_size),
+          recipe_ingredients: {
+            data: ingredients.map(ingredient => ({
+              ingredient: {
+                data: { name: ingredient.name },
+                on_conflict: {
+                  constraint: IngredientsConstraint.INGREDIENTS_NAME_KEY,
+                  update_columns: [IngredientsUpdateColumn.NAME]
+                }
               }
-            }
-          }))
-        },
-        steps: data.steps.map(step => step.description)
-      }
+            }))
+          },
+          steps: steps.map(step => step.description)
+        }
 
-      const result = await addRecipe({ variables: { recipe } })
+        const result = await addRecipe({ variables: { recipe } })
 
-      if (result.data?.insert_recipes_one?.id) {
-        navigate(`/recipe/${result.data.insert_recipes_one.id}`)
+        if (result.data?.insert_recipes_one?.id) {
+          navigate(`/recipe/${result.data.insert_recipes_one.id}`)
+        }
+
+        return null // Success
+      } catch (error) {
+        return error instanceof Error ? error.message : 'An unknown error occurred'
       }
-    } catch (error) {
-      setError(error instanceof Error ? error.message : 'An unknown error occurred')
-    }
-  }
+    },
+    null
+  )
 
   return (
     <FormContainer
       title="Create New Recipe"
-      onSubmit={handleSubmit(onSubmit)}
+      action={submitAction}
       submitText="Add Recipe"
-      isLoading={loading}
+      isLoading={isPending}
       isValid={isValid}
       error={error}
     >
       <FormInput
         {...register('title')}
+        name="title"
         label="Recipe Title"
         placeholder="Enter recipe title"
         error={errors.title}
@@ -117,6 +134,7 @@ export const AddRecipePage = () => {
 
       <FormSelect
         {...register('type')}
+        name="type"
         label="Type"
         options={Object.values(RecipeType).map(type => ({ value: type, label: type }))}
         placeholder="Select recipe type"
@@ -125,6 +143,7 @@ export const AddRecipePage = () => {
 
       <FormSelect
         {...register('complexity')}
+        name="complexity"
         label="Complexity"
         options={Object.values(RecipeComplexity).map(complexity => ({ value: complexity, label: complexity }))}
         placeholder="Select complexity"
@@ -134,6 +153,7 @@ export const AddRecipePage = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
         <FormInput
           {...register('cooking_time', { valueAsNumber: true })}
+          name="cooking_time"
           label="Cooking Time (minutes)"
           type="number"
           placeholder="30"
@@ -142,6 +162,7 @@ export const AddRecipePage = () => {
 
         <FormInput
           {...register('portion_size', { valueAsNumber: true })}
+          name="portion_size"
           label="Portion Size"
           type="number"
           placeholder="4"
@@ -176,6 +197,7 @@ export const AddRecipePage = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
         <FormInput
           {...register('image_url')}
+          name="image_url"
           label="Image URL (optional)"
           type="url"
           placeholder="https://example.com/image.jpg"
@@ -184,6 +206,7 @@ export const AddRecipePage = () => {
 
         <FormInput
           {...register('video_url')}
+          name="video_url"
           label="Video URL (optional)"
           type="url"
           placeholder="https://youtube.com/watch?v=..."
@@ -211,6 +234,7 @@ export const AddRecipePage = () => {
 
       <FormTextarea
         {...register('notes')}
+        name="notes"
         label="Notes (optional)"
         rows={4}
         placeholder="Add any notes about this recipe..."

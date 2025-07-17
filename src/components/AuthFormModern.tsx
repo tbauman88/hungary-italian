@@ -1,33 +1,44 @@
-import { zodResolver } from '@hookform/resolvers/zod'
 import React, { useActionState } from 'react'
-import { useForm } from 'react-hook-form'
+import { useFormStatus } from 'react-dom'
 import { Link } from 'react-router-dom'
-import { z } from 'zod'
 
-const authSchema = z.object({
-  email: z.string().email('Please enter a valid email address'),
-  password: z.string().min(6, 'Password must be at least 6 characters'),
-})
-
-type AuthFormData = z.infer<typeof authSchema>
-
-interface AuthFormProps {
+interface AuthFormModernProps {
   mode: 'login' | 'signup'
   onSubmit: (email: string, password: string) => Promise<void>
 }
 
-export const AuthForm: React.FC<AuthFormProps> = ({ mode, onSubmit }) => {
-  const {
-    register,
-    formState: { errors },
-  } = useForm<AuthFormData>({
-    resolver: zodResolver(authSchema),
-  })
+const SubmitButton = ({ isLogin }: { isLogin: boolean }) => {
+  const { pending } = useFormStatus()
+  const buttonText = isLogin ? 'Sign in' : 'Sign up'
 
+  return (
+    <button
+      type="submit"
+      disabled={pending}
+      className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
+    >
+      {pending ? (
+        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+      ) : (
+        buttonText
+      )}
+    </button>
+  )
+}
+
+export const AuthFormModern: React.FC<AuthFormModernProps> = ({ mode, onSubmit }) => {
   const [error, submitAction, isPending] = useActionState(
     async (previousState: string | null, formData: FormData) => {
       const email = formData.get('email') as string
       const password = formData.get('password') as string
+
+      if (!email || !email.includes('@')) {
+        return 'Please enter a valid email address.'
+      }
+
+      if (!password || password.length < 6) {
+        return 'Password must be at least 6 characters.'
+      }
 
       try {
         await onSubmit(email, password)
@@ -53,22 +64,8 @@ export const AuthForm: React.FC<AuthFormProps> = ({ mode, onSubmit }) => {
     null
   )
 
-  const enhancedSubmitAction = async (formData: FormData) => {
-    const email = formData.get('email') as string
-    const password = formData.get('password') as string
-
-    const validation = authSchema.safeParse({ email, password })
-
-    if (!validation.success) {
-      return
-    }
-
-    await submitAction(formData)
-  }
-
   const isLogin = mode === 'login'
   const title = isLogin ? 'Sign in to your account' : 'Create your account'
-  const buttonText = isLogin ? 'Sign in' : 'Sign up'
   const linkText = isLogin ? "Don't have an account? Sign up" : 'Already have an account? Sign in'
   const linkTo = isLogin ? '/signup' : '/login'
 
@@ -84,14 +81,14 @@ export const AuthForm: React.FC<AuthFormProps> = ({ mode, onSubmit }) => {
           </h2>
         </div>
 
-        <form className="mt-8 space-y-6" action={enhancedSubmitAction}>
+        <form className="mt-8 space-y-6" action={submitAction}>
           <div className="rounded-md shadow-sm space-y-4">
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                 Email address
               </label>
               <input
-                {...register('email')}
+                id="email"
                 name="email"
                 type="email"
                 autoComplete="email"
@@ -99,9 +96,6 @@ export const AuthForm: React.FC<AuthFormProps> = ({ mode, onSubmit }) => {
                 className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 focus:z-10 sm:text-sm"
                 placeholder="Email address"
               />
-              {errors.email && (
-                <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
-              )}
             </div>
 
             <div>
@@ -109,17 +103,15 @@ export const AuthForm: React.FC<AuthFormProps> = ({ mode, onSubmit }) => {
                 Password
               </label>
               <input
-                {...register('password')}
+                id="password"
                 name="password"
                 type="password"
                 autoComplete={isLogin ? 'current-password' : 'new-password'}
                 required
+                minLength={6}
                 className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 focus:z-10 sm:text-sm"
                 placeholder="Password"
               />
-              {errors.password && (
-                <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>
-              )}
             </div>
           </div>
 
@@ -130,17 +122,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ mode, onSubmit }) => {
           )}
 
           <div>
-            <button
-              type="submit"
-              disabled={isPending}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {isPending ? (
-                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-              ) : (
-                buttonText
-              )}
-            </button>
+            <SubmitButton isLogin={isLogin} />
           </div>
 
           <div className="text-center">
