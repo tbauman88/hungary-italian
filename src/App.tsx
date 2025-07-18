@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import { Header } from './components/Header'
 import { ProtectedRoute } from './components/ProtectedRoute'
 import { AddRecipePage } from './pages/AddRecipePage'
@@ -15,10 +15,24 @@ const App = () => {
       <Header />
       <main className="sm:container sm:mx-auto sm:px-4 lg:px-6 sm:py-6 lg:py-8 sm:max-w-7xl pt-8">
         <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/recipe/:id" element={<RecipePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <HomePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/recipe/:id"
+            element={
+              <ProtectedRoute>
+                <RecipePage />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/add-recipe"
             element={
@@ -43,6 +57,9 @@ const App = () => {
               </ProtectedRoute>
             }
           />
+
+          {/* Catch-all route - redirect to login for any invalid URLs */}
+          <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       </main>
     </div>
