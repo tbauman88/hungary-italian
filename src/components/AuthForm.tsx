@@ -84,11 +84,6 @@ export const AuthForm: React.FC<AuthFormProps> = ({
             </div>
 
             <div className="relative z-10">
-              <div className="flex items-center justify-center mb-4 sm:mb-6">
-                <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-primary-500 to-primary-600 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg">
-                  <span className="text-xl sm:text-2xl">🍝</span>
-                </div>
-              </div>
 
               <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-2 sm:mb-3">
                 {title}

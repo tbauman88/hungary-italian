@@ -34,7 +34,7 @@ export const RecipeCard = ({ recipe }: { recipe: Recipes }) => {
         )}
 
         <div className="absolute top-3 left-3">
-          <span className="bg-white/90 backdrop-blur-sm text-primary-600 px-3 py-1.5 rounded-xl text-xs font-semibold uppercase tracking-wide shadow-sm">
+          <span className="bg-white/90 backdrop-blur-sm text-tertiary-600 px-3 py-1.5 rounded-xl text-xs font-semibold uppercase tracking-wide shadow-sm">
             {recipe.type || 'Recipe'}
           </span>
         </div>

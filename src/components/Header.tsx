@@ -19,7 +19,7 @@ export const Header = () => {
         <div className="flex items-center justify-between h-16 sm:h-20">
           <Link to="/" className="flex items-center space-x-3 group">
             <div className="relative">
-              <span className="text-2xl sm:text-3xl font-bold text-primary-600 flex-shrink-0 group-hover:scale-110 transition-transform duration-200">🍝</span>
+              <span className="text-2xl sm:text-3xl font-bold text-primary-600 flex-shrink-0 group-hover:scale-110 transition-transform duration-200">🧀</span>
               <div className="absolute -inset-1 bg-primary-100 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200 -z-10"></div>
             </div>
             <div className="flex flex-col">

@@ -68,15 +68,6 @@ export const HomePage = () => {
     <div className="space-y-6 relative">
       {hasRecipes && (
         <>
-          <div className="text-center space-y-3 px-2 py-4 sm:py-8">
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 leading-tight">
-              Delicious Hungary-Italian Recipes
-            </h1>
-            <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto px-4">
-              Explore recipes for every occasion.
-            </p>
-          </div>
-
           <div className="space-y-4 sm:space-y-0 sm:flex sm:flex-row sm:gap-4 sm:items-start sm:justify-between px-4 sm:px-0">
             <div className="w-full sm:w-96">
               <RecipeSearch
@@ -123,7 +114,7 @@ export const HomePage = () => {
 const CallToAction = () => (
   <div className="text-center py-16 px-4">
     <div className="max-w-2xl mx-auto space-y-6">
-      <div className="text-8xl mb-6">🍝</div>
+      <div className="text-8xl mb-6">🧀</div>
 
       <h3 className="text-2xl sm:text-3xl font-bold text-gray-900">
         Start Your Culinary Journey
