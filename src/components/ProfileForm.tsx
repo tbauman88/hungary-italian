@@ -2,7 +2,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import React from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
-import { FormContainer } from './FormContainer'
 import { FormInput } from './FormInput'
 
 interface ProfileFormProps {
@@ -61,7 +60,7 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({ type, currentEmail, on
     // Reset form on success (when result is null)
     if (result === null) {
       if (isEmailForm) {
-        emailForm.reset({ newEmail: (data as EmailUpdateData).newEmail, currentPassword: '' })
+        emailForm.reset({ newEmail: '', currentPassword: '' })
       } else {
         passwordForm.reset()
       }
@@ -70,18 +69,10 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({ type, currentEmail, on
     return result
   }
 
-  const title = isEmailForm ? 'Update Email Address' : 'Update Password'
   const submitText = isEmailForm ? 'Update Email' : 'Update Password'
 
   return (
-    <FormContainer
-      title={title}
-      onSubmit={activeForm.handleSubmit(handleFormSubmit)}
-      submitText={submitText}
-      isLoading={isLoading}
-      isValid={activeForm.formState.isValid}
-      error={error}
-    >
+    <div className="space-y-6">
       {/* Hidden username field for accessibility - helps password managers */}
       <input
         type="text"
@@ -93,16 +84,22 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({ type, currentEmail, on
       />
 
       {isEmailForm && (
-        <>
+        <div className="space-y-6">
+          {/* Current Email Display */}
+          <div className="flex items-center space-x-3">
+            <span className="text-lg">✉️</span>
+            <h3 className="text-lg font-semibold text-gray-900">Update Email Address</h3>
+          </div>
+
           <FormInput
             label="Current Email"
-            name="currentEmail"
             type="email"
             value={currentEmail || ''}
+            readOnly
             disabled
-            className="bg-gray-50"
           />
 
+          {/* New Email Field */}
           <FormInput
             label="New Email Address"
             type="email"
@@ -112,42 +109,105 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({ type, currentEmail, on
             autoComplete="email"
             required
           />
-        </>
-      )}
 
-      <FormInput
-        label="Current Password"
-        type="password"
-        {...(isEmailForm ? emailForm.register('currentPassword') : passwordForm.register('currentPassword'))}
-        error={isEmailForm ? emailForm.formState.errors.currentPassword : passwordForm.formState.errors.currentPassword}
-        placeholder={isEmailForm ? "Enter your current password for verification" : "Enter your current password"}
-        autoComplete="current-password"
-        required
-      />
+          <div className="space-y-4 pt-4 border-t border-gray-100">
+            <div className="flex items-center space-x-3">
+              <span className="text-lg">🔑</span>
+              <h3 className="text-lg font-semibold text-gray-900">Verification</h3>
+            </div>
+            {/* Current Password for Verification */}
+            <FormInput
+              label="Current Password"
+              type="password"
+              {...emailForm.register('currentPassword')}
+              error={emailForm.formState.errors.currentPassword}
+              placeholder="Enter your current password for verification"
+              autoComplete="current-password"
+              required
+            />
+          </div>
+        </div>
+      )}
 
       {!isEmailForm && (
-        <>
-          <FormInput
-            label="New Password"
-            type="password"
-            {...passwordForm.register('newPassword')}
-            error={passwordForm.formState.errors.newPassword}
-            placeholder="Enter your new password (min. 6 characters)"
-            autoComplete="new-password"
-            required
-          />
+        <div className="space-y-6">
+          <div className="space-y-4">
+            <div className="flex items-center space-x-3">
+              <span className="text-lg">🔐</span>
+              <h3 className="text-lg font-semibold text-gray-900">Update Password</h3>
+            </div>
 
-          <FormInput
-            label="Confirm New Password"
-            type="password"
-            {...passwordForm.register('confirmPassword')}
-            error={passwordForm.formState.errors.confirmPassword}
-            placeholder="Confirm your new password"
-            autoComplete="new-password"
-            required
-          />
-        </>
+            <FormInput
+              label="New Password"
+              type="password"
+              {...passwordForm.register('newPassword')}
+              error={passwordForm.formState.errors.newPassword}
+              placeholder="Enter your new password (min. 6 characters)"
+              autoComplete="new-password"
+              required
+            />
+
+            <FormInput
+              label="Confirm New Password"
+              type="password"
+              {...passwordForm.register('confirmPassword')}
+              error={passwordForm.formState.errors.confirmPassword}
+              placeholder="Confirm your new password"
+              autoComplete="new-password"
+              required
+            />
+          </div>
+
+          <div className="space-y-4 pt-4 border-t border-gray-100">
+            <div className="flex items-center space-x-3">
+              <span className="text-lg">🔑</span>
+              <h3 className="text-lg font-semibold text-gray-900">Verification</h3>
+            </div>
+
+            <FormInput
+              label="Current Password"
+              type="password"
+              {...passwordForm.register('currentPassword')}
+              error={passwordForm.formState.errors.currentPassword}
+              placeholder="Enter your current password"
+              autoComplete="current-password"
+              required
+            />
+          </div>
+        </div>
       )}
-    </FormContainer>
+
+      {/* Submit Button */}
+      <div className="pt-6">
+        <button
+          type="button"
+          onClick={activeForm.handleSubmit(handleFormSubmit)}
+          disabled={!activeForm.formState.isValid || isLoading}
+          className={`w-full flex items-center justify-center px-6 py-4 text-base font-semibold rounded-xl transition-all duration-200 ${activeForm.formState.isValid && !isLoading
+            ? 'bg-primary-600 hover:bg-primary-700 text-white shadow-lg hover:shadow-xl'
+            : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+            }`}
+        >
+          {isLoading ? (
+            <div className="flex items-center space-x-2">
+              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              <span>Updating...</span>
+            </div>
+          ) : (
+            submitText
+          )}
+        </button>
+      </div>
+
+      {/* Error Display */}
+      {error && (
+        <div className="bg-red-50 border border-red-200 rounded-xl p-4">
+          <div className="flex items-center space-x-2">
+            <span className="text-red-500">⚠️</span>
+            <p className="text-red-700 text-sm font-medium">{error}</p>
+          </div>
+        </div>
+      )}
+    </div>
   )
 } 
