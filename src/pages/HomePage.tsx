@@ -77,7 +77,7 @@ export const HomePage = () => {
             </p>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+          <div className="space-y-4 sm:space-y-0 sm:flex sm:flex-row sm:gap-4 sm:items-start sm:justify-between px-4 sm:px-0">
             <div className="w-full sm:w-96">
               <RecipeSearch
                 searchValue={searchValue}
@@ -85,11 +85,13 @@ export const HomePage = () => {
                 placeholder="Search recipes by title..."
               />
             </div>
-            <RecipeSort
-              sortBy={sortBy}
-              sortDirection={sortDirection}
-              onSortChange={handleSortChange}
-            />
+            <div className="w-full sm:w-auto">
+              <RecipeSort
+                sortBy={sortBy}
+                sortDirection={sortDirection}
+                onSortChange={handleSortChange}
+              />
+            </div>
           </div>
 
           {filteredAndSortedRecipes.length > 0 ? (

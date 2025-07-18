@@ -1,4 +1,4 @@
-import { ChevronDownIcon } from '@heroicons/react/24/outline'
+import { ArrowsUpDownIcon, ChevronDownIcon } from '@heroicons/react/24/outline'
 import { RecipeType } from '../types'
 
 export type SortOption = 'all' | RecipeType
@@ -27,12 +27,12 @@ export const RecipeSort = ({ sortBy, sortDirection, onSortChange }: RecipeSortPr
   }
 
   return (
-    <div className="flex items-center space-x-2">
-      <div className="relative">
+    <div className="flex items-center space-x-3 w-full sm:w-auto">
+      <div className="relative flex-1 sm:flex-none">
         <select
           value={sortBy}
           onChange={(e) => handleSortChange(e.target.value as SortOption)}
-          className="appearance-none bg-white border border-gray-300 rounded-md px-3 py-2 pr-8 text-sm focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 cursor-pointer"
+          className="appearance-none w-full sm:w-auto bg-white border border-gray-300 rounded-lg px-4 py-3 sm:py-2.5 pr-10 text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 cursor-pointer transition-all duration-200 shadow-sm hover:shadow-md focus:shadow-lg"
         >
           {sortOptions.map(option => (
             <option key={option.value} value={option.value}>
@@ -40,17 +40,17 @@ export const RecipeSort = ({ sortBy, sortDirection, onSortChange }: RecipeSortPr
             </option>
           ))}
         </select>
-        <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-          <ChevronDownIcon className="h-4 w-4 text-gray-400" />
+        <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+          <ChevronDownIcon className="h-5 w-5 text-gray-400" />
         </div>
       </div>
       {sortBy !== 'all' && (
         <button
           onClick={() => onSortChange(sortBy, sortDirection === 'ASC' ? 'DESC' : 'ASC')}
-          className="px-2 py-1 text-xs font-medium text-gray-600 hover:text-gray-800 border border-gray-300 rounded hover:border-gray-400 transition-colors"
+          className="flex items-center justify-center w-12 h-12 sm:w-10 sm:h-10 text-gray-600 hover:text-gray-800 border border-gray-300 rounded-lg hover:border-gray-400 transition-all duration-200 shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
           title={`Sort ${sortDirection === 'ASC' ? 'descending' : 'ascending'}`}
         >
-          {sortDirection === 'ASC' ? '↑' : '↓'}
+          <ArrowsUpDownIcon className="h-5 w-5" />
         </button>
       )}
     </div>
