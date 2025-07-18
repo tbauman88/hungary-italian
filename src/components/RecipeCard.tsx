@@ -57,7 +57,7 @@ export const RecipeCard = ({ recipe }: { recipe: Recipes }) => {
         </Link>
 
         <p className="text-gray-600 text-sm sm:text-base mb-5 line-clamp-2 leading-relaxed">
-          {recipe.notes || 'A delicious fusion recipe combining Hungarian and Italian flavors.'}
+          {recipe.notes}
         </p>
 
         <div className="flex items-center justify-between pt-4 border-t border-gray-100">
