@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import React from 'react'
-import { useForm } from 'react-hook-form'
+import { useForm, type FieldError } from 'react-hook-form'
 import { Link } from 'react-router-dom'
 import { z } from 'zod'
 import { FormContainer } from './FormContainer'
@@ -14,34 +14,69 @@ const authSchema = z.object({
 type AuthFormData = z.infer<typeof authSchema>
 
 interface AuthFormProps {
+  title: string
+  buttonText: string
+  linkText: string
+  linkTo: string
   mode: 'login' | 'signup'
   onSubmit: (email: string, password: string) => Promise<string | null>
   isLoading?: boolean
   error?: string | null
 }
 
-export const AuthForm: React.FC<AuthFormProps> = ({ mode, onSubmit, isLoading, error }) => {
+type Row = {
+  label: string
+  type: string
+  autoComplete?: string
+  placeholder?: string
+  error?: FieldError
+  required?: boolean
+}
+
+export const AuthForm: React.FC<AuthFormProps> = ({
+  title,
+  buttonText,
+  linkText,
+  linkTo,
+  mode,
+  onSubmit,
+  isLoading,
+  error,
+}) => {
   const {
     register,
     handleSubmit,
     formState: { errors, isValid },
   } = useForm<AuthFormData>({
     resolver: zodResolver(authSchema),
-    mode: 'onChange'
+    mode: 'onSubmit'
   })
 
   const handleFormSubmit = async (data: AuthFormData) => {
     return await onSubmit(data.email, data.password)
   }
 
-  const isLogin = mode === 'login'
-  const title = isLogin ? 'Sign in to your account' : 'Create your account'
-  const buttonText = isLogin ? 'Sign in' : 'Sign up'
-  const linkText = isLogin ? "Don't have an account? Sign up" : 'Already have an account? Sign in'
-  const linkTo = isLogin ? '/signup' : '/login'
+  const rows: Record<string, Row> = {
+    'email': {
+      label: 'Email address',
+      type: 'email',
+      autoComplete: 'email',
+      placeholder: 'Enter your email',
+      error: errors.email,
+      required: true,
+    },
+    'password': {
+      label: 'Password',
+      type: 'password',
+      autoComplete: mode === 'login' ? 'current-password' : 'new-password',
+      placeholder: 'Enter your password',
+      error: errors.password,
+      required: true,
+    }
+  }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="lg:min-h-[calc(100vh-128px)] flex items-center justify-center bg-gray-50 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div>
           <div className="mx-auto h-12 w-12 flex items-center justify-center">
@@ -60,7 +95,6 @@ export const AuthForm: React.FC<AuthFormProps> = ({ mode, onSubmit, isLoading, e
           isValid={isValid}
           error={error}
         >
-          {/* Hidden username field for accessibility */}
           <input
             type="text"
             name="username"
@@ -69,27 +103,19 @@ export const AuthForm: React.FC<AuthFormProps> = ({ mode, onSubmit, isLoading, e
             readOnly
           />
 
-          <FormInput
-            {...register('email')}
-            name="email"
-            label="Email address"
-            type="email"
-            autoComplete="email"
-            placeholder="Enter your email"
-            error={errors.email}
-            required
-          />
-
-          <FormInput
-            {...register('password')}
-            name="password"
-            label="Password"
-            type="password"
-            autoComplete={isLogin ? 'current-password' : 'new-password'}
-            placeholder="Enter your password"
-            error={errors.password}
-            required
-          />
+          {Object.entries(rows).map(([name, row]) => (
+            <FormInput
+              key={name}
+              {...register(name as 'email' | 'password')}
+              name={name}
+              label={row.label}
+              type={row.type}
+              autoComplete={row.autoComplete}
+              placeholder={row.placeholder}
+              error={row.error}
+              required={row.required}
+            />
+          ))}
 
           <div className="text-center">
             <Link

@@ -3,6 +3,14 @@ import { Navigate } from 'react-router-dom'
 import { AuthForm } from '../components/AuthForm'
 import { useAuth } from '../contexts/AuthContext'
 
+const formErrors: Record<string, string> = {
+  'user-not-found': 'No account found with this email address.',
+  'wrong-password': 'Incorrect password. Please try again.',
+  'invalid-email': 'Please enter a valid email address.',
+  'too-many-requests': 'Too many failed attempts. Please try again later.',
+  'default': 'An error occurred. Please try again.'
+}
+
 export const LoginPage: React.FC = () => {
   const { login, currentUser } = useAuth()
   const [isLoading, setIsLoading] = useState(false)
@@ -14,21 +22,10 @@ export const LoginPage: React.FC = () => {
 
     try {
       await login(email, password)
-      return null // Success
+      return null
     } catch (error: any) {
-      const errorMessage = error?.message || 'An error occurred. Please try again.'
-
-      if (errorMessage.includes('user-not-found')) {
-        return 'No account found with this email address.'
-      } else if (errorMessage.includes('wrong-password') || errorMessage.includes('invalid-credential')) {
-        return 'Incorrect password. Please try again.'
-      } else if (errorMessage.includes('invalid-email')) {
-        return 'Please enter a valid email address.'
-      } else if (errorMessage.includes('too-many-requests')) {
-        return 'Too many failed attempts. Please try again later.'
-      } else {
-        return errorMessage
-      }
+      const errorMessage = error?.message || 'default'
+      return formErrors[errorMessage] || formErrors.default
     } finally {
       setIsLoading(false)
     }
@@ -41,6 +38,10 @@ export const LoginPage: React.FC = () => {
   return (
     <AuthForm
       mode="login"
+      title="Sign in to your account"
+      buttonText="Sign in"
+      linkText="Don't have an account? Sign up"
+      linkTo="/signup"
       onSubmit={handleLogin}
       isLoading={isLoading}
       error={error}

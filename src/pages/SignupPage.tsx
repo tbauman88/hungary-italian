@@ -3,6 +3,14 @@ import { Navigate } from 'react-router-dom'
 import { AuthForm } from '../components/AuthForm'
 import { useAuth } from '../contexts/AuthContext'
 
+const formErrors: Record<string, string> = {
+  'email-already-in-use': 'An account with this email already exists.',
+  'weak-password': 'Password is too weak. Please choose a stronger password.',
+  'invalid-email': 'Please enter a valid email address.',
+  'operation-not-allowed': 'Email/password accounts are not enabled. Please contact support.',
+  'default': 'An error occurred. Please try again.'
+}
+
 export const SignupPage: React.FC = () => {
   const { register, currentUser } = useAuth()
   const [isLoading, setIsLoading] = useState(false)
@@ -14,21 +22,10 @@ export const SignupPage: React.FC = () => {
 
     try {
       await register(email, password)
-      return null // Success
+      return null
     } catch (error: any) {
-      const errorMessage = error?.message || 'An error occurred. Please try again.'
-
-      if (errorMessage.includes('email-already-in-use')) {
-        return 'An account with this email already exists.'
-      } else if (errorMessage.includes('weak-password')) {
-        return 'Password is too weak. Please choose a stronger password.'
-      } else if (errorMessage.includes('invalid-email')) {
-        return 'Please enter a valid email address.'
-      } else if (errorMessage.includes('operation-not-allowed')) {
-        return 'Email/password accounts are not enabled. Please contact support.'
-      } else {
-        return errorMessage
-      }
+      const errorMessage = error?.message || 'default'
+      return formErrors[errorMessage] || formErrors.default
     } finally {
       setIsLoading(false)
     }
@@ -41,6 +38,10 @@ export const SignupPage: React.FC = () => {
   return (
     <AuthForm
       mode="signup"
+      title="Create your account"
+      buttonText="Sign up"
+      linkText="Already have an account? Sign in"
+      linkTo="/login"
       onSubmit={handleSignup}
       isLoading={isLoading}
       error={error}
