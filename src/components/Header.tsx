@@ -1,4 +1,4 @@
-import { ArrowRightEndOnRectangleIcon, HomeIcon, PlusIcon, UserCircleIcon, UserIcon } from '@heroicons/react/24/outline'
+import { ArrowRightEndOnRectangleIcon, HomeIcon, PlusIcon, UserCircleIcon } from '@heroicons/react/24/outline'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 
@@ -31,7 +31,7 @@ export const Header = () => {
           </Link>
 
           <nav className="flex items-center space-x-2 sm:space-x-4">
-            {currentUser ? (
+            {currentUser && (
               <>
                 <Link
                   to="/"
@@ -68,25 +68,6 @@ export const Header = () => {
                   <PlusIcon className="w-5 h-5 sm:w-6 sm:h-6" />
                   <span className="hidden sm:inline">Add Recipe</span>
                   <span className="sm:hidden">Add</span>
-                </Link>
-              </>
-            ) : (
-              <>
-                <Link
-                  to="/login"
-                  className="flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 text-gray-600 hover:text-primary-600 transition-all duration-200 rounded-xl hover:bg-primary-50 active:bg-primary-100 group"
-                  title="Login"
-                >
-                  <UserIcon className="w-6 h-6 sm:w-7 sm:h-7 group-hover:scale-110 transition-transform duration-200" />
-                </Link>
-
-                <div className="h-8 w-px bg-gray-200 mx-2 sm:mx-4"></div>
-
-                <Link
-                  to="/signup"
-                  className="flex items-center space-x-2 bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 active:from-primary-800 active:to-primary-900 text-white font-semibold px-4 py-3 sm:px-6 sm:py-3.5 rounded-xl transition-all duration-200 text-sm shadow-lg hover:shadow-xl transform hover:scale-105"
-                >
-                  <span>Sign Up</span>
                 </Link>
               </>
             )}
