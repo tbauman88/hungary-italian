@@ -115,6 +115,10 @@ export type Ingredients = {
   recipe_ingredients: Array<RecipeIngredients>;
   /** An aggregate relationship */
   recipe_ingredients_aggregate: RecipeIngredientsAggregate;
+  /** An array relationship */
+  user_ingredients: Array<UserIngredients>;
+  /** An aggregate relationship */
+  user_ingredients_aggregate: UserIngredientsAggregate;
 };
 
 
@@ -135,6 +139,26 @@ export type IngredientsRecipeIngredientsAggregateArgs = {
   offset?: InputMaybe<Scalars['Int']['input']>;
   order_by?: InputMaybe<Array<RecipeIngredientsOrderBy>>;
   where?: InputMaybe<RecipeIngredientsBoolExp>;
+};
+
+
+/** columns and relationships of "ingredients" */
+export type IngredientsUserIngredientsArgs = {
+  distinct_on?: InputMaybe<Array<UserIngredientsSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<UserIngredientsOrderBy>>;
+  where?: InputMaybe<UserIngredientsBoolExp>;
+};
+
+
+/** columns and relationships of "ingredients" */
+export type IngredientsUserIngredientsAggregateArgs = {
+  distinct_on?: InputMaybe<Array<UserIngredientsSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<UserIngredientsOrderBy>>;
+  where?: InputMaybe<UserIngredientsBoolExp>;
 };
 
 /** aggregated selection of "ingredients" */
@@ -168,6 +192,8 @@ export type IngredientsBoolExp = {
   name?: InputMaybe<StringComparisonExp>;
   recipe_ingredients?: InputMaybe<RecipeIngredientsBoolExp>;
   recipe_ingredients_aggregate?: InputMaybe<RecipeIngredientsAggregateBoolExp>;
+  user_ingredients?: InputMaybe<UserIngredientsBoolExp>;
+  user_ingredients_aggregate?: InputMaybe<UserIngredientsAggregateBoolExp>;
 };
 
 /** unique or primary key constraints on table "ingredients" */
@@ -183,6 +209,7 @@ export type IngredientsInsertInput = {
   id?: InputMaybe<Scalars['uuid']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   recipe_ingredients?: InputMaybe<RecipeIngredientsArrRelInsertInput>;
+  user_ingredients?: InputMaybe<UserIngredientsArrRelInsertInput>;
 };
 
 /** aggregate max on columns */
@@ -227,6 +254,7 @@ export type IngredientsOrderBy = {
   id?: InputMaybe<OrderBy>;
   name?: InputMaybe<OrderBy>;
   recipe_ingredients_aggregate?: InputMaybe<RecipeIngredientsAggregateOrderBy>;
+  user_ingredients_aggregate?: InputMaybe<UserIngredientsAggregateOrderBy>;
 };
 
 /** primary key columns input for table: ingredients */
@@ -277,6 +305,14 @@ export type IngredientsUpdates = {
   where: IngredientsBoolExp;
 };
 
+export type MissingIngredientsCountRecipesArgs = {
+  user_id?: InputMaybe<Scalars['uuid']['input']>;
+};
+
+export type MissingIngredientsRecipesArgs = {
+  user_id?: InputMaybe<Scalars['uuid']['input']>;
+};
+
 /** mutation root */
 export type MutationRoot = {
   __typename?: 'mutation_root';
@@ -292,6 +328,10 @@ export type MutationRoot = {
   delete_recipes?: Maybe<RecipesMutationResponse>;
   /** delete single row from the table: "recipes" */
   delete_recipes_by_pk?: Maybe<Recipes>;
+  /** delete data from the table: "user_ingredients" */
+  delete_user_ingredients?: Maybe<UserIngredientsMutationResponse>;
+  /** delete single row from the table: "user_ingredients" */
+  delete_user_ingredients_by_pk?: Maybe<UserIngredients>;
   /** delete data from the table: "users" */
   delete_users?: Maybe<UsersMutationResponse>;
   /** delete single row from the table: "users" */
@@ -308,6 +348,10 @@ export type MutationRoot = {
   insert_recipes?: Maybe<RecipesMutationResponse>;
   /** insert a single row into the table: "recipes" */
   insert_recipes_one?: Maybe<Recipes>;
+  /** insert data into the table: "user_ingredients" */
+  insert_user_ingredients?: Maybe<UserIngredientsMutationResponse>;
+  /** insert a single row into the table: "user_ingredients" */
+  insert_user_ingredients_one?: Maybe<UserIngredients>;
   /** insert data into the table: "users" */
   insert_users?: Maybe<UsersMutationResponse>;
   /** insert a single row into the table: "users" */
@@ -330,6 +374,12 @@ export type MutationRoot = {
   update_recipes_by_pk?: Maybe<Recipes>;
   /** update multiples rows of table: "recipes" */
   update_recipes_many?: Maybe<Array<Maybe<RecipesMutationResponse>>>;
+  /** update data of the table: "user_ingredients" */
+  update_user_ingredients?: Maybe<UserIngredientsMutationResponse>;
+  /** update single row of the table: "user_ingredients" */
+  update_user_ingredients_by_pk?: Maybe<UserIngredients>;
+  /** update multiples rows of table: "user_ingredients" */
+  update_user_ingredients_many?: Maybe<Array<Maybe<UserIngredientsMutationResponse>>>;
   /** update data of the table: "users" */
   update_users?: Maybe<UsersMutationResponse>;
   /** update single row of the table: "users" */
@@ -372,6 +422,18 @@ export type MutationRootDeleteRecipesArgs = {
 
 /** mutation root */
 export type MutationRootDeleteRecipesByPkArgs = {
+  id: Scalars['uuid']['input'];
+};
+
+
+/** mutation root */
+export type MutationRootDeleteUserIngredientsArgs = {
+  where: UserIngredientsBoolExp;
+};
+
+
+/** mutation root */
+export type MutationRootDeleteUserIngredientsByPkArgs = {
   id: Scalars['uuid']['input'];
 };
 
@@ -427,6 +489,20 @@ export type MutationRootInsertRecipesArgs = {
 export type MutationRootInsertRecipesOneArgs = {
   object: RecipesInsertInput;
   on_conflict?: InputMaybe<RecipesOnConflict>;
+};
+
+
+/** mutation root */
+export type MutationRootInsertUserIngredientsArgs = {
+  objects: Array<UserIngredientsInsertInput>;
+  on_conflict?: InputMaybe<UserIngredientsOnConflict>;
+};
+
+
+/** mutation root */
+export type MutationRootInsertUserIngredientsOneArgs = {
+  object: UserIngredientsInsertInput;
+  on_conflict?: InputMaybe<UserIngredientsOnConflict>;
 };
 
 
@@ -505,6 +581,26 @@ export type MutationRootUpdateRecipesManyArgs = {
 
 
 /** mutation root */
+export type MutationRootUpdateUserIngredientsArgs = {
+  _set?: InputMaybe<UserIngredientsSetInput>;
+  where: UserIngredientsBoolExp;
+};
+
+
+/** mutation root */
+export type MutationRootUpdateUserIngredientsByPkArgs = {
+  _set?: InputMaybe<UserIngredientsSetInput>;
+  pk_columns: UserIngredientsPkColumnsInput;
+};
+
+
+/** mutation root */
+export type MutationRootUpdateUserIngredientsManyArgs = {
+  updates: Array<UserIngredientsUpdates>;
+};
+
+
+/** mutation root */
 export type MutationRootUpdateUsersArgs = {
   _set?: InputMaybe<UsersSetInput>;
   where: UsersBoolExp;
@@ -559,6 +655,12 @@ export type QueryRoot = {
   recipes_aggregate: RecipesAggregate;
   /** fetch data from the table: "recipes" using primary key columns */
   recipes_by_pk?: Maybe<Recipes>;
+  /** An array relationship */
+  user_ingredients: Array<UserIngredients>;
+  /** An aggregate relationship */
+  user_ingredients_aggregate: UserIngredientsAggregate;
+  /** fetch data from the table: "user_ingredients" using primary key columns */
+  user_ingredients_by_pk?: Maybe<UserIngredients>;
   /** fetch data from the table: "users" */
   users: Array<Users>;
   /** fetch aggregated fields from the table: "users" */
@@ -634,6 +736,29 @@ export type QueryRootRecipesAggregateArgs = {
 
 
 export type QueryRootRecipesByPkArgs = {
+  id: Scalars['uuid']['input'];
+};
+
+
+export type QueryRootUserIngredientsArgs = {
+  distinct_on?: InputMaybe<Array<UserIngredientsSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<UserIngredientsOrderBy>>;
+  where?: InputMaybe<UserIngredientsBoolExp>;
+};
+
+
+export type QueryRootUserIngredientsAggregateArgs = {
+  distinct_on?: InputMaybe<Array<UserIngredientsSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<UserIngredientsOrderBy>>;
+  where?: InputMaybe<UserIngredientsBoolExp>;
+};
+
+
+export type QueryRootUserIngredientsByPkArgs = {
   id: Scalars['uuid']['input'];
 };
 
@@ -908,6 +1033,10 @@ export type Recipes = {
   has_protein: Scalars['Boolean']['output'];
   id: Scalars['uuid']['output'];
   image_url?: Maybe<Scalars['String']['output']>;
+  /** A computed field, executes function "missing_list" */
+  missing_ingredients?: Maybe<Array<RecipeIngredients>>;
+  /** A computed field, executes function "missing_count" */
+  missing_ingredients_count?: Maybe<Scalars['Int']['output']>;
   notes?: Maybe<Scalars['String']['output']>;
   /** An object relationship */
   owner?: Maybe<Users>;
@@ -923,6 +1052,23 @@ export type Recipes = {
   type: Scalars['recipe_type']['output'];
   updated_at: Scalars['timestamptz']['output'];
   video_url?: Maybe<Scalars['String']['output']>;
+};
+
+
+/** columns and relationships of "recipes" */
+export type RecipesMissingIngredientsArgs = {
+  args: MissingIngredientsRecipesArgs;
+  distinct_on?: InputMaybe<Array<RecipeIngredientsSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<RecipeIngredientsOrderBy>>;
+  where?: InputMaybe<RecipeIngredientsBoolExp>;
+};
+
+
+/** columns and relationships of "recipes" */
+export type RecipesMissingIngredientsCountArgs = {
+  args: MissingIngredientsCountRecipesArgs;
 };
 
 
@@ -982,9 +1128,17 @@ export type RecipesAggregateBoolExpCount = {
 /** aggregate fields of "recipes" */
 export type RecipesAggregateFields = {
   __typename?: 'recipes_aggregate_fields';
+  avg?: Maybe<RecipesAvgFields>;
   count: Scalars['Int']['output'];
   max?: Maybe<RecipesMaxFields>;
   min?: Maybe<RecipesMinFields>;
+  stddev?: Maybe<RecipesStddevFields>;
+  stddev_pop?: Maybe<RecipesStddevPopFields>;
+  stddev_samp?: Maybe<RecipesStddevSampFields>;
+  sum?: Maybe<RecipesSumFields>;
+  var_pop?: Maybe<RecipesVarPopFields>;
+  var_samp?: Maybe<RecipesVarSampFields>;
+  variance?: Maybe<RecipesVarianceFields>;
 };
 
 
@@ -1006,6 +1160,19 @@ export type RecipesArrRelInsertInput = {
   data: Array<RecipesInsertInput>;
   /** upsert condition */
   on_conflict?: InputMaybe<RecipesOnConflict>;
+};
+
+/** aggregate avg on columns */
+export type RecipesAvgFields = {
+  __typename?: 'recipes_avg_fields';
+  /** A computed field, executes function "missing_count" */
+  missing_ingredients_count?: Maybe<Scalars['Int']['output']>;
+};
+
+
+/** aggregate avg on columns */
+export type RecipesAvgFieldsMissingIngredientsCountArgs = {
+  args: MissingIngredientsCountRecipesArgs;
 };
 
 /** Boolean expression to filter rows from the table "recipes". All fields are combined with a logical 'AND'. */
@@ -1070,6 +1237,8 @@ export type RecipesMaxFields = {
   created_at?: Maybe<Scalars['timestamptz']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
   image_url?: Maybe<Scalars['String']['output']>;
+  /** A computed field, executes function "missing_count" */
+  missing_ingredients_count?: Maybe<Scalars['Int']['output']>;
   notes?: Maybe<Scalars['String']['output']>;
   owner_id?: Maybe<Scalars['uuid']['output']>;
   portion_size?: Maybe<Scalars['String']['output']>;
@@ -1079,6 +1248,12 @@ export type RecipesMaxFields = {
   type?: Maybe<Scalars['recipe_type']['output']>;
   updated_at?: Maybe<Scalars['timestamptz']['output']>;
   video_url?: Maybe<Scalars['String']['output']>;
+};
+
+
+/** aggregate max on columns */
+export type RecipesMaxFieldsMissingIngredientsCountArgs = {
+  args: MissingIngredientsCountRecipesArgs;
 };
 
 /** order by max() on columns of table "recipes" */
@@ -1107,6 +1282,8 @@ export type RecipesMinFields = {
   created_at?: Maybe<Scalars['timestamptz']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
   image_url?: Maybe<Scalars['String']['output']>;
+  /** A computed field, executes function "missing_count" */
+  missing_ingredients_count?: Maybe<Scalars['Int']['output']>;
   notes?: Maybe<Scalars['String']['output']>;
   owner_id?: Maybe<Scalars['uuid']['output']>;
   portion_size?: Maybe<Scalars['String']['output']>;
@@ -1116,6 +1293,12 @@ export type RecipesMinFields = {
   type?: Maybe<Scalars['recipe_type']['output']>;
   updated_at?: Maybe<Scalars['timestamptz']['output']>;
   video_url?: Maybe<Scalars['String']['output']>;
+};
+
+
+/** aggregate min on columns */
+export type RecipesMinFieldsMissingIngredientsCountArgs = {
+  args: MissingIngredientsCountRecipesArgs;
 };
 
 /** order by min() on columns of table "recipes" */
@@ -1250,6 +1433,45 @@ export type RecipesSetInput = {
   video_url?: InputMaybe<Scalars['String']['input']>;
 };
 
+/** aggregate stddev on columns */
+export type RecipesStddevFields = {
+  __typename?: 'recipes_stddev_fields';
+  /** A computed field, executes function "missing_count" */
+  missing_ingredients_count?: Maybe<Scalars['Int']['output']>;
+};
+
+
+/** aggregate stddev on columns */
+export type RecipesStddevFieldsMissingIngredientsCountArgs = {
+  args: MissingIngredientsCountRecipesArgs;
+};
+
+/** aggregate stddev_pop on columns */
+export type RecipesStddevPopFields = {
+  __typename?: 'recipes_stddev_pop_fields';
+  /** A computed field, executes function "missing_count" */
+  missing_ingredients_count?: Maybe<Scalars['Int']['output']>;
+};
+
+
+/** aggregate stddev_pop on columns */
+export type RecipesStddevPopFieldsMissingIngredientsCountArgs = {
+  args: MissingIngredientsCountRecipesArgs;
+};
+
+/** aggregate stddev_samp on columns */
+export type RecipesStddevSampFields = {
+  __typename?: 'recipes_stddev_samp_fields';
+  /** A computed field, executes function "missing_count" */
+  missing_ingredients_count?: Maybe<Scalars['Int']['output']>;
+};
+
+
+/** aggregate stddev_samp on columns */
+export type RecipesStddevSampFieldsMissingIngredientsCountArgs = {
+  args: MissingIngredientsCountRecipesArgs;
+};
+
 /** Streaming cursor of the table "recipes" */
 export type RecipesStreamCursorInput = {
   /** Stream column input with initial value */
@@ -1275,6 +1497,19 @@ export type RecipesStreamCursorValueInput = {
   type?: InputMaybe<Scalars['recipe_type']['input']>;
   updated_at?: InputMaybe<Scalars['timestamptz']['input']>;
   video_url?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** aggregate sum on columns */
+export type RecipesSumFields = {
+  __typename?: 'recipes_sum_fields';
+  /** A computed field, executes function "missing_count" */
+  missing_ingredients_count?: Maybe<Scalars['Int']['output']>;
+};
+
+
+/** aggregate sum on columns */
+export type RecipesSumFieldsMissingIngredientsCountArgs = {
+  args: MissingIngredientsCountRecipesArgs;
 };
 
 /** update columns of table "recipes" */
@@ -1318,6 +1553,45 @@ export type RecipesUpdates = {
   where: RecipesBoolExp;
 };
 
+/** aggregate var_pop on columns */
+export type RecipesVarPopFields = {
+  __typename?: 'recipes_var_pop_fields';
+  /** A computed field, executes function "missing_count" */
+  missing_ingredients_count?: Maybe<Scalars['Int']['output']>;
+};
+
+
+/** aggregate var_pop on columns */
+export type RecipesVarPopFieldsMissingIngredientsCountArgs = {
+  args: MissingIngredientsCountRecipesArgs;
+};
+
+/** aggregate var_samp on columns */
+export type RecipesVarSampFields = {
+  __typename?: 'recipes_var_samp_fields';
+  /** A computed field, executes function "missing_count" */
+  missing_ingredients_count?: Maybe<Scalars['Int']['output']>;
+};
+
+
+/** aggregate var_samp on columns */
+export type RecipesVarSampFieldsMissingIngredientsCountArgs = {
+  args: MissingIngredientsCountRecipesArgs;
+};
+
+/** aggregate variance on columns */
+export type RecipesVarianceFields = {
+  __typename?: 'recipes_variance_fields';
+  /** A computed field, executes function "missing_count" */
+  missing_ingredients_count?: Maybe<Scalars['Int']['output']>;
+};
+
+
+/** aggregate variance on columns */
+export type RecipesVarianceFieldsMissingIngredientsCountArgs = {
+  args: MissingIngredientsCountRecipesArgs;
+};
+
 export type SubscriptionRoot = {
   __typename?: 'subscription_root';
   /** fetch data from the table: "ingredients" */
@@ -1344,6 +1618,14 @@ export type SubscriptionRoot = {
   recipes_by_pk?: Maybe<Recipes>;
   /** fetch data from the table in a streaming manner: "recipes" */
   recipes_stream: Array<Recipes>;
+  /** An array relationship */
+  user_ingredients: Array<UserIngredients>;
+  /** An aggregate relationship */
+  user_ingredients_aggregate: UserIngredientsAggregate;
+  /** fetch data from the table: "user_ingredients" using primary key columns */
+  user_ingredients_by_pk?: Maybe<UserIngredients>;
+  /** fetch data from the table in a streaming manner: "user_ingredients" */
+  user_ingredients_stream: Array<UserIngredients>;
   /** fetch data from the table: "users" */
   users: Array<Users>;
   /** fetch aggregated fields from the table: "users" */
@@ -1446,6 +1728,36 @@ export type SubscriptionRootRecipesStreamArgs = {
 };
 
 
+export type SubscriptionRootUserIngredientsArgs = {
+  distinct_on?: InputMaybe<Array<UserIngredientsSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<UserIngredientsOrderBy>>;
+  where?: InputMaybe<UserIngredientsBoolExp>;
+};
+
+
+export type SubscriptionRootUserIngredientsAggregateArgs = {
+  distinct_on?: InputMaybe<Array<UserIngredientsSelectColumn>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<UserIngredientsOrderBy>>;
+  where?: InputMaybe<UserIngredientsBoolExp>;
+};
+
+
+export type SubscriptionRootUserIngredientsByPkArgs = {
+  id: Scalars['uuid']['input'];
+};
+
+
+export type SubscriptionRootUserIngredientsStreamArgs = {
+  batch_size: Scalars['Int']['input'];
+  cursor: Array<InputMaybe<UserIngredientsStreamCursorInput>>;
+  where?: InputMaybe<UserIngredientsBoolExp>;
+};
+
+
 export type SubscriptionRootUsersArgs = {
   distinct_on?: InputMaybe<Array<UsersSelectColumn>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -1488,10 +1800,217 @@ export type TimestamptzComparisonExp = {
   _nin?: InputMaybe<Array<Scalars['timestamptz']['input']>>;
 };
 
+/** columns and relationships of "user_ingredients" */
+export type UserIngredients = {
+  __typename?: 'user_ingredients';
+  amount?: Maybe<Scalars['String']['output']>;
+  id: Scalars['uuid']['output'];
+  /** An object relationship */
+  ingredient: Ingredients;
+  ingredient_id: Scalars['uuid']['output'];
+  user_id: Scalars['uuid']['output'];
+};
+
+/** aggregated selection of "user_ingredients" */
+export type UserIngredientsAggregate = {
+  __typename?: 'user_ingredients_aggregate';
+  aggregate?: Maybe<UserIngredientsAggregateFields>;
+  nodes: Array<UserIngredients>;
+};
+
+export type UserIngredientsAggregateBoolExp = {
+  count?: InputMaybe<UserIngredientsAggregateBoolExpCount>;
+};
+
+export type UserIngredientsAggregateBoolExpCount = {
+  arguments?: InputMaybe<Array<UserIngredientsSelectColumn>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+  filter?: InputMaybe<UserIngredientsBoolExp>;
+  predicate: IntComparisonExp;
+};
+
+/** aggregate fields of "user_ingredients" */
+export type UserIngredientsAggregateFields = {
+  __typename?: 'user_ingredients_aggregate_fields';
+  count: Scalars['Int']['output'];
+  max?: Maybe<UserIngredientsMaxFields>;
+  min?: Maybe<UserIngredientsMinFields>;
+};
+
+
+/** aggregate fields of "user_ingredients" */
+export type UserIngredientsAggregateFieldsCountArgs = {
+  columns?: InputMaybe<Array<UserIngredientsSelectColumn>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** order by aggregate values of table "user_ingredients" */
+export type UserIngredientsAggregateOrderBy = {
+  count?: InputMaybe<OrderBy>;
+  max?: InputMaybe<UserIngredientsMaxOrderBy>;
+  min?: InputMaybe<UserIngredientsMinOrderBy>;
+};
+
+/** input type for inserting array relation for remote table "user_ingredients" */
+export type UserIngredientsArrRelInsertInput = {
+  data: Array<UserIngredientsInsertInput>;
+  /** upsert condition */
+  on_conflict?: InputMaybe<UserIngredientsOnConflict>;
+};
+
+/** Boolean expression to filter rows from the table "user_ingredients". All fields are combined with a logical 'AND'. */
+export type UserIngredientsBoolExp = {
+  _and?: InputMaybe<Array<UserIngredientsBoolExp>>;
+  _not?: InputMaybe<UserIngredientsBoolExp>;
+  _or?: InputMaybe<Array<UserIngredientsBoolExp>>;
+  amount?: InputMaybe<StringComparisonExp>;
+  id?: InputMaybe<UuidComparisonExp>;
+  ingredient?: InputMaybe<IngredientsBoolExp>;
+  ingredient_id?: InputMaybe<UuidComparisonExp>;
+  user_id?: InputMaybe<UuidComparisonExp>;
+};
+
+/** unique or primary key constraints on table "user_ingredients" */
+export enum UserIngredientsConstraint {
+  /** unique or primary key constraint on columns "id" */
+  USER_INGREDIENTS_PKEY = 'user_ingredients_pkey',
+  /** unique or primary key constraint on columns "user_id", "ingredient_id" */
+  USER_INGREDIENTS_USER_ID_INGREDIENT_ID_KEY = 'user_ingredients_user_id_ingredient_id_key'
+}
+
+/** input type for inserting data into table "user_ingredients" */
+export type UserIngredientsInsertInput = {
+  amount?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  ingredient?: InputMaybe<IngredientsObjRelInsertInput>;
+  ingredient_id?: InputMaybe<Scalars['uuid']['input']>;
+  user_id?: InputMaybe<Scalars['uuid']['input']>;
+};
+
+/** aggregate max on columns */
+export type UserIngredientsMaxFields = {
+  __typename?: 'user_ingredients_max_fields';
+  amount?: Maybe<Scalars['String']['output']>;
+  id?: Maybe<Scalars['uuid']['output']>;
+  ingredient_id?: Maybe<Scalars['uuid']['output']>;
+  user_id?: Maybe<Scalars['uuid']['output']>;
+};
+
+/** order by max() on columns of table "user_ingredients" */
+export type UserIngredientsMaxOrderBy = {
+  amount?: InputMaybe<OrderBy>;
+  id?: InputMaybe<OrderBy>;
+  ingredient_id?: InputMaybe<OrderBy>;
+  user_id?: InputMaybe<OrderBy>;
+};
+
+/** aggregate min on columns */
+export type UserIngredientsMinFields = {
+  __typename?: 'user_ingredients_min_fields';
+  amount?: Maybe<Scalars['String']['output']>;
+  id?: Maybe<Scalars['uuid']['output']>;
+  ingredient_id?: Maybe<Scalars['uuid']['output']>;
+  user_id?: Maybe<Scalars['uuid']['output']>;
+};
+
+/** order by min() on columns of table "user_ingredients" */
+export type UserIngredientsMinOrderBy = {
+  amount?: InputMaybe<OrderBy>;
+  id?: InputMaybe<OrderBy>;
+  ingredient_id?: InputMaybe<OrderBy>;
+  user_id?: InputMaybe<OrderBy>;
+};
+
+/** response of any mutation on the table "user_ingredients" */
+export type UserIngredientsMutationResponse = {
+  __typename?: 'user_ingredients_mutation_response';
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars['Int']['output'];
+  /** data from the rows affected by the mutation */
+  returning: Array<UserIngredients>;
+};
+
+/** on_conflict condition type for table "user_ingredients" */
+export type UserIngredientsOnConflict = {
+  constraint: UserIngredientsConstraint;
+  update_columns?: Array<UserIngredientsUpdateColumn>;
+  where?: InputMaybe<UserIngredientsBoolExp>;
+};
+
+/** Ordering options when selecting data from "user_ingredients". */
+export type UserIngredientsOrderBy = {
+  amount?: InputMaybe<OrderBy>;
+  id?: InputMaybe<OrderBy>;
+  ingredient?: InputMaybe<IngredientsOrderBy>;
+  ingredient_id?: InputMaybe<OrderBy>;
+  user_id?: InputMaybe<OrderBy>;
+};
+
+/** primary key columns input for table: user_ingredients */
+export type UserIngredientsPkColumnsInput = {
+  id: Scalars['uuid']['input'];
+};
+
+/** select columns of table "user_ingredients" */
+export enum UserIngredientsSelectColumn {
+  /** column name */
+  AMOUNT = 'amount',
+  /** column name */
+  ID = 'id',
+  /** column name */
+  INGREDIENT_ID = 'ingredient_id',
+  /** column name */
+  USER_ID = 'user_id'
+}
+
+/** input type for updating data in table "user_ingredients" */
+export type UserIngredientsSetInput = {
+  amount?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  ingredient_id?: InputMaybe<Scalars['uuid']['input']>;
+  user_id?: InputMaybe<Scalars['uuid']['input']>;
+};
+
+/** Streaming cursor of the table "user_ingredients" */
+export type UserIngredientsStreamCursorInput = {
+  /** Stream column input with initial value */
+  initial_value: UserIngredientsStreamCursorValueInput;
+  /** cursor ordering */
+  ordering?: InputMaybe<CursorOrdering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type UserIngredientsStreamCursorValueInput = {
+  amount?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  ingredient_id?: InputMaybe<Scalars['uuid']['input']>;
+  user_id?: InputMaybe<Scalars['uuid']['input']>;
+};
+
+/** update columns of table "user_ingredients" */
+export enum UserIngredientsUpdateColumn {
+  /** column name */
+  AMOUNT = 'amount',
+  /** column name */
+  ID = 'id',
+  /** column name */
+  INGREDIENT_ID = 'ingredient_id',
+  /** column name */
+  USER_ID = 'user_id'
+}
+
+export type UserIngredientsUpdates = {
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<UserIngredientsSetInput>;
+  /** filter the rows which have to be updated */
+  where: UserIngredientsBoolExp;
+};
+
 /** columns and relationships of "users" */
 export type Users = {
   __typename?: 'users';
   created_at: Scalars['timestamptz']['output'];
+  deleted_at?: Maybe<Scalars['timestamptz']['output']>;
   email: Scalars['String']['output'];
   firebase_uid?: Maybe<Scalars['String']['output']>;
   id: Scalars['uuid']['output'];
@@ -1550,6 +2069,7 @@ export type UsersBoolExp = {
   _not?: InputMaybe<UsersBoolExp>;
   _or?: InputMaybe<Array<UsersBoolExp>>;
   created_at?: InputMaybe<TimestamptzComparisonExp>;
+  deleted_at?: InputMaybe<TimestamptzComparisonExp>;
   email?: InputMaybe<StringComparisonExp>;
   firebase_uid?: InputMaybe<StringComparisonExp>;
   id?: InputMaybe<UuidComparisonExp>;
@@ -1569,6 +2089,7 @@ export enum UsersConstraint {
 /** input type for inserting data into table "users" */
 export type UsersInsertInput = {
   created_at?: InputMaybe<Scalars['timestamptz']['input']>;
+  deleted_at?: InputMaybe<Scalars['timestamptz']['input']>;
   email?: InputMaybe<Scalars['String']['input']>;
   firebase_uid?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
@@ -1580,6 +2101,7 @@ export type UsersInsertInput = {
 export type UsersMaxFields = {
   __typename?: 'users_max_fields';
   created_at?: Maybe<Scalars['timestamptz']['output']>;
+  deleted_at?: Maybe<Scalars['timestamptz']['output']>;
   email?: Maybe<Scalars['String']['output']>;
   firebase_uid?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
@@ -1590,6 +2112,7 @@ export type UsersMaxFields = {
 export type UsersMinFields = {
   __typename?: 'users_min_fields';
   created_at?: Maybe<Scalars['timestamptz']['output']>;
+  deleted_at?: Maybe<Scalars['timestamptz']['output']>;
   email?: Maybe<Scalars['String']['output']>;
   firebase_uid?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
@@ -1622,6 +2145,7 @@ export type UsersOnConflict = {
 /** Ordering options when selecting data from "users". */
 export type UsersOrderBy = {
   created_at?: InputMaybe<OrderBy>;
+  deleted_at?: InputMaybe<OrderBy>;
   email?: InputMaybe<OrderBy>;
   firebase_uid?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
@@ -1639,6 +2163,8 @@ export enum UsersSelectColumn {
   /** column name */
   CREATED_AT = 'created_at',
   /** column name */
+  DELETED_AT = 'deleted_at',
+  /** column name */
   EMAIL = 'email',
   /** column name */
   FIREBASE_UID = 'firebase_uid',
@@ -1651,6 +2177,7 @@ export enum UsersSelectColumn {
 /** input type for updating data in table "users" */
 export type UsersSetInput = {
   created_at?: InputMaybe<Scalars['timestamptz']['input']>;
+  deleted_at?: InputMaybe<Scalars['timestamptz']['input']>;
   email?: InputMaybe<Scalars['String']['input']>;
   firebase_uid?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
@@ -1668,6 +2195,7 @@ export type UsersStreamCursorInput = {
 /** Initial value of the column from where the streaming should start */
 export type UsersStreamCursorValueInput = {
   created_at?: InputMaybe<Scalars['timestamptz']['input']>;
+  deleted_at?: InputMaybe<Scalars['timestamptz']['input']>;
   email?: InputMaybe<Scalars['String']['input']>;
   firebase_uid?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
@@ -1678,6 +2206,8 @@ export type UsersStreamCursorValueInput = {
 export enum UsersUpdateColumn {
   /** column name */
   CREATED_AT = 'created_at',
+  /** column name */
+  DELETED_AT = 'deleted_at',
   /** column name */
   EMAIL = 'email',
   /** column name */
@@ -1758,7 +2288,7 @@ export type GetRecipesQueryVariables = Exact<{
 }>;
 
 
-export type GetRecipesQuery = { __typename?: 'query_root', recipes: Array<{ __typename?: 'recipes', steps: Array<string>, tags: Array<any>, owner_id?: string | null, id: string, title: string, type: any, notes?: string | null, complexity: any, portion_size?: string | null, cooking_time?: string | null, video_url?: string | null, image_url?: string | null, recipe_ingredients: Array<{ __typename?: 'recipe_ingredients', amount?: string | null, ingredient: { __typename?: 'ingredients', name: string } }> }> };
+export type GetRecipesQuery = { __typename?: 'query_root', recipes: Array<{ __typename?: 'recipes', missing_ingredients_count?: number | null, steps: Array<string>, tags: Array<any>, owner_id?: string | null, id: string, title: string, type: any, notes?: string | null, complexity: any, portion_size?: string | null, cooking_time?: string | null, video_url?: string | null, image_url?: string | null, recipe_ingredients: Array<{ __typename?: 'recipe_ingredients', amount?: string | null, ingredient: { __typename?: 'ingredients', name: string } }> }> };
 
 export type GetUserByEmailQueryVariables = Exact<{
   email: Scalars['String']['input'];
@@ -1993,6 +2523,7 @@ export const GetRecipesDocument = gql`
     query GetRecipes($owner_id: uuid!) {
   recipes(where: {owner_id: {_eq: $owner_id}}, order_by: {created_at: desc}) {
     ...Recipe
+    missing_ingredients_count(args: {user_id: $owner_id})
   }
 }
     ${RecipeFragmentDoc}`;

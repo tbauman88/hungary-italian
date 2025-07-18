@@ -4,5 +4,6 @@ query GetRecipes($owner_id: uuid!) {
         order_by: { created_at: desc }
     ) {
         ...Recipe
+        missing_ingredients_count(args: { user_id: $owner_id })
     }
 }

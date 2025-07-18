@@ -1,6 +1,29 @@
-import { ClockIcon, HeartIcon, UserGroupIcon, VideoCameraIcon } from '@heroicons/react/24/outline'
-import { Link } from 'react-router-dom'
-import { type Recipes } from '../generated/graphql'
+import { ClockIcon, ShoppingBagIcon, UserGroupIcon, VideoCameraIcon } from '@heroicons/react/24/outline';
+import { Link } from 'react-router-dom';
+import { type Recipes } from '../generated/graphql';
+
+type ProgressStatus = 'complete' | 'almost' | 'mostly' | 'missing';
+
+interface ProgressData {
+  percentage: number;
+  color: string;
+  text: string;
+  status: ProgressStatus;
+}
+
+const PROGRESS_CONFIG: Record<ProgressStatus, Omit<ProgressData, 'percentage' | 'status'>> = {
+  complete: { color: 'bg-secondary-500', text: 'All ingredients available' },
+  almost: { color: 'bg-tertiary-500', text: 'Almost ready to cook!' },
+  mostly: { color: 'bg-quaternary-500', text: 'Most ingredients available' },
+  missing: { color: 'bg-quinary-500', text: 'Need to shop for ingredients' }
+};
+
+const getProgressStatus = (percentage: number, hasMissingIngredients: boolean): ProgressStatus => {
+  if (!hasMissingIngredients) return 'complete';
+  if (percentage >= 80) return 'almost';
+  if (percentage >= 60) return 'mostly';
+  return 'missing';
+};
 
 export const RecipeCard = ({ recipe }: { recipe: Recipes }) => {
   const recipeLink = `/recipe/${recipe.id}`
@@ -10,6 +33,18 @@ export const RecipeCard = ({ recipe }: { recipe: Recipes }) => {
     e.stopPropagation()
     window.open(videoUrl, '_blank', 'noopener,noreferrer')
   }
+
+  const missingIngredientsCount = recipe.recipe_ingredients.length - (recipe.missing_ingredients_count ?? 0);
+  const hasMissingIngredients = Boolean(recipe.missing_ingredients_count && recipe.missing_ingredients_count > 0);
+  const ingredientCount = recipe.recipe_ingredients.length;
+  const availablePercentage = hasMissingIngredients ? (missingIngredientsCount / ingredientCount) * 100 : 100;
+
+  const status = getProgressStatus(availablePercentage, hasMissingIngredients);
+  const progress: ProgressData = {
+    percentage: Math.round(availablePercentage),
+    status,
+    ...PROGRESS_CONFIG[status]
+  };
 
   return (
     <article className="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-lg active:shadow-xl transition-all duration-300 border border-gray-100 group">
@@ -41,41 +76,62 @@ export const RecipeCard = ({ recipe }: { recipe: Recipes }) => {
       </Link>
 
       <div className="p-5 sm:p-6">
-        <div className="flex items-center justify-between mb-4">
-          <span className="text-xs text-gray-500 capitalize bg-gray-100 px-2.5 py-1 rounded-lg">
-            {recipe.complexity}
-          </span>
-          <button className="text-gray-400 hover:text-red-500 transition-colors p-1.5 rounded-lg hover:bg-red-50">
-            <HeartIcon className="w-5 h-5" />
-          </button>
-        </div>
-
         <Link to={recipeLink}>
           <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-3 line-clamp-2 leading-tight hover:text-primary-600 transition-colors group-hover:text-primary-600">
             {recipe.title}
           </h3>
         </Link>
 
-        <p className="text-gray-600 text-sm sm:text-base mb-5 line-clamp-2 leading-relaxed">
-          {recipe.notes}
-        </p>
-
-        <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-          <div className="flex items-center space-x-2 text-gray-500">
-            <div className="bg-gray-100 p-1.5 rounded-lg">
-              <ClockIcon className="w-4 h-4 flex-shrink-0" />
+        <div className="mb-4">
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center space-x-2">
+              <ShoppingBagIcon className="w-4 h-4 text-gray-600" />
+              <span className="text-sm font-medium text-gray-700">
+                {hasMissingIngredients ? (
+                  <>
+                    <span className="font-semibold">{missingIngredientsCount}</span>
+                    <span className="text-gray-500">/</span>
+                    <span>{ingredientCount}</span>
+                  </>
+                ) : (
+                  <span className="font-semibold">{ingredientCount}</span>
+                )}
+                <span className="text-gray-500 ml-1">ingredients</span>
+              </span>
             </div>
-            <span className="text-sm font-medium">{recipe.cooking_time || '30 min'}</span>
+            <span className="text-xs font-medium text-gray-500">
+              {progress.percentage}%
+            </span>
+          </div>
+
+          <div className="w-full bg-gray-200 rounded-full h-2.5 mb-2">
+            <div
+              className={`h-2.5 rounded-full transition-all duration-500 ease-out ${progress.color}`}
+              style={{ width: `${availablePercentage}%` }}
+            />
+          </div>
+
+          <p className="text-xs text-gray-600 font-medium">
+            {progress.text}
+          </p>
+        </div>
+
+        <div className="flex flex-wrap gap-2 pt-3 border-t border-gray-100">
+          <div className="flex items-center space-x-1.5 bg-gray-100 px-2.5 py-1.5 rounded-lg">
+            <ClockIcon className="w-3.5 h-3.5 text-gray-600 flex-shrink-0" />
+            <span className="text-xs font-medium text-gray-700">{recipe.cooking_time || '30 min'}</span>
           </div>
 
           {recipe.portion_size && (
-            <div className="flex items-center space-x-2 text-gray-500">
-              <div className="bg-gray-100 p-1.5 rounded-lg">
-                <UserGroupIcon className="w-4 h-4 flex-shrink-0" />
-              </div>
-              <span className="text-sm font-medium">{recipe.portion_size}</span>
+            <div className="flex items-center space-x-1.5 bg-gray-100 px-2.5 py-1.5 rounded-lg">
+              <UserGroupIcon className="w-3.5 h-3.5 text-gray-600 flex-shrink-0" />
+              <span className="text-xs font-medium text-gray-700">{recipe.portion_size}</span>
             </div>
           )}
+
+          <div className="flex items-center space-x-1.5 bg-gray-100 px-2.5 py-1.5 rounded-lg">
+            <span className="text-xs font-medium text-gray-700 capitalize">{recipe.complexity}</span>
+          </div>
         </div>
       </div>
     </article>
