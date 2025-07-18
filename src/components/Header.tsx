@@ -63,7 +63,7 @@ export const Header = () => {
 
                 <Link
                   to="/add-recipe"
-                  className="flex items-center space-x-2 bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 active:from-primary-800 active:to-primary-900 text-white font-semibold px-4 py-3 sm:px-6 sm:py-3.5 rounded-xl transition-all duration-200 text-sm shadow-lg hover:shadow-xl transform hover:scale-105"
+                  className="flex items-center space-x-2 bg-primary-600 hover:bg-primary-700 text-white font-semibold px-4 py-3 sm:px-6 sm:py-3.5 rounded-xl transition-colors duration-200 text-sm shadow-md hover:shadow-lg"
                 >
                   <PlusIcon className="w-5 h-5 sm:w-6 sm:h-6" />
                   <span className="hidden sm:inline">Add Recipe</span>
