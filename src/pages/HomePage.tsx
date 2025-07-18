@@ -65,7 +65,7 @@ export const HomePage = () => {
   const hasRecipes = data?.recipes?.length !== 0
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 relative">
       {hasRecipes && (
         <>
           <div className="text-center space-y-3 px-2 py-4 sm:py-8">
@@ -95,7 +95,7 @@ export const HomePage = () => {
           </div>
 
           {filteredAndSortedRecipes.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 px-4 sm:px-0">
               {filteredAndSortedRecipes.map((recipe: Recipe) => (
                 <RecipeCard key={recipe.id} recipe={recipe as any} />
               ))}
@@ -109,6 +109,13 @@ export const HomePage = () => {
       {!hasRecipes && (
         <CallToAction />
       )}
+
+      <Link
+        to="/add-recipe"
+        className="fixed bottom-6 right-6 sm:hidden bg-primary-600 hover:bg-primary-700 text-white w-14 h-14 rounded-full shadow-lg hover:shadow-xl flex items-center justify-center transition-all duration-200 transform hover:scale-110 z-40"
+      >
+        <PlusIcon className="w-6 h-6" />
+      </Link>
     </div>
   )
 }
