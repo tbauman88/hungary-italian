@@ -15,13 +15,57 @@ const tabs: { label: string; value: Tabs }[] = [
 export const ProfileSettingsPage: React.FC = () => {
   const { currentUser, updateEmail, updatePassword } = useAuth()
   const [activeTab, setActiveTab] = useState<Tabs>(Tabs.EMAIL)
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
-  const handleEmailUpdate = async (data: { newEmail: string; currentPassword: string }) => {
-    await updateEmail(data.newEmail, data.currentPassword)
+  const handleEmailUpdate = async (data: { newEmail: string; currentPassword: string }): Promise<string | null> => {
+    setIsLoading(true)
+    setError(null)
+
+    try {
+      await updateEmail(data.newEmail, data.currentPassword)
+      return null // Success
+    } catch (error: any) {
+      const errorMessage = error?.message || 'An error occurred. Please try again.'
+
+      if (errorMessage.includes('wrong-password') || errorMessage.includes('invalid-credential')) {
+        return 'Incorrect current password. Please try again.'
+      } else if (errorMessage.includes('email-already-in-use')) {
+        return 'This email address is already in use by another account.'
+      } else if (errorMessage.includes('invalid-email')) {
+        return 'Please enter a valid email address.'
+      } else if (errorMessage.includes('requires-recent-login')) {
+        return 'For security reasons, please log out and log back in before changing your email.'
+      } else {
+        return errorMessage
+      }
+    } finally {
+      setIsLoading(false)
+    }
   }
 
-  const handlePasswordUpdate = async (data: { newPassword: string; currentPassword: string }) => {
-    await updatePassword(data.newPassword, data.currentPassword)
+  const handlePasswordUpdate = async (data: { newPassword: string; currentPassword: string }): Promise<string | null> => {
+    setIsLoading(true)
+    setError(null)
+
+    try {
+      await updatePassword(data.newPassword, data.currentPassword)
+      return null // Success
+    } catch (error: any) {
+      const errorMessage = error?.message || 'An error occurred. Please try again.'
+
+      if (errorMessage.includes('wrong-password') || errorMessage.includes('invalid-credential')) {
+        return 'Incorrect current password. Please try again.'
+      } else if (errorMessage.includes('weak-password')) {
+        return 'Password is too weak. Please choose a stronger password.'
+      } else if (errorMessage.includes('requires-recent-login')) {
+        return 'For security reasons, please log out and log back in before changing your password.'
+      } else {
+        return errorMessage
+      }
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -57,6 +101,8 @@ export const ProfileSettingsPage: React.FC = () => {
               type="email"
               currentEmail={currentUser?.email || undefined}
               onSubmit={handleEmailUpdate}
+              isLoading={isLoading}
+              error={error}
             />
           )}
 
@@ -64,6 +110,8 @@ export const ProfileSettingsPage: React.FC = () => {
             <ProfileForm
               type="password"
               onSubmit={handlePasswordUpdate}
+              isLoading={isLoading}
+              error={error}
             />
           )}
         </div>

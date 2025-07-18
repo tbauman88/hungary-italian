@@ -1,8 +1,10 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import React, { useActionState } from 'react'
+import React from 'react'
 import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
 import { z } from 'zod'
+import { FormContainer } from './FormContainer'
+import { FormInput } from './FormInput'
 
 const authSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
@@ -13,57 +15,23 @@ type AuthFormData = z.infer<typeof authSchema>
 
 interface AuthFormProps {
   mode: 'login' | 'signup'
-  onSubmit: (email: string, password: string) => Promise<void>
+  onSubmit: (email: string, password: string) => Promise<string | null>
+  isLoading?: boolean
+  error?: string | null
 }
 
-export const AuthForm: React.FC<AuthFormProps> = ({ mode, onSubmit }) => {
+export const AuthForm: React.FC<AuthFormProps> = ({ mode, onSubmit, isLoading, error }) => {
   const {
     register,
-    formState: { errors },
+    handleSubmit,
+    formState: { errors, isValid },
   } = useForm<AuthFormData>({
     resolver: zodResolver(authSchema),
+    mode: 'onChange'
   })
 
-  const [error, submitAction, isPending] = useActionState(
-    async (previousState: string | null, formData: FormData) => {
-      const email = formData.get('email') as string
-      const password = formData.get('password') as string
-
-      try {
-        await onSubmit(email, password)
-        return null
-      } catch (error: any) {
-        const errorMessage = error?.message || 'An error occurred. Please try again.'
-
-        if (errorMessage.includes('user-not-found')) {
-          return 'No account found with this email address.'
-        } else if (errorMessage.includes('wrong-password')) {
-          return 'Incorrect password. Please try again.'
-        } else if (errorMessage.includes('email-already-in-use')) {
-          return 'An account with this email already exists.'
-        } else if (errorMessage.includes('weak-password')) {
-          return 'Password is too weak. Please choose a stronger password.'
-        } else if (errorMessage.includes('invalid-email')) {
-          return 'Please enter a valid email address.'
-        } else {
-          return errorMessage
-        }
-      }
-    },
-    null
-  )
-
-  const enhancedSubmitAction = async (formData: FormData) => {
-    const email = formData.get('email') as string
-    const password = formData.get('password') as string
-
-    const validation = authSchema.safeParse({ email, password })
-
-    if (!validation.success) {
-      return
-    }
-
-    await submitAction(formData)
+  const handleFormSubmit = async (data: AuthFormData) => {
+    return await onSubmit(data.email, data.password)
   }
 
   const isLogin = mode === 'login'
@@ -84,64 +52,44 @@ export const AuthForm: React.FC<AuthFormProps> = ({ mode, onSubmit }) => {
           </h2>
         </div>
 
-        <form className="mt-8 space-y-6" action={enhancedSubmitAction}>
-          <div className="rounded-md shadow-sm space-y-4">
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                Email address
-              </label>
-              <input
-                {...register('email')}
-                name="email"
-                type="email"
-                autoComplete="email"
-                required
-                className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 focus:z-10 sm:text-sm"
-                placeholder="Email address"
-              />
-              {errors.email && (
-                <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
-              )}
-            </div>
+        <FormContainer
+          title=""
+          onSubmit={handleSubmit(handleFormSubmit)}
+          submitText={buttonText}
+          isLoading={isLoading}
+          isValid={isValid}
+          error={error}
+        >
+          {/* Hidden username field for accessibility */}
+          <input
+            type="text"
+            name="username"
+            autoComplete="username"
+            style={{ display: 'none' }}
+            readOnly
+          />
 
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                Password
-              </label>
-              <input
-                {...register('password')}
-                name="password"
-                type="password"
-                autoComplete={isLogin ? 'current-password' : 'new-password'}
-                required
-                className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 focus:z-10 sm:text-sm"
-                placeholder="Password"
-              />
-              {errors.password && (
-                <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>
-              )}
-            </div>
-          </div>
+          <FormInput
+            {...register('email')}
+            name="email"
+            label="Email address"
+            type="email"
+            autoComplete="email"
+            placeholder="Enter your email"
+            error={errors.email}
+            required
+          />
 
-          {error && (
-            <div className="rounded-md bg-red-50 p-4">
-              <div className="text-sm text-red-800">{error}</div>
-            </div>
-          )}
-
-          <div>
-            <button
-              type="submit"
-              disabled={isPending}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {isPending ? (
-                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-              ) : (
-                buttonText
-              )}
-            </button>
-          </div>
+          <FormInput
+            {...register('password')}
+            name="password"
+            label="Password"
+            type="password"
+            autoComplete={isLogin ? 'current-password' : 'new-password'}
+            placeholder="Enter your password"
+            error={errors.password}
+            required
+          />
 
           <div className="text-center">
             <Link
@@ -151,7 +99,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ mode, onSubmit }) => {
               {linkText}
             </Link>
           </div>
-        </form>
+        </FormContainer>
       </div>
     </div>
   )
