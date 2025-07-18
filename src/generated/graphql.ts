@@ -1496,7 +1496,6 @@ export type Users = {
   firebase_uid?: Maybe<Scalars['String']['output']>;
   id: Scalars['uuid']['output'];
   name: Scalars['String']['output'];
-  password_hash?: Maybe<Scalars['String']['output']>;
   /** An array relationship */
   recipes: Array<Recipes>;
   /** An aggregate relationship */
@@ -1555,7 +1554,6 @@ export type UsersBoolExp = {
   firebase_uid?: InputMaybe<StringComparisonExp>;
   id?: InputMaybe<UuidComparisonExp>;
   name?: InputMaybe<StringComparisonExp>;
-  password_hash?: InputMaybe<StringComparisonExp>;
   recipes?: InputMaybe<RecipesBoolExp>;
   recipes_aggregate?: InputMaybe<RecipesAggregateBoolExp>;
 };
@@ -1575,7 +1573,6 @@ export type UsersInsertInput = {
   firebase_uid?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
-  password_hash?: InputMaybe<Scalars['String']['input']>;
   recipes?: InputMaybe<RecipesArrRelInsertInput>;
 };
 
@@ -1587,7 +1584,6 @@ export type UsersMaxFields = {
   firebase_uid?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
   name?: Maybe<Scalars['String']['output']>;
-  password_hash?: Maybe<Scalars['String']['output']>;
 };
 
 /** aggregate min on columns */
@@ -1598,7 +1594,6 @@ export type UsersMinFields = {
   firebase_uid?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
   name?: Maybe<Scalars['String']['output']>;
-  password_hash?: Maybe<Scalars['String']['output']>;
 };
 
 /** response of any mutation on the table "users" */
@@ -1631,7 +1626,6 @@ export type UsersOrderBy = {
   firebase_uid?: InputMaybe<OrderBy>;
   id?: InputMaybe<OrderBy>;
   name?: InputMaybe<OrderBy>;
-  password_hash?: InputMaybe<OrderBy>;
   recipes_aggregate?: InputMaybe<RecipesAggregateOrderBy>;
 };
 
@@ -1651,9 +1645,7 @@ export enum UsersSelectColumn {
   /** column name */
   ID = 'id',
   /** column name */
-  NAME = 'name',
-  /** column name */
-  PASSWORD_HASH = 'password_hash'
+  NAME = 'name'
 }
 
 /** input type for updating data in table "users" */
@@ -1663,7 +1655,6 @@ export type UsersSetInput = {
   firebase_uid?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
-  password_hash?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Streaming cursor of the table "users" */
@@ -1681,7 +1672,6 @@ export type UsersStreamCursorValueInput = {
   firebase_uid?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
-  password_hash?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** update columns of table "users" */
@@ -1695,9 +1685,7 @@ export enum UsersUpdateColumn {
   /** column name */
   ID = 'id',
   /** column name */
-  NAME = 'name',
-  /** column name */
-  PASSWORD_HASH = 'password_hash'
+  NAME = 'name'
 }
 
 export type UsersUpdates = {
