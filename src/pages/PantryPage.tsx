@@ -301,7 +301,7 @@ export const PantryPage = () => {
                   (ingredientMode === IngredientMode.CREATE_NEW && !newIngredientName.trim()) ||
                   addingIngredient
                 }
-                className="w-full bg-primary-600 hover:bg-primary-700 disabled:bg-gray-300 text-white py-3 rounded-xl font-medium transition-colors disabled:cursor-not-allowed mt-auto"
+                className="fixed bottom-0 left-0 right-0 sm:relative sm:rounded-xl w-full bg-primary-600 hover:bg-primary-700 disabled:bg-gray-300 text-white py-3 font-medium transition-colors disabled:cursor-not-allowed"
               >
                 {addingIngredient ? 'Adding...' : 'Add to Pantry'}
               </button>
