@@ -194,7 +194,7 @@ export const PantryPage = () => {
 
       {showAddModal && (
         <div className="fixed inset-0 bg-black/50 flex items-end sm:items-center justify-center z-50">
-          <div className="bg-white rounded-t-2xl sm:rounded-2xl w-full h-full sm:h-auto sm:max-w-md sm:max-h-[90vh] overflow-hidden">
+          <div className="bg-white sm:rounded-2xl w-full h-full sm:h-auto sm:max-w-md sm:max-h-[90vh] overflow-hidden">
             <div className="p-4 border-b border-gray-100">
               <div className="flex items-center justify-between">
                 <h2 className="text-lg font-semibold text-gray-900">Add Ingredient</h2>
