@@ -2253,12 +2253,27 @@ export type AddRecipeMutationVariables = Exact<{
 
 export type AddRecipeMutation = { __typename?: 'mutation_root', insert_recipes_one?: { __typename?: 'recipes', steps: Array<string>, tags: Array<any>, owner_id?: string | null, id: string, title: string, type: any, notes?: string | null, complexity: any, portion_size?: string | null, cooking_time?: string | null, video_url?: string | null, image_url?: string | null, recipe_ingredients: Array<{ __typename?: 'recipe_ingredients', amount?: string | null, ingredient: { __typename?: 'ingredients', name: string } }> } | null };
 
+export type AddUserIngredientMutationVariables = Exact<{
+  user_id: Scalars['uuid']['input'];
+  ingredient_name: Scalars['String']['input'];
+}>;
+
+
+export type AddUserIngredientMutation = { __typename?: 'mutation_root', insert_user_ingredients_one?: { __typename?: 'user_ingredients', id: string, ingredient: { __typename?: 'ingredients', id: string, name: string } } | null };
+
 export type CreateUserMutationVariables = Exact<{
   user: UsersInsertInput;
 }>;
 
 
 export type CreateUserMutation = { __typename?: 'mutation_root', insert_users_one?: { __typename?: 'users', id: string, email: string, name: string, created_at: string } | null };
+
+export type RemoveUserIngredientMutationVariables = Exact<{
+  id: Scalars['uuid']['input'];
+}>;
+
+
+export type RemoveUserIngredientMutation = { __typename?: 'mutation_root', delete_user_ingredients_by_pk?: { __typename?: 'user_ingredients', id: string, ingredient: { __typename?: 'ingredients', name: string } } | null };
 
 export type UpdateRecipeMutationVariables = Exact<{
   id: Scalars['uuid']['input'];
@@ -2275,6 +2290,11 @@ export type UpdateUserMutationVariables = Exact<{
 
 
 export type UpdateUserMutation = { __typename?: 'mutation_root', update_users_by_pk?: { __typename?: 'users', id: string, email: string, name: string, created_at: string } | null };
+
+export type GetAllIngredientsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAllIngredientsQuery = { __typename?: 'query_root', ingredients: Array<{ __typename?: 'ingredients', id: string, name: string }> };
 
 export type GetRecipeByIdQueryVariables = Exact<{
   id: Scalars['uuid']['input'];
@@ -2303,6 +2323,13 @@ export type GetUserByIdQueryVariables = Exact<{
 
 
 export type GetUserByIdQuery = { __typename?: 'query_root', users_by_pk?: { __typename?: 'users', id: string, email: string, name: string, created_at: string } | null };
+
+export type GetUserIngredientsQueryVariables = Exact<{
+  user_id: Scalars['uuid']['input'];
+}>;
+
+
+export type GetUserIngredientsQuery = { __typename?: 'query_root', user_ingredients: Array<{ __typename?: 'user_ingredients', id: string, ingredient: { __typename?: 'ingredients', id: string, name: string } }> };
 
 export const BaseRecipeFragmentDoc = gql`
     fragment BaseRecipe on recipes {
@@ -2378,6 +2405,46 @@ export function useAddRecipeMutation(baseOptions?: Apollo.MutationHookOptions<Ad
 export type AddRecipeMutationHookResult = ReturnType<typeof useAddRecipeMutation>;
 export type AddRecipeMutationResult = Apollo.MutationResult<AddRecipeMutation>;
 export type AddRecipeMutationOptions = Apollo.BaseMutationOptions<AddRecipeMutation, AddRecipeMutationVariables>;
+export const AddUserIngredientDocument = gql`
+    mutation AddUserIngredient($user_id: uuid!, $ingredient_name: String!) {
+  insert_user_ingredients_one(
+    object: {user_id: $user_id, ingredient: {data: {name: $ingredient_name}, on_conflict: {constraint: ingredients_name_key, update_columns: [name]}}}
+  ) {
+    id
+    ingredient {
+      id
+      name
+    }
+  }
+}
+    `;
+export type AddUserIngredientMutationFn = Apollo.MutationFunction<AddUserIngredientMutation, AddUserIngredientMutationVariables>;
+
+/**
+ * __useAddUserIngredientMutation__
+ *
+ * To run a mutation, you first call `useAddUserIngredientMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddUserIngredientMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addUserIngredientMutation, { data, loading, error }] = useAddUserIngredientMutation({
+ *   variables: {
+ *      user_id: // value for 'user_id'
+ *      ingredient_name: // value for 'ingredient_name'
+ *   },
+ * });
+ */
+export function useAddUserIngredientMutation(baseOptions?: Apollo.MutationHookOptions<AddUserIngredientMutation, AddUserIngredientMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddUserIngredientMutation, AddUserIngredientMutationVariables>(AddUserIngredientDocument, options);
+      }
+export type AddUserIngredientMutationHookResult = ReturnType<typeof useAddUserIngredientMutation>;
+export type AddUserIngredientMutationResult = Apollo.MutationResult<AddUserIngredientMutation>;
+export type AddUserIngredientMutationOptions = Apollo.BaseMutationOptions<AddUserIngredientMutation, AddUserIngredientMutationVariables>;
 export const CreateUserDocument = gql`
     mutation CreateUser($user: users_insert_input!) {
   insert_users_one(object: $user) {
@@ -2411,6 +2478,42 @@ export function useCreateUserMutation(baseOptions?: Apollo.MutationHookOptions<C
 export type CreateUserMutationHookResult = ReturnType<typeof useCreateUserMutation>;
 export type CreateUserMutationResult = Apollo.MutationResult<CreateUserMutation>;
 export type CreateUserMutationOptions = Apollo.BaseMutationOptions<CreateUserMutation, CreateUserMutationVariables>;
+export const RemoveUserIngredientDocument = gql`
+    mutation RemoveUserIngredient($id: uuid!) {
+  delete_user_ingredients_by_pk(id: $id) {
+    id
+    ingredient {
+      name
+    }
+  }
+}
+    `;
+export type RemoveUserIngredientMutationFn = Apollo.MutationFunction<RemoveUserIngredientMutation, RemoveUserIngredientMutationVariables>;
+
+/**
+ * __useRemoveUserIngredientMutation__
+ *
+ * To run a mutation, you first call `useRemoveUserIngredientMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveUserIngredientMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeUserIngredientMutation, { data, loading, error }] = useRemoveUserIngredientMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useRemoveUserIngredientMutation(baseOptions?: Apollo.MutationHookOptions<RemoveUserIngredientMutation, RemoveUserIngredientMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RemoveUserIngredientMutation, RemoveUserIngredientMutationVariables>(RemoveUserIngredientDocument, options);
+      }
+export type RemoveUserIngredientMutationHookResult = ReturnType<typeof useRemoveUserIngredientMutation>;
+export type RemoveUserIngredientMutationResult = Apollo.MutationResult<RemoveUserIngredientMutation>;
+export type RemoveUserIngredientMutationOptions = Apollo.BaseMutationOptions<RemoveUserIngredientMutation, RemoveUserIngredientMutationVariables>;
 export const UpdateRecipeDocument = gql`
     mutation UpdateRecipe($id: uuid!, $recipe: recipes_set_input!) {
   update_recipes_by_pk(pk_columns: {id: $id}, _set: $recipe) {
@@ -2479,6 +2582,46 @@ export function useUpdateUserMutation(baseOptions?: Apollo.MutationHookOptions<U
 export type UpdateUserMutationHookResult = ReturnType<typeof useUpdateUserMutation>;
 export type UpdateUserMutationResult = Apollo.MutationResult<UpdateUserMutation>;
 export type UpdateUserMutationOptions = Apollo.BaseMutationOptions<UpdateUserMutation, UpdateUserMutationVariables>;
+export const GetAllIngredientsDocument = gql`
+    query GetAllIngredients {
+  ingredients(order_by: {name: asc}) {
+    id
+    name
+  }
+}
+    `;
+
+/**
+ * __useGetAllIngredientsQuery__
+ *
+ * To run a query within a React component, call `useGetAllIngredientsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllIngredientsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllIngredientsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetAllIngredientsQuery(baseOptions?: Apollo.QueryHookOptions<GetAllIngredientsQuery, GetAllIngredientsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetAllIngredientsQuery, GetAllIngredientsQueryVariables>(GetAllIngredientsDocument, options);
+      }
+export function useGetAllIngredientsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllIngredientsQuery, GetAllIngredientsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetAllIngredientsQuery, GetAllIngredientsQueryVariables>(GetAllIngredientsDocument, options);
+        }
+export function useGetAllIngredientsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetAllIngredientsQuery, GetAllIngredientsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetAllIngredientsQuery, GetAllIngredientsQueryVariables>(GetAllIngredientsDocument, options);
+        }
+export type GetAllIngredientsQueryHookResult = ReturnType<typeof useGetAllIngredientsQuery>;
+export type GetAllIngredientsLazyQueryHookResult = ReturnType<typeof useGetAllIngredientsLazyQuery>;
+export type GetAllIngredientsSuspenseQueryHookResult = ReturnType<typeof useGetAllIngredientsSuspenseQuery>;
+export type GetAllIngredientsQueryResult = Apollo.QueryResult<GetAllIngredientsQuery, GetAllIngredientsQueryVariables>;
 export const GetRecipeByIdDocument = gql`
     query GetRecipeById($id: uuid!) {
   recipes_by_pk(id: $id) {
@@ -2640,3 +2783,47 @@ export type GetUserByIdQueryHookResult = ReturnType<typeof useGetUserByIdQuery>;
 export type GetUserByIdLazyQueryHookResult = ReturnType<typeof useGetUserByIdLazyQuery>;
 export type GetUserByIdSuspenseQueryHookResult = ReturnType<typeof useGetUserByIdSuspenseQuery>;
 export type GetUserByIdQueryResult = Apollo.QueryResult<GetUserByIdQuery, GetUserByIdQueryVariables>;
+export const GetUserIngredientsDocument = gql`
+    query GetUserIngredients($user_id: uuid!) {
+  user_ingredients(where: {user_id: {_eq: $user_id}}) {
+    id
+    ingredient {
+      id
+      name
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetUserIngredientsQuery__
+ *
+ * To run a query within a React component, call `useGetUserIngredientsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserIngredientsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUserIngredientsQuery({
+ *   variables: {
+ *      user_id: // value for 'user_id'
+ *   },
+ * });
+ */
+export function useGetUserIngredientsQuery(baseOptions: Apollo.QueryHookOptions<GetUserIngredientsQuery, GetUserIngredientsQueryVariables> & ({ variables: GetUserIngredientsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetUserIngredientsQuery, GetUserIngredientsQueryVariables>(GetUserIngredientsDocument, options);
+      }
+export function useGetUserIngredientsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserIngredientsQuery, GetUserIngredientsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetUserIngredientsQuery, GetUserIngredientsQueryVariables>(GetUserIngredientsDocument, options);
+        }
+export function useGetUserIngredientsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetUserIngredientsQuery, GetUserIngredientsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetUserIngredientsQuery, GetUserIngredientsQueryVariables>(GetUserIngredientsDocument, options);
+        }
+export type GetUserIngredientsQueryHookResult = ReturnType<typeof useGetUserIngredientsQuery>;
+export type GetUserIngredientsLazyQueryHookResult = ReturnType<typeof useGetUserIngredientsLazyQuery>;
+export type GetUserIngredientsSuspenseQueryHookResult = ReturnType<typeof useGetUserIngredientsSuspenseQuery>;
+export type GetUserIngredientsQueryResult = Apollo.QueryResult<GetUserIngredientsQuery, GetUserIngredientsQueryVariables>;

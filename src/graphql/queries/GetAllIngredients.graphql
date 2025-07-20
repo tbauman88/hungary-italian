@@ -1,0 +1,6 @@
+query GetAllIngredients {
+    ingredients(order_by: { name: asc }) {
+        id
+        name
+    }
+}

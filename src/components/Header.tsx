@@ -1,4 +1,4 @@
-import { ArrowRightEndOnRectangleIcon, HomeIcon, PlusIcon, UserCircleIcon } from '@heroicons/react/24/outline'
+import { ArrowRightEndOnRectangleIcon, HomeIcon, PlusIcon, ShoppingBagIcon, UserCircleIcon } from '@heroicons/react/24/outline'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 
@@ -41,6 +41,14 @@ export const Header = () => {
                   <HomeIcon className="w-6 h-6 sm:w-7 sm:h-7 group-hover:scale-110 transition-transform duration-200" />
                 </Link>
 
+                <Link
+                  to="/profile/pantry"
+                  className="flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 text-gray-600 hover:text-primary-600 transition-all duration-200 rounded-xl hover:bg-primary-50 active:bg-primary-100 group"
+                  title="My Pantry"
+                >
+                  <ShoppingBagIcon className="w-6 h-6 sm:w-7 sm:h-7 group-hover:scale-110 transition-transform duration-200" />
+                </Link>
+
                 <div className="flex items-center space-x-2 sm:space-x-3">
                   <Link
                     to="/profile/settings"
@@ -62,7 +70,7 @@ export const Header = () => {
                 <div className="h-8 w-px bg-gray-200 mx-2 sm:mx-4"></div>
 
                 <Link
-                  to="/add-recipe"
+                  to="/recipe/add"
                   className="flex items-center space-x-2 bg-primary-600 hover:bg-primary-700 text-white font-semibold px-4 py-3 sm:px-6 sm:py-2.5 rounded-xl transition-colors duration-200 text-sm shadow-md hover:shadow-lg"
                 >
                   <PlusIcon className="w-5 h-5 sm:w-6 sm:h-6" />

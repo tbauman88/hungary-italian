@@ -1,0 +1,8 @@
+mutation RemoveUserIngredient($id: uuid!) {
+    delete_user_ingredients_by_pk(id: $id) {
+        id
+        ingredient {
+            name
+        }
+    }
+}

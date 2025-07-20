@@ -1,0 +1,9 @@
+query GetUserIngredients($user_id: uuid!) {
+    user_ingredients(where: { user_id: { _eq: $user_id } }) {
+        id
+        ingredient {
+            id
+            name
+        }
+    }
+}

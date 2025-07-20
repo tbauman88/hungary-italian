@@ -1,0 +1,20 @@
+mutation AddUserIngredient($user_id: uuid!, $ingredient_name: String!) {
+    insert_user_ingredients_one(
+        object: {
+            user_id: $user_id
+            ingredient: {
+                data: { name: $ingredient_name }
+                on_conflict: {
+                    constraint: ingredients_name_key
+                    update_columns: [name]
+                }
+            }
+        }
+    ) {
+        id
+        ingredient {
+            id
+            name
+        }
+    }
+}

@@ -102,7 +102,7 @@ export const HomePage = () => {
       )}
 
       <Link
-        to="/add-recipe"
+        to="/recipe/add"
         className="fixed bottom-6 right-6 sm:hidden bg-primary-600 hover:bg-primary-700 text-white w-14 h-14 rounded-full shadow-lg hover:shadow-xl flex items-center justify-center transition-all duration-200 transform hover:scale-110 z-40"
       >
         <PlusIcon className="w-6 h-6" />
@@ -125,7 +125,7 @@ const CallToAction = () => (
       </p>
 
       <Link
-        to="/add-recipe"
+        to="/recipe/add"
         className="inline-flex items-center space-x-2 bg-primary-600 hover:bg-primary-700 active:bg-primary-800 text-white font-semibold px-8 py-4 rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl"
       >
         <PlusIcon className="w-5 h-5" />

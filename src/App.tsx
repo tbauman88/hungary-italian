@@ -1,13 +1,24 @@
-import { Navigate, Route, Routes } from 'react-router-dom'
+import { Navigate, Outlet, Route, Routes } from 'react-router-dom'
 import { Header } from './components/Header'
-import { ProtectedRoute } from './components/ProtectedRoute'
+import { useAuth } from './contexts/AuthContext'
 import { AddRecipePage } from './pages/AddRecipePage'
 import { EditRecipePage } from './pages/EditRecipePage'
 import { HomePage } from './pages/HomePage'
 import { LoginPage } from './pages/LoginPage'
+import { PantryPage } from './pages/PantryPage'
 import { ProfileSettingsPage } from './pages/ProfileSettingsPage'
 import { RecipePage } from './pages/RecipePage'
 import { SignupPage } from './pages/SignupPage'
+
+const ProtectedRoute: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
+  const { currentUser } = useAuth()
+
+  if (!currentUser) {
+    return <Navigate to="/login" replace />
+  }
+
+  return children ?? <Outlet />
+}
 
 const App = () => {
   return (
@@ -15,50 +26,18 @@ const App = () => {
       <Header />
       <main className="sm:container sm:mx-auto sm:px-4 lg:px-6 sm:py-6 lg:py-8 sm:max-w-7xl pt-8">
         <Routes>
+          <Route element={<ProtectedRoute />}>
+            <Route index element={<HomePage />} />
+            <Route path="recipe/:id" element={<RecipePage />} />
+            <Route path="recipe/:id/edit" element={<EditRecipePage />} />
+            <Route path="recipe/add" element={<AddRecipePage />} />
+            <Route path="profile/pantry" element={<PantryPage />} />
+            <Route path="profile/settings" element={<ProfileSettingsPage />} />
+          </Route>
+
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
-          <Route
-            path="/"
-            element={
-              <ProtectedRoute>
-                <HomePage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/recipe/:id"
-            element={
-              <ProtectedRoute>
-                <RecipePage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/add-recipe"
-            element={
-              <ProtectedRoute>
-                <AddRecipePage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/recipe/:id/edit"
-            element={
-              <ProtectedRoute>
-                <EditRecipePage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/profile/settings"
-            element={
-              <ProtectedRoute>
-                <ProfileSettingsPage />
-              </ProtectedRoute>
-            }
-          />
 
-          {/* Catch-all route - redirect to login for any invalid URLs */}
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       </main>
