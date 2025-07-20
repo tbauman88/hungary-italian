@@ -67,11 +67,11 @@ export const Header = () => {
                   </button>
                 </div>
 
-                <div className="h-8 w-px bg-gray-200 mx-2 sm:mx-4"></div>
+                <div className="h-8 w-px bg-gray-200 sm:mx-4 hidden sm:flex"></div>
 
                 <Link
                   to="/recipe/add"
-                  className="flex items-center space-x-2 bg-primary-600 hover:bg-primary-700 text-white font-semibold px-4 py-3 sm:px-6 sm:py-2.5 rounded-xl transition-colors duration-200 text-sm shadow-md hover:shadow-lg"
+                  className="flex items-center space-x-2 bg-primary-600 hover:bg-primary-700 text-white font-semibold px-4 py-3 sm:px-6 sm:py-2.5 rounded-xl transition-colors duration-200 text-sm shadow-md hover:shadow-lg hidden sm:flex"
                 >
                   <PlusIcon className="w-5 h-5 sm:w-6 sm:h-6" />
                   <span className="hidden sm:inline">Add Recipe</span>
