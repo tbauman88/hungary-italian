@@ -1,5 +1,5 @@
 import { MagnifyingGlassIcon, PlusIcon, XMarkIcon } from '@heroicons/react/24/outline'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useAuth } from '../contexts/AuthContext'
 import {
   useAddUserIngredientMutation,
@@ -25,6 +25,14 @@ export const PantryPage = () => {
   const [ingredientMode, setIngredientMode] = useState(IngredientMode.SELECT_EXISTING)
   const [newIngredientName, setNewIngredientName] = useState('')
   const [selectedIngredients, setSelectedIngredients] = useState<Set<string>>(new Set())
+
+  useEffect(() => {
+    document.body.style.overflow = showAddModal ? 'hidden' : 'unset'
+
+    return () => {
+      document.body.style.overflow = 'unset'
+    }
+  }, [showAddModal])
 
   const {
     data: userIngredients,
@@ -194,7 +202,7 @@ export const PantryPage = () => {
 
       {showAddModal && (
         <div className="fixed inset-0 bg-black/50 flex items-end sm:items-center justify-center z-50">
-          <div className="bg-white sm:rounded-2xl w-full h-full sm:h-auto sm:max-w-md sm:max-h-[90vh] overflow-hidden">
+          <div className="bg-white sm:rounded-2xl w-full h-full sm:h-auto sm:max-w-md sm:max-h-[80vh] overflow-hidden">
             <div className="p-4 border-b border-gray-100">
               <div className="flex items-center justify-between">
                 <h2 className="text-lg font-semibold text-gray-900">Add Ingredient</h2>
@@ -239,7 +247,7 @@ export const PantryPage = () => {
                     />
                   </div>
 
-                  <div className="flex-1 overflow-y-auto space-y-2 min-h-0">
+                  <div className="flex-1 overflow-y-auto space-y-2 min-h-0 sm:max-h-96">
                     {loadingAllIngredients ? (
                       <div className="text-center py-8">
                         <div className="w-6 h-6 border-2 border-primary-600 border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
@@ -257,8 +265,8 @@ export const PantryPage = () => {
                           key={ingredient.id}
                           onClick={() => toggleIngredientSelection(ingredient.name)}
                           className={`w-full text-left p-3 rounded-xl border transition-colors ${selectedIngredients.has(ingredient.name)
-                              ? 'border-primary-500 bg-primary-50 text-primary-700'
-                              : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                            ? 'border-primary-500 bg-primary-50 text-primary-700'
+                            : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
                             }`}
                         >
                           <span className="capitalize">{ingredient.name}</span>
