@@ -142,7 +142,7 @@ export const PantryPage = () => {
         </div>
       </div>
 
-      <div className="py-4 ">
+      <div className="py-4">
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
           <div className="p-4 border-b border-gray-100">
             <h2 className="text-lg font-semibold text-gray-900">
@@ -157,7 +157,7 @@ export const PantryPage = () => {
             </div>
           )}
 
-          {userIngredients?.user_ingredients.length === 0 && (
+          {!loadingUserIngredients && userIngredients?.user_ingredients?.length === 0 && (
             <div className="p-8 text-center">
               <div className="text-4xl mb-4">🛒</div>
               <h3 className="text-lg font-semibold text-gray-900 mb-2">Your pantry is empty</h3>
@@ -171,7 +171,7 @@ export const PantryPage = () => {
             </div>
           )}
 
-          {userIngredients?.user_ingredients?.length && (
+          {!loadingUserIngredients && userIngredients?.user_ingredients.length !== 0 && (
             <div className="divide-y divide-gray-100">
               {userIngredients?.user_ingredients.map((userIngredient) => (
                 <div key={userIngredient.id} className="flex items-center justify-between p-4 hover:bg-gray-50 transition-colors">
@@ -193,8 +193,8 @@ export const PantryPage = () => {
       </div>
 
       {showAddModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-end sm:items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-t-2xl sm:rounded-2xl w-full max-w-md max-h-[90vh] overflow-hidden">
+        <div className="fixed inset-0 bg-black/50 flex items-end sm:items-center justify-center z-50">
+          <div className="bg-white rounded-t-2xl sm:rounded-2xl w-full h-full sm:h-auto sm:max-w-md sm:max-h-[90vh] overflow-hidden">
             <div className="p-4 border-b border-gray-100">
               <div className="flex items-center justify-between">
                 <h2 className="text-lg font-semibold text-gray-900">Add Ingredient</h2>
@@ -210,7 +210,7 @@ export const PantryPage = () => {
               </div>
             </div>
 
-            <div className="p-4 space-y-4">
+            <div className="p-4 space-y-4 flex-1 flex flex-col h-full sm:h-auto">
               <div className="flex bg-gray-100 rounded-xl p-1">
                 {OPTIONS.map((option) => (
                   <button
@@ -239,7 +239,7 @@ export const PantryPage = () => {
                     />
                   </div>
 
-                  <div className="max-h-60 overflow-y-auto space-y-2">
+                  <div className="flex-1 overflow-y-auto space-y-2 min-h-0">
                     {loadingAllIngredients ? (
                       <div className="text-center py-8">
                         <div className="w-6 h-6 border-2 border-primary-600 border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
@@ -257,8 +257,8 @@ export const PantryPage = () => {
                           key={ingredient.id}
                           onClick={() => toggleIngredientSelection(ingredient.name)}
                           className={`w-full text-left p-3 rounded-xl border transition-colors ${selectedIngredients.has(ingredient.name)
-                            ? 'border-primary-500 bg-primary-50 text-primary-700'
-                            : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                              ? 'border-primary-500 bg-primary-50 text-primary-700'
+                              : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
                             }`}
                         >
                           <span className="capitalize">{ingredient.name}</span>
@@ -270,17 +270,19 @@ export const PantryPage = () => {
               )}
 
               {ingredientMode === IngredientMode.CREATE_NEW && (
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Ingredient Name
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="e.g., Fresh Basil, Organic Quinoa, Aged Parmesan"
-                    value={newIngredientName}
-                    onChange={(e) => setNewIngredientName(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                  />
+                <div className="flex-1 flex flex-col">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Ingredient Name
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="e.g., Fresh Basil, Organic Quinoa, Aged Parmesan"
+                      value={newIngredientName}
+                      onChange={(e) => setNewIngredientName(e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                    />
+                  </div>
                 </div>
               )}
 
@@ -291,7 +293,7 @@ export const PantryPage = () => {
                   (ingredientMode === IngredientMode.CREATE_NEW && !newIngredientName.trim()) ||
                   addingIngredient
                 }
-                className="w-full bg-primary-600 hover:bg-primary-700 disabled:bg-gray-300 text-white py-3 rounded-xl font-medium transition-colors disabled:cursor-not-allowed"
+                className="w-full bg-primary-600 hover:bg-primary-700 disabled:bg-gray-300 text-white py-3 rounded-xl font-medium transition-colors disabled:cursor-not-allowed mt-auto"
               >
                 {addingIngredient ? 'Adding...' : 'Add to Pantry'}
               </button>
