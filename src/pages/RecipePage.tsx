@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom'
 import { LoadingSpinner } from '../components/LoadingSpinner'
 import { useAuth } from '../contexts/AuthContext'
 import { useGetRecipeByIdQuery } from '../generated/graphql'
+import { getImageUrl } from '../utils'
 
 export const RecipePage = () => {
   const { id } = useParams<{ id: string }>()
@@ -30,7 +31,7 @@ export const RecipePage = () => {
         <div className="bg-white rounded-2xl shadow-xl overflow-hidden mb-8">
           <div className="relative">
             <img
-              src={recipe.image_url || ''}
+              src={getImageUrl(recipe.image_url ?? '')}
               alt={recipe.title}
               className="w-full h-64 sm:h-80 lg:h-96 object-cover"
             />
