@@ -2,7 +2,6 @@ import { PhotoIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { useMemo, useRef, useState } from 'react'
 import { uploadImageToS3, validateImageFile } from '../utils'
 
-
 interface ImageUploadProps {
   value?: string
   onChange: (value: string) => void
@@ -42,22 +41,18 @@ export const ImageUpload = ({
       return
     }
 
-    // Create preview
     const reader = new FileReader()
     reader.onload = (e) => {
       setPreview(e.target?.result as string)
     }
     reader.readAsDataURL(file)
 
-    // Call parent handler
     if (onFileSelect) {
       onFileSelect(file)
     }
 
-    // Upload to S3
     setIsUploading(true)
     try {
-      // Pass both file and recipeTitle
       const uploadResult = await uploadImageToS3({ file, recipeTitle })
 
       if (uploadResult.success && uploadResult.filename) {
@@ -119,6 +114,12 @@ export const ImageUpload = ({
           } ${preview ? 'border-primary-300 bg-primary-50' : ''} ${disabled ? 'opacity-60 pointer-events-none' : ''}`}
         onDrop={handleDrop}
         onDragOver={handleDragOver}
+        onClick={() => {
+          if (!isUploading && !disabled && fileInputRef.current) {
+            fileInputRef.current.click();
+          }
+        }}
+        style={{ cursor: isUploading || disabled ? 'not-allowed' : 'pointer' }}
       >
         {preview ? (
           <div className="relative">
@@ -136,25 +137,10 @@ export const ImageUpload = ({
             </button>
           </div>
         ) : (
-          <div className="p-8 text-center">
+          <div className="p-8 text-center select-none">
             <PhotoIcon className="mx-auto h-12 w-12 text-gray-400" />
-            <div className="mt-4">
-              <label
-                htmlFor="image-upload"
-                className={`cursor-pointer px-4 py-2 rounded-lg font-medium transition-colors ${isUploading || disabled
-                  ? 'bg-gray-400 text-white cursor-not-allowed'
-                  : 'bg-primary-600 hover:bg-primary-700 text-white'
-                  }`}
-              >
-                {isUploading ? 'Uploading...' : 'Choose Image'}
-              </label>
-              <p className="mt-2 text-sm text-gray-500">
-                or drag and drop
-              </p>
-              <p className="text-xs text-gray-400 mt-1">
-                PNG, JPG, HEIC, HEIF, WebP up to 5MB
-              </p>
-            </div>
+            <p className="mt-2 text-sm text-gray-900">Click or drag and drop</p>
+            <p className="mt-1 text-xs text-gray-500">PNG, JPG, HEIC, HEIF, WebP up to 5MB</p>
           </div>
         )}
 
