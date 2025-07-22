@@ -35,7 +35,7 @@ export const EditRecipePage = () => {
     }
   }, [recipe, currentUserId, navigate])
 
-  const handleSubmit = async (data: RecipeFormData): Promise<string | null> => {
+  const handleSubmit = async (data: RecipeFormData, uploadedFile?: File | null): Promise<string | null> => {
     if (!id || !currentUserId) {
       return 'Missing recipe ID or user authentication'
     }
@@ -44,6 +44,9 @@ export const EditRecipePage = () => {
     setError(null)
 
     try {
+      // File upload is handled by the ImageUpload component
+      // The image_url field will contain the filename from the upload
+
       const { ingredients, steps, ...recipeData } = data
 
       const recipeUpdate: RecipesSetInput = {

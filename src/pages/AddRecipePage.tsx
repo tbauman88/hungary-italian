@@ -21,11 +21,14 @@ export const AddRecipePage = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const handleSubmit = async (data: RecipeFormData): Promise<string | null> => {
+  const handleSubmit = async (data: RecipeFormData, uploadedFile?: File | null): Promise<string | null> => {
     setIsLoading(true)
     setError(null)
 
     try {
+      // File upload is handled by the ImageUpload component
+      // The image_url field will contain the filename from the upload
+
       const { ingredients, steps, ...recipeData } = data
 
       const recipe: RecipesInsertInput = {
