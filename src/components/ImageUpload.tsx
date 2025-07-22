@@ -29,18 +29,10 @@ export const ImageUpload = ({
 
   const disabled = useMemo(() => !recipeTitle, [recipeTitle])
 
-  const errorMessages = useMemo(() => {
-    const errors: string[] = []
-    if (errors.length > 0) errors.push(...errors)
-    if (disabled) errors.push('Must add a recipe title before adding an image.')
-    return errors
-  }, [errors, disabled])
-
   const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     if (!file) return
 
-    // Clear previous errors
     setErrors([])
 
     const validationErrors = validateImageFile(file)
@@ -112,9 +104,9 @@ export const ImageUpload = ({
         {label}
       </label>
 
-      {errorMessages.length > 0 && (
+      {errors.length > 0 && (
         <div className="space-y-1">
-          {errorMessages.map((msg, idx) => (
+          {errors.map((msg, idx) => (
             <span key={idx} className="text-sm text-red-500 block">{msg}</span>
           ))}
         </div>
