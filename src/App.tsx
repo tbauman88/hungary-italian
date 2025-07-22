@@ -5,10 +5,10 @@ import { AddRecipePage } from './pages/AddRecipePage'
 import { EditRecipePage } from './pages/EditRecipePage'
 import { HomePage } from './pages/HomePage'
 import { LoginPage } from './pages/LoginPage'
+import NotFoundPage from './pages/NotFoundPage'
 import { PantryPage } from './pages/PantryPage'
 import { ProfileSettingsPage } from './pages/ProfileSettingsPage'
 import { RecipePage } from './pages/RecipePage'
-import { SignupPage } from './pages/SignupPage'
 
 const ProtectedRoute: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
   const { currentUser } = useAuth()
@@ -17,31 +17,33 @@ const ProtectedRoute: React.FC<{ children?: React.ReactNode }> = ({ children }) 
     return <Navigate to="/login" replace />
   }
 
-  return children ?? <Outlet />
-}
-
-const App = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
       <main className="sm:container sm:mx-auto sm:px-4 lg:px-6 sm:py-6 lg:py-8 sm:max-w-7xl pt-8">
-        <Routes>
-          <Route element={<ProtectedRoute />}>
-            <Route index element={<HomePage />} />
-            <Route path="recipe/:id" element={<RecipePage />} />
-            <Route path="recipe/:id/edit" element={<EditRecipePage />} />
-            <Route path="recipe/add" element={<AddRecipePage />} />
-            <Route path="profile/pantry" element={<PantryPage />} />
-            <Route path="profile/settings" element={<ProfileSettingsPage />} />
-          </Route>
-
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<SignupPage />} />
-
-          <Route path="*" element={<Navigate to="/login" replace />} />
-        </Routes>
+        {children ?? <Outlet />}
       </main>
     </div>
+  )
+}
+
+const App = () => {
+  return (
+    <Routes>
+      <Route element={<ProtectedRoute />}>
+        <Route index element={<HomePage />} />
+        <Route path="recipe/:id" element={<RecipePage />} />
+        <Route path="recipe/:id/edit" element={<EditRecipePage />} />
+        <Route path="recipe/add" element={<AddRecipePage />} />
+        <Route path="profile/pantry" element={<PantryPage />} />
+        <Route path="profile/settings" element={<ProfileSettingsPage />} />
+      </Route>
+
+      <Route path="/login" element={<LoginPage />} />
+      {/* <Route path="/signup" element={<SignupPage />} /> */}
+
+      <Route path="*" element={<NotFoundPage />} />
+    </Routes>
   )
 }
 
