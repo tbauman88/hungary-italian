@@ -26,13 +26,11 @@ export const AddRecipePage = () => {
     setError(null)
 
     try {
-      // File upload is handled by the ImageUpload component
-      // The image_url field will contain the filename from the upload
-
       const { ingredients, steps, ...recipeData } = data
 
       const recipe: RecipesInsertInput = {
         ...recipeData,
+        image_url: uploadedFile?.name ?? null,
         owner_id: currentUserId,
         cooking_time: data.cooking_time ? String(data.cooking_time) : null,
         portion_size: String(data.portion_size),
