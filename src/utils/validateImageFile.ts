@@ -10,11 +10,11 @@ export const validateImageFile = (file: File): string[] => {
   }
 
   if (!ALLOWED_TYPES.includes(file.type)) {
-    errors.push('Only JPEG, PNG, and GIF files are allowed')
+    errors.push('Only JPEG, PNG, HEIC, HEIF, and WebP files are allowed')
   }
 
   if (!ALLOWED_EXTENSIONS.some(ext => file.name.toLowerCase().endsWith(ext))) {
-    errors.push('File extension must be JPG, JPEG, PNG, or GIF')
+    errors.push('File extension must be JPG, JPEG, PNG, HEIC, HEIF, or WebP')
   }
 
   return errors

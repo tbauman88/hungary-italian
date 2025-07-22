@@ -11,7 +11,7 @@ export default defineConfig({
       '/api/uploader': {
         target: 'http://localhost:3001',
         changeOrigin: true,
-        secure: true,
+        secure: false,
         headers: {
           'Access-Control-Allow-Origin': '*',
           'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',

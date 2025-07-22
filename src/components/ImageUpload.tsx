@@ -25,17 +25,28 @@ export const ImageUpload = ({
   const [preview, setPreview] = useState<string | null>(null)
   const [isUploading, setIsUploading] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const [errors, setErrors] = useState<string[]>([])
 
   const disabled = useMemo(() => !recipeTitle, [recipeTitle])
+
+  const errorMessages = useMemo(() => {
+    const errors: string[] = []
+    if (errors.length > 0) errors.push(...errors)
+    if (disabled) errors.push('Must add a recipe title before adding an image.')
+    return errors
+  }, [errors, disabled])
 
   const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     if (!file) return
 
-    const validationError = validateImageFile(file)
+    // Clear previous errors
+    setErrors([])
 
-    if (validationError.length > 0) {
-      alert(validationError)
+    const validationErrors = validateImageFile(file)
+
+    if (validationErrors.length > 0) {
+      setErrors(validationErrors)
       return
     }
 
@@ -60,10 +71,10 @@ export const ImageUpload = ({
       if (uploadResult.success && uploadResult.filename) {
         onChange(uploadResult.filename)
       } else {
-        alert(uploadResult.error || 'Upload failed. Please try again.')
+        setErrors([uploadResult.error || 'Upload failed. Please try again.'])
       }
     } catch (error) {
-      alert('Upload failed. Please try again.')
+      setErrors(['Upload failed. Please try again.'])
     } finally {
       setIsUploading(false)
     }
@@ -72,6 +83,7 @@ export const ImageUpload = ({
   const handleRemoveImage = () => {
     setPreview(null)
     onChange('')
+    setErrors([])
     if (fileInputRef.current) {
       fileInputRef.current.value = ''
     }
@@ -100,10 +112,12 @@ export const ImageUpload = ({
         {label}
       </label>
 
-      {disabled && (
-        <span className="text-sm text-red-500">
-          Must add a recipe title before adding an image.
-        </span>
+      {errorMessages.length > 0 && (
+        <div className="space-y-1">
+          {errorMessages.map((msg, idx) => (
+            <span key={idx} className="text-sm text-red-500 block">{msg}</span>
+          ))}
+        </div>
       )}
 
       <div
@@ -146,7 +160,7 @@ export const ImageUpload = ({
                 or drag and drop
               </p>
               <p className="text-xs text-gray-400 mt-1">
-                PNG, JPG, GIF up to 5MB
+                PNG, JPG, HEIC, HEIF, WebP up to 5MB
               </p>
             </div>
           </div>
@@ -162,15 +176,6 @@ export const ImageUpload = ({
           className="hidden"
         />
       </div>
-
-      {error && (
-        <p className="text-sm text-red-600 font-medium flex items-center space-x-1">
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          <span>{error}</span>
-        </p>
-      )}
 
       {value && !preview && (
         <div className="text-sm text-gray-500">
