@@ -6,9 +6,9 @@ export const uploadImageToS3 = async ({
   recipeTitle: string
 }): Promise<{ success: boolean; filename?: string; error?: string }> => {
   try {
-    const [fileName, fileExtension] = file.name.split('.')
+    const fileExtension = file.type.split('/')[1]
     const recipeName = recipeTitle.toLowerCase().replace(/ /g, '-')
-    const filename = fileName === recipeName ? `${fileName}.${fileExtension}` : `${recipeName}.${fileExtension}`
+    const filename = `${recipeName}.${fileExtension}`
 
     const response = await fetch('/api/uploader', {
       method: 'POST',
