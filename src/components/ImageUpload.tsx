@@ -130,7 +130,10 @@ export const ImageUpload = ({
             />
             <button
               type="button"
-              onClick={handleRemoveImage}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleRemoveImage();
+              }}
               className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white p-2 rounded-full shadow-lg transition-colors"
             >
               <XMarkIcon className="w-4 h-4" />
