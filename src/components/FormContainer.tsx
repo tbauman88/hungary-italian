@@ -1,5 +1,3 @@
-import { useFormStatus } from 'react-dom'
-
 interface FormContainerProps {
   title: string
   onSubmit?: (e: React.FormEvent) => void
@@ -11,22 +9,19 @@ interface FormContainerProps {
   error?: string | null
 }
 
-// Submit button component that uses useFormStatus
+// Submit button component
 const SubmitButton = ({ submitText, isLoading, isValid }: {
   submitText: string
   isLoading?: boolean
   isValid?: boolean
 }) => {
-  const { pending } = useFormStatus()
-  const isPending = pending || isLoading
-
   return (
     <button
       type="submit"
-      disabled={isPending || !isValid}
+      disabled={isLoading || !isValid}
       className="w-full py-4 px-6 bg-primary-600 hover:bg-primary-700 disabled:bg-gray-400 text-white font-semibold text-lg rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 shadow-lg hover:shadow-xl transform hover:scale-[1.02] disabled:transform-none disabled:shadow-none"
     >
-      {isPending ? (
+      {isLoading ? (
         <div className="flex items-center justify-center space-x-2">
           <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
           <span>{submitText}...</span>

@@ -30,7 +30,7 @@ export const RecipeSchema = z.object({
   cooking_time: z.number().min(1, 'Cooking time must be at least 1 minute').max(1440, 'Cooking time must be less than 24 hours').optional().or(z.literal('')),
   complexity: z.enum(Object.values(RecipeComplexity)).optional(),
   portion_size: z.number().min(1, 'Portion size must be at least 1').max(20, 'Portion size must be less than 20'),
-  image_url: z.string().url('Must be a valid URL').optional().or(z.literal('')),
+  image_url: z.string().optional().or(z.literal('')),
   video_url: z.string().url('Must be a valid URL').optional().or(z.literal('')),
   ingredients: z.array(z.object({
     name: z.string().min(1, 'Ingredient name is required')
