@@ -21,7 +21,7 @@ export const AddRecipePage = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const handleSubmit = async (data: RecipeFormData): Promise<string | null> => {
+  const handleSubmit = async (data: RecipeFormData, uploadedFile?: File | null): Promise<string | null> => {
     setIsLoading(true)
     setError(null)
 
@@ -30,6 +30,7 @@ export const AddRecipePage = () => {
 
       const recipe: RecipesInsertInput = {
         ...recipeData,
+        image_url: uploadedFile?.name ?? null,
         owner_id: currentUserId,
         cooking_time: data.cooking_time ? String(data.cooking_time) : null,
         portion_size: String(data.portion_size),

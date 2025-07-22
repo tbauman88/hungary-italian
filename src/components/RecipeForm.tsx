@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { type RecipeFragment } from '../generated/graphql'
@@ -9,6 +9,7 @@ import { FormContainer } from './FormContainer'
 import { FormInput } from './FormInput'
 import { FormSelect } from './FormSelect'
 import { FormTextarea } from './FormTextarea'
+import { ImageUpload } from './ImageUpload'
 import { TagSelector } from './TagSelector'
 
 type RecipeFormData = z.infer<typeof RecipeSchema>
@@ -16,16 +17,20 @@ type RecipeFormData = z.infer<typeof RecipeSchema>
 interface RecipeFormProps {
   mode: 'add' | 'edit'
   recipe?: RecipeFragment
-  onSubmit: (data: RecipeFormData) => Promise<string | null>
+  onSubmit: (data: RecipeFormData, uploadedFile?: File | null) => Promise<string | null>
   isLoading?: boolean
   error?: string | null
 }
 
 export const RecipeForm = ({ mode, recipe, onSubmit, isLoading, error }: RecipeFormProps) => {
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null)
+
   const {
     register,
     control,
     handleSubmit,
+    watch,
+    setValue,
     formState: { errors, isValid },
     reset
   } = useForm<RecipeFormData>({
@@ -83,7 +88,7 @@ export const RecipeForm = ({ mode, recipe, onSubmit, isLoading, error }: RecipeF
   })
 
   const handleFormSubmit = async (data: RecipeFormData) => {
-    await onSubmit(data)
+    await onSubmit(data, uploadedFile)
   }
 
   const title = mode === 'add' ? 'Create New Recipe' : 'Edit Recipe'
@@ -210,25 +215,22 @@ export const RecipeForm = ({ mode, recipe, onSubmit, isLoading, error }: RecipeF
             <h3 className="text-xl sm:text-2xl font-bold text-gray-900">Media & Additional Information</h3>
           </div>
           <div className="space-y-6 sm:space-y-8">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
-              <FormInput
-                {...register('image_url')}
-                name="image_url"
-                label="Image URL (optional)"
-                type="url"
-                placeholder="https://example.com/image.jpg"
-                error={errors.image_url}
-              />
+            <ImageUpload
+              value={watch('image_url')}
+              onChange={(value: string) => setValue('image_url', value)}
+              onFileSelect={(file: File) => setUploadedFile(file)}
+              error={errors.image_url?.message}
+              recipeTitle={watch('title') || ''}
+            />
 
-              <FormInput
-                {...register('video_url')}
-                name="video_url"
-                label="Video URL (optional)"
-                type="url"
-                placeholder="https://youtube.com/watch?v=..."
-                error={errors.video_url}
-              />
-            </div>
+            <FormInput
+              {...register('video_url')}
+              name="video_url"
+              label="Video URL (optional)"
+              type="url"
+              placeholder="https://youtube.com/watch?v=..."
+              error={errors.video_url}
+            />
 
             <Controller
               name="tags"

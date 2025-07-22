@@ -35,7 +35,7 @@ export const EditRecipePage = () => {
     }
   }, [recipe, currentUserId, navigate])
 
-  const handleSubmit = async (data: RecipeFormData): Promise<string | null> => {
+  const handleSubmit = async (data: RecipeFormData, uploadedFile?: File | null): Promise<string | null> => {
     if (!id || !currentUserId) {
       return 'Missing recipe ID or user authentication'
     }
@@ -48,6 +48,7 @@ export const EditRecipePage = () => {
 
       const recipeUpdate: RecipesSetInput = {
         ...recipeData,
+        image_url: uploadedFile?.name ?? null,
         cooking_time: data.cooking_time ? String(data.cooking_time) : null,
         portion_size: String(data.portion_size),
         steps: steps.map(step => step.description)
