@@ -1,7 +1,7 @@
 import { ClockIcon, ShoppingBagIcon, UserGroupIcon, VideoCameraIcon } from '@heroicons/react/24/outline';
 import { Link } from 'react-router-dom';
 import { type Recipes } from '../generated/graphql';
-import { getImageUrl } from '../utils';
+import { getImageUrl, handleImageError } from '../utils';
 
 type ProgressStatus = 'complete' | 'almost' | 'mostly' | 'missing';
 
@@ -55,6 +55,7 @@ export const RecipeCard = ({ recipe }: { recipe: Recipes }) => {
             src={getImageUrl(recipe.image_url ?? '')}
             alt={recipe.title}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            onError={e => handleImageError(e, recipe.title)}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         </div>
