@@ -10,6 +10,7 @@ import {
   type RecipesInsertInput
 } from '../generated/graphql'
 import { RecipeSchema } from '../types'
+import { getFileName } from '../utils'
 
 type RecipeFormData = z.infer<typeof RecipeSchema>
 
@@ -30,7 +31,7 @@ export const AddRecipePage = () => {
 
       const recipe: RecipesInsertInput = {
         ...recipeData,
-        image_url: uploadedFile?.name ?? null,
+        image_url: getFileName(uploadedFile, recipeData.title),
         owner_id: currentUserId,
         cooking_time: data.cooking_time ? String(data.cooking_time) : null,
         portion_size: String(data.portion_size),

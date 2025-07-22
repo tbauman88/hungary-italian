@@ -46,3 +46,11 @@ export const uploadImageToS3 = async ({
     return { success: false, error: 'Upload failed' }
   }
 }
+
+export const getFileName = (file: File | null | undefined, recipeTitle: string) => {
+  if (!file) return null
+
+  const fileExtension = file.type.split('/')[1]
+  const recipeName = recipeTitle.toLowerCase().replace(/ /g, '-')
+  return `${recipeName}.${fileExtension}`
+}
