@@ -220,7 +220,7 @@ export const RecipeForm = ({ mode, recipe, onSubmit, isLoading, error }: RecipeF
               onChange={(value: string) => setValue('image_url', value)}
               onFileSelect={(file: File) => setUploadedFile(file)}
               error={errors.image_url?.message}
-              disabled={!watch('title')}
+              recipeTitle={watch('title') || ''}
             />
 
             <FormInput

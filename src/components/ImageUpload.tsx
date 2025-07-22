@@ -1,5 +1,5 @@
 import { PhotoIcon, XMarkIcon } from '@heroicons/react/24/outline'
-import { useRef, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { uploadImageToS3, validateImageFile } from '../utils'
 
 
@@ -10,7 +10,7 @@ interface ImageUploadProps {
   label?: string
   error?: string
   className?: string
-  disabled?: boolean
+  recipeTitle: string
 }
 
 export const ImageUpload = ({
@@ -20,19 +20,21 @@ export const ImageUpload = ({
   label = "Recipe Image",
   error,
   className = "",
-  disabled = false
+  recipeTitle
 }: ImageUploadProps) => {
   const [preview, setPreview] = useState<string | null>(null)
   const [isUploading, setIsUploading] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
+  const disabled = useMemo(() => !recipeTitle, [recipeTitle])
+
   const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     if (!file) return
 
-    // Validate file using utility function
     const validationError = validateImageFile(file)
-    if (validationError) {
+
+    if (validationError.length > 0) {
       alert(validationError)
       return
     }
@@ -52,7 +54,8 @@ export const ImageUpload = ({
     // Upload to S3
     setIsUploading(true)
     try {
-      const uploadResult = await uploadImageToS3(file)
+      // Pass both file and recipeTitle
+      const uploadResult = await uploadImageToS3({ file, recipeTitle })
 
       if (uploadResult.success && uploadResult.filename) {
         onChange(uploadResult.filename)
