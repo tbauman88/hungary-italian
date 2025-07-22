@@ -10,6 +10,7 @@ interface ImageUploadProps {
   label?: string
   error?: string
   className?: string
+  disabled?: boolean
 }
 
 export const ImageUpload = ({
@@ -18,7 +19,8 @@ export const ImageUpload = ({
   onFileSelect,
   label = "Recipe Image",
   error,
-  className = ""
+  className = "",
+  disabled = false
 }: ImageUploadProps) => {
   const [preview, setPreview] = useState<string | null>(null)
   const [isUploading, setIsUploading] = useState(false)
@@ -85,6 +87,7 @@ export const ImageUpload = ({
   }
 
   const handleDragOver = (event: React.DragEvent) => {
+    if (disabled) return;
     event.preventDefault()
   }
 
@@ -94,11 +97,17 @@ export const ImageUpload = ({
         {label}
       </label>
 
+      {disabled && (
+        <span className="text-sm text-red-500">
+          Must add a recipe title before adding an image.
+        </span>
+      )}
+
       <div
         className={`relative border-2 border-dashed rounded-xl transition-all duration-200 ${error
           ? 'border-red-300 bg-red-50'
           : 'border-gray-300 bg-white hover:border-gray-400'
-          } ${preview ? 'border-primary-300 bg-primary-50' : ''}`}
+          } ${preview ? 'border-primary-300 bg-primary-50' : ''} ${disabled ? 'opacity-60 pointer-events-none' : ''}`}
         onDrop={handleDrop}
         onDragOver={handleDragOver}
       >
@@ -123,7 +132,7 @@ export const ImageUpload = ({
             <div className="mt-4">
               <label
                 htmlFor="image-upload"
-                className={`cursor-pointer px-4 py-2 rounded-lg font-medium transition-colors ${isUploading
+                className={`cursor-pointer px-4 py-2 rounded-lg font-medium transition-colors ${isUploading || disabled
                   ? 'bg-gray-400 text-white cursor-not-allowed'
                   : 'bg-primary-600 hover:bg-primary-700 text-white'
                   }`}
@@ -146,7 +155,7 @@ export const ImageUpload = ({
           type="file"
           accept="image/*"
           onChange={handleFileSelect}
-          disabled={isUploading}
+          disabled={isUploading || disabled}
           className="hidden"
         />
       </div>
