@@ -93,6 +93,14 @@ export const ImageUpload = ({
     event.preventDefault()
   }
 
+  const uploadButtonClass = [
+    'relative w-full border-2 border-dashed rounded-xl transition-all duration-200',
+    'focus-within:border-blue-400 focus-within:outline-none focus-within:border-solid',
+    error ? 'border-red-300 bg-red-50' : 'border-gray-300 bg-white hover:border-gray-400',
+    preview ? 'border-primary-300 bg-primary-50' : '',
+    disabled ? 'opacity-60 pointer-events-none' : '',
+  ].filter(Boolean).join(' ');
+
   return (
     <div className={`space-y-3 ${className}`}>
       <label className="block text-sm font-semibold text-gray-700">
@@ -107,11 +115,9 @@ export const ImageUpload = ({
         </div>
       )}
 
-      <div
-        className={`relative border-2 border-dashed rounded-xl transition-all duration-200 ${error
-          ? 'border-red-300 bg-red-50'
-          : 'border-gray-300 bg-white hover:border-gray-400'
-          } ${preview ? 'border-primary-300 bg-primary-50' : ''} ${disabled ? 'opacity-60 pointer-events-none' : ''}`}
+      <button
+        type="button"
+        className={uploadButtonClass}
         onDrop={handleDrop}
         onDragOver={handleDragOver}
         onClick={() => {
@@ -156,7 +162,7 @@ export const ImageUpload = ({
           disabled={isUploading || disabled}
           className="hidden"
         />
-      </div>
+      </button>
 
       {value && !preview && (
         <div className="text-sm text-gray-500">
