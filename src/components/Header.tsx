@@ -1,6 +1,7 @@
 import { ArrowRightEndOnRectangleIcon, HomeIcon, PlusIcon, ShoppingBagIcon, UserCircleIcon } from '@heroicons/react/24/outline'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
+import { Logo } from './Logo'
 
 export const Header = () => {
   const { currentUser, logout } = useAuth()
@@ -18,16 +19,7 @@ export const Header = () => {
       <div className="w-full mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 sm:h-20">
           <Link to="/" className="flex items-center space-x-3 group">
-            <div className="relative">
-              <span className="text-2xl sm:text-3xl font-bold text-primary-600 flex-shrink-0 group-hover:scale-110 transition-transform duration-200">🧀</span>
-              <div className="absolute -inset-1 bg-primary-100 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200 -z-10"></div>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-lg sm:text-xl font-bold text-gray-900 group-hover:text-primary-600 transition-colors">
-                <span className="hidden sm:inline">Hungary-Italian Recipes</span>
-                <span className="sm:hidden">Recipes</span>
-              </span>
-            </div>
+            <Logo type="header" showText />
           </Link>
 
           <nav className="flex items-center space-x-2 sm:space-x-4">
