@@ -37,6 +37,7 @@ export const AddRecipePage = () => {
         portion_size: String(data.portion_size),
         recipe_ingredients: {
           data: ingredients.map(ingredient => ({
+            amount: ingredient.amount || null,
             ingredient: {
               data: { name: ingredient.name },
               on_conflict: {

@@ -34,7 +34,7 @@ export const RecipeSchema = z.object({
   portion_size: z.number({ message: 'Portion size is required' })
     .min(1, { message: 'Portion size must be at least 1' })
     .max(20, { message: 'Portion size must be less than 20' }),
-  ingredients: z.array(z.object({ name: z.string() })).min(1),
+  ingredients: z.array(z.object({ name: z.string(), amount: z.string() })).min(1),
   steps: z.array(z.object({ description: z.string() })).min(1),
   image_url: z.string().optional().or(z.literal('')),
   video_url: z.string().url('Must be a valid URL').optional().or(z.literal('')),

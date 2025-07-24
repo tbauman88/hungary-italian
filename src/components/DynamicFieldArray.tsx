@@ -41,9 +41,17 @@ export const DynamicFieldArray = ({
         {fields.map((field, index) => (
           <div key={field.id} className="group relative">
             <div className="flex gap-3">
-              <div className="flex-1 relative">
-                {fieldName === 'ingredients' && !isTextarea && control ? (
-                  <>
+              {fieldName === 'ingredients' && !isTextarea && control ? (
+                <>
+                  <div className="w-32">
+                    <input
+                      {...register(`${fieldName}.${index}.amount`)}
+                      type="text"
+                      placeholder="Amount"
+                      className="w-full px-4 py-3.5 text-base border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200 shadow-sm hover:shadow-md focus:shadow-lg border-gray-300 bg-white hover:border-gray-400"
+                    />
+                  </div>
+                  <div className="flex-1 relative">
                     <Controller
                       name={`${fieldName}.${index}.name`}
                       control={control}
@@ -64,8 +72,10 @@ export const DynamicFieldArray = ({
                         <span>{errors[index].name.message}</span>
                       </p>
                     )}
-                  </>
-                ) : (
+                  </div>
+                </>
+              ) : (
+                <div className="flex-1 relative">
                   <InputComponent
                     {...register(`${fieldName}.${index}.${isTextarea ? 'description' : 'name'}`)}
                     type={isTextarea ? undefined : 'text'}
@@ -74,8 +84,8 @@ export const DynamicFieldArray = ({
                     className={`w-full px-4 py-3.5 text-base border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200 shadow-sm hover:shadow-md focus:shadow-lg ${isTextarea ? 'resize-none' : ''} border-gray-300 bg-white hover:border-gray-400`}
                     onBlur={register(`${fieldName}.${index}.${isTextarea ? 'description' : 'name'}`).onBlur}
                   />
-                )}
-              </div>
+                </div>
+              )}
               {fields.length > 1 && (
                 <button
                   type="button"
@@ -91,7 +101,7 @@ export const DynamicFieldArray = ({
         ))}
         <button
           type="button"
-          onClick={() => append({ [isTextarea ? 'description' : 'name']: '' })}
+          onClick={() => append(isTextarea ? { description: '' } : { name: '', amount: '' })}
           className="flex items-center justify-center w-full px-4 py-3.5 text-base border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200 shadow-sm hover:shadow-md focus:shadow-lg border-gray-300 bg-white hover:border-gray-400"
         >
           <PlusIcon className="h-5 w-5 mr-2" />
