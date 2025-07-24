@@ -3,7 +3,20 @@ import { defineConfig } from 'vite';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    {
+      name: 'custom-mime-sw',
+      configureServer(server) {
+        server.middlewares.use((req, res, next) => {
+          if (req.url === '/sw.js') {
+            res.setHeader('Content-Type', 'application/javascript');
+          }
+          next();
+        });
+      },
+    },
+  ],
   server: {
     port: 3000,
     open: true,
@@ -11,7 +24,7 @@ export default defineConfig({
       '/api/uploader': {
         target: 'http://localhost:3001',
         changeOrigin: true,
-        secure: false,
+        secure: true,
       },
     },
   },

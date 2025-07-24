@@ -7,7 +7,6 @@ import { AuthProvider } from './contexts/AuthContext'
 import './index.css'
 import { client } from './lib/apollo-client'
 
-// Service Worker Registration
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/sw.js')
