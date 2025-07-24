@@ -1,5 +1,5 @@
 import { ClockIcon, HeartIcon, PencilIcon, ShareIcon, UserGroupIcon, VideoCameraIcon } from '@heroicons/react/24/outline'
-import { Link, useParams } from 'react-router-dom'
+import { Link, Navigate, useParams } from 'react-router-dom'
 import { LoadingSpinner } from '../components/LoadingSpinner'
 import { useAuth } from '../contexts/AuthContext'
 import { useGetRecipeByIdQuery } from '../generated/graphql'
@@ -20,7 +20,7 @@ export const RecipePage = () => {
 
   if (loading) return <LoadingSpinner />
   if (error) return <div className="text-red-600">Error: {error.message}</div>
-  if (!data?.recipes_by_pk) return <div>Recipe not found</div>
+  if (!data?.recipes_by_pk) return <Navigate to="*" replace />;
 
   const recipe = data.recipes_by_pk
 

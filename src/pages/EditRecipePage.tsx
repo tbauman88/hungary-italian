@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { z } from 'zod'
 import { LoadingSpinner } from '../components/LoadingSpinner'
 import { RecipeForm } from '../components/RecipeForm'
@@ -79,7 +79,7 @@ export const EditRecipePage = () => {
 
   if (loadingRecipe) return <LoadingSpinner />
   if (recipeError) return <div className="text-red-600">Error: {recipeError.message}</div>
-  if (!recipe) return <div>Recipe not found</div>
+  if (!recipe) return <Navigate to="*" replace />;
 
   if (recipe.owner_id !== currentUserId) {
     return <div>You don't have permission to edit this recipe</div>
