@@ -25,7 +25,7 @@ export const Logo = ({
 
       {showText && (
         <span className="text-2xl font-bold text-blue-700 group-hover:text-primary-600 transition-colors ">
-          Ricetta
+          Ricette
         </span>
       )}
     </div>

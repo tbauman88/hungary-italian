@@ -1,4 +1,4 @@
-# Hungary-Italian Recipe App
+# Hungary Italian Ricette App
 
 A modern recipe application built with React 19, TypeScript, and Hasura GraphQL.
 

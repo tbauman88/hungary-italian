@@ -48,6 +48,7 @@
     "@vercel/node": "^3.0.12",
     "@vitejs/plugin-react": "^4.1.1",
     "autoprefixer": "^10.4.16",
+
     "dotenv": "^17.2.0",
     "eslint": "^8.53.0",
     "eslint-plugin-react-hooks": "^4.6.0",

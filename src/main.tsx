@@ -7,6 +7,19 @@ import { AuthProvider } from './contexts/AuthContext'
 import './index.css'
 import { client } from './lib/apollo-client'
 
+// Service Worker Registration
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then((registration) => {
+        console.log('SW registered: ', registration);
+      })
+      .catch((registrationError) => {
+        console.log('SW registration failed: ', registrationError);
+      });
+  });
+}
+
 if (import.meta.env.DEV) {
   const originalError = console.error
   console.error = (...args) => {
