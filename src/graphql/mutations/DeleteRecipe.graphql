@@ -1,0 +1,6 @@
+mutation DeleteRecipe($id: uuid!) {
+    delete_recipes_by_pk(id: $id) {
+        id
+        title
+    }
+}

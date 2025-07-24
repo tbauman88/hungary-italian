@@ -1,21 +1,96 @@
-import { ClockIcon, HeartIcon, PencilIcon, ShareIcon, UserGroupIcon, VideoCameraIcon } from '@heroicons/react/24/outline'
-import { Link, Navigate, useParams } from 'react-router-dom'
+import { ClockIcon, HeartIcon, PencilSquareIcon, TrashIcon, UserGroupIcon, VideoCameraIcon } from '@heroicons/react/24/outline'
+import { useState } from 'react'
+import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
 import { LoadingSpinner } from '../components/LoadingSpinner'
 import { useAuth } from '../contexts/AuthContext'
-import { useGetRecipeByIdQuery } from '../generated/graphql'
+import { useDeleteRecipeMutation, useGetRecipeByIdQuery } from '../generated/graphql'
 import { getImageUrl, handleImageError } from '../utils'
+
+const ConfirmationModal = ({
+  title,
+  onClose,
+  onConfirm,
+  isDeleting,
+}: {
+  title: string,
+  onClose: () => void,
+  onConfirm: () => void,
+  isDeleting: boolean,
+}) => {
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-6">
+        <div className="flex items-center space-x-3 mb-4">
+          <div className="w-10 h-10 bg-red-100 rounded-xl flex items-center justify-center">
+            <TrashIcon className="w-6 h-6 text-red-600" />
+          </div>
+          <h3 className="text-xl font-bold text-gray-900">Delete Recipe</h3>
+        </div>
+
+        <p className="text-gray-600 mb-6">
+          Are you sure you want to delete "{title}"? This action cannot be undone.
+        </p>
+
+        <div className="flex space-x-3">
+          <button
+            onClick={onClose}
+            disabled={isDeleting}
+            className="flex-1 px-4 py-2.5 bg-gray-100 hover:bg-gray-200 disabled:bg-gray-50 text-gray-700 font-semibold rounded-xl transition-all duration-200"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={onConfirm}
+            disabled={isDeleting}
+            className="flex-1 px-4 py-2.5 bg-red-600 hover:bg-red-700 disabled:bg-red-400 text-white font-semibold rounded-xl transition-all duration-200"
+          >
+            {isDeleting ? 'Deleting...' : 'Delete'}
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
 
 export const RecipePage = () => {
   const { id } = useParams<{ id: string }>()
   const { currentUserId } = useAuth()
+  const navigate = useNavigate()
+  const [isDeleting, setIsDeleting] = useState(false)
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+
   const { loading, error, data } = useGetRecipeByIdQuery({
     variables: { id: id || '' },
   })
+
+  const [deleteRecipe] = useDeleteRecipeMutation()
 
   const handleVideoClick = (e: React.MouseEvent, videoUrl: string) => {
     e.preventDefault()
     e.stopPropagation()
     window.open(videoUrl, '_blank', 'noopener,noreferrer')
+  }
+
+  const handleDeleteClick = () => {
+    setShowDeleteConfirm(true)
+  }
+
+  const handleDeleteConfirm = async () => {
+    if (!id) return
+
+    setIsDeleting(true)
+    try {
+      await deleteRecipe({ variables: { id }, refetchQueries: ['GetRecipes'] })
+      navigate('/', { replace: true })
+    } catch (error) {
+      console.error('Failed to delete recipe:', error)
+      setIsDeleting(false)
+      setShowDeleteConfirm(false)
+    }
+  }
+
+  const handleDeleteCancel = () => {
+    setShowDeleteConfirm(false)
   }
 
   if (loading) return <LoadingSpinner />
@@ -94,19 +169,17 @@ export const RecipePage = () => {
 
               <div className="flex items-center space-x-3">
                 <button className="flex items-center justify-center w-10 h-10 text-gray-400 hover:text-red-500 transition-colors rounded-xl hover:bg-red-50">
-                  <HeartIcon className="w-5 h-5" />
-                </button>
-                <button className="flex items-center justify-center w-10 h-10 text-gray-400 hover:text-gray-600 transition-colors rounded-xl hover:bg-gray-50">
-                  <ShareIcon className="w-5 h-5" />
+                  <HeartIcon className="w-6 h-6" />
                 </button>
                 {currentUserId === recipe.owner_id && (
-                  <Link
-                    to={`/recipe/${id}/edit`}
-                    className="inline-flex items-center px-4 py-2.5 bg-primary-600 hover:bg-primary-700 text-white text-sm font-semibold rounded-xl transition-all duration-200 shadow-md hover:shadow-lg"
-                  >
-                    <PencilIcon className="w-4 h-4 mr-2" />
-                    Edit Recipe
-                  </Link>
+                  <>
+                    <Link to={`/recipe/${id}/edit`} className="flex items-center justify-center w-10 h-10 text-gray-400 hover:text-primary-600 transition-colors rounded-xl hover:bg-primary-50">
+                      <PencilSquareIcon className="w-6 h-6" />
+                    </Link>
+                    <button onClick={handleDeleteClick} disabled={isDeleting} className="flex items-center justify-center w-10 h-10 text-gray-400 hover:text-red-500 transition-colors rounded-xl hover:bg-red-50">
+                      <TrashIcon className="w-6 h-6" />
+                    </button>
+                  </>
                 )}
               </div>
             </div>
@@ -170,6 +243,15 @@ export const RecipePage = () => {
           </div>
         </div>
       </div>
+
+      {showDeleteConfirm && (
+        <ConfirmationModal
+          title={recipe.title}
+          onClose={handleDeleteCancel}
+          onConfirm={handleDeleteConfirm}
+          isDeleting={isDeleting}
+        />
+      )}
     </div>
   )
 } 
