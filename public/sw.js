@@ -2,7 +2,7 @@ self.addEventListener('install', (event) => {
     event.waitUntil(
         caches
             .open('ricette-v1')
-            .then((cache) => cache.addAll(['/', '/index.html']))
+            .then((cache) => cache.addAll(['/', '/index.html', '/script.js']))
     );
 });
 
