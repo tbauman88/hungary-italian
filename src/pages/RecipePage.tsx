@@ -235,7 +235,7 @@ export const RecipePage = () => {
                 <li key={index} className="flex items-center p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors duration-200">
                   <div className="w-2 h-2 bg-primary-500 rounded-full mr-4 flex-shrink-0"></div>
                   <span className="text-gray-700 font-medium">
-                    {ingredient.amount} {ingredient.ingredient.name}
+                    {ingredient.amount} <span className="capitalize">{ingredient.ingredient.name}</span>
                   </span>
                 </li>
               ))}

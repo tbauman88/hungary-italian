@@ -39,7 +39,7 @@ export const AddRecipePage = () => {
           data: ingredients.map(ingredient => ({
             amount: ingredient.amount || null,
             ingredient: {
-              data: { name: ingredient.name },
+              data: { name: ingredient.name.toLowerCase() },
               on_conflict: {
                 constraint: IngredientsConstraint.INGREDIENTS_NAME_KEY,
                 update_columns: [IngredientsUpdateColumn.NAME]

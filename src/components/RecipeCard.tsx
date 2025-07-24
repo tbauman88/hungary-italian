@@ -121,7 +121,7 @@ export const RecipeCard = ({ recipe }: { recipe: Recipes }) => {
         <div className="flex flex-wrap gap-2 pt-3 border-t border-gray-100">
           <div className="flex items-center space-x-1.5 bg-gray-100 px-2.5 py-1.5 rounded-lg">
             <ClockIcon className="w-3.5 h-3.5 text-gray-600 flex-shrink-0" />
-            <span className="text-xs font-medium text-gray-700">{recipe.cooking_time || '30 min'}</span>
+            <span className="text-xs font-medium text-gray-700">{recipe.cooking_time} minutes</span>
           </div>
 
           {recipe.portion_size && (
