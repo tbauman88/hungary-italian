@@ -1,5 +1,6 @@
 import { Navigate, Outlet, Route, Routes } from 'react-router-dom'
 import { Header } from './components/Header'
+import { ScrollToTop } from './components/ScrollToTop'
 import { useAuth } from './contexts/AuthContext'
 import { AddRecipePage } from './pages/AddRecipePage'
 import { EditRecipePage } from './pages/EditRecipePage'
@@ -29,21 +30,24 @@ const ProtectedRoute: React.FC<{ children?: React.ReactNode }> = ({ children }) 
 
 const App = () => {
   return (
-    <Routes>
-      <Route element={<ProtectedRoute />}>
-        <Route index element={<HomePage />} />
-        <Route path="recipe/:id" element={<RecipePage />} />
-        <Route path="recipe/:id/edit" element={<EditRecipePage />} />
-        <Route path="recipe/add" element={<AddRecipePage />} />
-        <Route path="profile/pantry" element={<PantryPage />} />
-        <Route path="profile/settings" element={<ProfileSettingsPage />} />
-      </Route>
+    <>
+      <ScrollToTop />
+      <Routes>
+        <Route element={<ProtectedRoute />}>
+          <Route index element={<HomePage />} />
+          <Route path="recipe/:id" element={<RecipePage />} />
+          <Route path="recipe/:id/edit" element={<EditRecipePage />} />
+          <Route path="recipe/add" element={<AddRecipePage />} />
+          <Route path="profile/pantry" element={<PantryPage />} />
+          <Route path="profile/settings" element={<ProfileSettingsPage />} />
+        </Route>
 
-      <Route path="/login" element={<LoginPage />} />
-      {/* <Route path="/signup" element={<SignupPage />} /> */}
+        <Route path="/login" element={<LoginPage />} />
+        {/* <Route path="/signup" element={<SignupPage />} /> */}
 
-      <Route path="*" element={<NotFoundPage />} />
-    </Routes>
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
+    </>
   )
 }
 
