@@ -48,7 +48,7 @@ export const RecipeForm = ({ mode, recipe, onSubmit, isLoading, error }: RecipeF
       tags: [],
       type: undefined,
     },
-    mode: 'onChange'
+    mode: 'onBlur'
   })
 
   useEffect(() => {
@@ -183,23 +183,27 @@ export const RecipeForm = ({ mode, recipe, onSubmit, isLoading, error }: RecipeF
               label="Ingredients"
               fields={ingredientFields}
               register={register}
+              control={control}
               remove={removeIngredient}
               append={appendIngredient}
               fieldName="ingredients"
               placeholder={(index) => `Ingredient ${index + 1}`}
               required
+              errors={errors.ingredients}
             />
 
             <DynamicFieldArray
               label="Steps"
               fields={stepFields}
               register={register}
+              control={control}
               remove={removeStep}
               append={appendStep}
               fieldName="steps"
               placeholder={(index) => `Step ${index + 1}: Describe what to do...`}
               isTextarea
               required
+              errors={errors.steps}
             />
           </div>
         </div>
