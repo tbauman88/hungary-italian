@@ -35,10 +35,10 @@ export const IngredientTypeahead = ({
   const allIngredients = data?.ingredients || [];
   const filtered = useMemo(() => {
     const term = inputValue.trim().toLowerCase();
-    return allIngredients.filter((i: { name: string }) => i.name.toLowerCase().includes(term));
+    return allIngredients.filter((i: { name: string }) => (i.name || '').toLowerCase().includes(term));
   }, [allIngredients, inputValue]);
 
-  const showCreate = inputValue.trim() && !filtered.some((i: { name: string }) => i.name.toLowerCase() === inputValue.trim().toLowerCase());
+  const showCreate = inputValue.trim() && !filtered.some((i: { name: string }) => (i.name || '').toLowerCase() === inputValue.trim().toLowerCase());
 
   const handleSelect = (name: string) => {
     onChange(name);
@@ -98,7 +98,7 @@ export const IngredientTypeahead = ({
                   <button
                     key={ingredient.id}
                     type="button"
-                    className={`w-full text-left px-4 py-3 hover:bg-primary-50 focus:bg-primary-100 transition-colors ${ingredient.name.toLowerCase() === value.toLowerCase() ? 'bg-primary-100 text-primary-700' : ''}`}
+                    className={`w-full text-left px-4 py-3 hover:bg-primary-50 focus:bg-primary-100 transition-colors ${(ingredient.name || '').toLowerCase() === (value || '').toLowerCase() ? 'bg-primary-100 text-primary-700' : ''}`}
                     onClick={() => handleSelect(ingredient.name)}
                   >
                     <span className="capitalize">{ingredient.name}</span>

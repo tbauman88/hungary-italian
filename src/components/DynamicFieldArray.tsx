@@ -47,13 +47,10 @@ export const DynamicFieldArray = ({
                     <Controller
                       name={`${fieldName}.${index}.name`}
                       control={control}
-                      render={({ field: rhfField, fieldState }) => (
+                      render={({ field: rhfField }) => (
                         <IngredientTypeahead
                           value={rhfField.value}
                           onChange={rhfField.onChange}
-                          error={fieldState.error}
-                          label={index === 0 ? 'Ingredient' : ''}
-                          required={required && index === 0}
                           placeholder={placeholder(index)}
                           onBlur={rhfField.onBlur}
                         />
@@ -94,13 +91,13 @@ export const DynamicFieldArray = ({
         ))}
         <button
           type="button"
-          onClick={() => append({})}
+          onClick={() => append({ [isTextarea ? 'description' : 'name']: '' })}
           className="flex items-center justify-center w-full px-4 py-3.5 text-base border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200 shadow-sm hover:shadow-md focus:shadow-lg border-gray-300 bg-white hover:border-gray-400"
         >
           <PlusIcon className="h-5 w-5 mr-2" />
           Add {fieldName}
         </button>
       </div>
-    </div>
+    </div >
   )
 }
