@@ -1,4 +1,8 @@
-import { z } from "zod"
+// import { array, z } from "zod"
+import { yupResolver } from '@hookform/resolvers/yup'
+import type { Resolver } from 'react-hook-form'
+import { array, number, object, string, type InferType } from 'yup'
+import type { RecipeFragment } from "../generated/graphql"
 
 export enum RecipeType {
   SIDES = 'Sides',
@@ -24,20 +28,50 @@ export enum RecipeTag {
   SAVOURY = 'Savoury',
 }
 
-export const RecipeSchema = z.object({
-  title: z.string().min(1, 'Recipe title is required').max(100, 'Title must be less than 100 characters'),
-  type: z.enum(Object.values(RecipeType) as [string, ...string[]], { message: 'Type is required' }),
-  complexity: z.enum(Object.values(RecipeComplexity) as [string, ...string[]], { message: 'Complexity is required' }),
-  cooking_time: z.number({ message: 'Cooking time is required' })
-    .min(1, { message: 'Cooking time must be at least 1 minute' })
-    .max(1440, { message: 'Cooking time must be less than 24 hours' }),
-  portion_size: z.number({ message: 'Portion size is required' })
-    .min(1, { message: 'Portion size must be at least 1' })
-    .max(20, { message: 'Portion size must be less than 20' }),
-  ingredients: z.array(z.object({ name: z.string(), amount: z.string() })).min(1),
-  steps: z.array(z.object({ description: z.string() })).min(1),
-  image_url: z.string().optional().or(z.literal('')),
-  video_url: z.string().url('Must be a valid URL').optional().or(z.literal('')),
-  tags: z.array(z.enum(Object.values(RecipeTag))).optional(),
-  notes: z.string().optional(),
+export type Ingredient = Pick<RecipeFragment['recipe_ingredients'][number], 'ingredient' | 'amount'>
+
+export const RecipeSchema = object({
+  title: string().required('Title is required'),
+  type: string()
+    .oneOf(Object.values(RecipeType), 'Type is required')
+    .required('Type is required'),
+  complexity: string()
+    .oneOf(Object.values(RecipeComplexity), 'Complexity is required')
+    .required('Complexity is required'),
+  cooking_time: number()
+    .transform((value, og) => og === '' ? undefined : value)
+    .typeError('Cooking time is required')
+    .required(),
+  portion_size: number()
+    .transform((value, og) => og === '' ? undefined : value)
+    .typeError('Portion size is required')
+    .required(),
+  ingredients: array(object({
+    name: string().required('Ingredient name is required'),
+    amount: string().required('Amount is required'),
+    ingredientId: string().optional().nullable(),
+  })).min(1, 'At least one ingredient is required').default([]),
+  steps: array(object({ description: string().required('Step description is required') })).default([]),
+  image_url: string().optional(),
+  video_url: string().url('Must be a valid URL').optional(),
+  tags: array(string()).optional(),
+  notes: string().optional(),
 })
+
+export type RecipeFormData = InferType<typeof RecipeSchema>
+
+export const RecipeResolver = yupResolver(RecipeSchema) as Resolver<RecipeFormData>
+
+export const FORM_DEFAULT_VALUES: InferType<typeof RecipeSchema> = {
+  title: '',
+  notes: '',
+  cooking_time: 0,
+  complexity: RecipeComplexity.SIMPLE,
+  portion_size: 1,
+  image_url: '',
+  video_url: '',
+  ingredients: [{ ingredientId: '', name: '', amount: '' }],
+  steps: [{ description: '' }],
+  tags: [],
+  type: RecipeType.SIDES,
+}

@@ -1,40 +1,135 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import { FormProvider, useForm, useWatch } from 'react-hook-form'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
-import { z } from 'zod'
 import { LoadingSpinner } from '../components/LoadingSpinner'
 import { RecipeForm } from '../components/RecipeForm'
 import { useAuth } from '../contexts/AuthContext'
 import {
+  IngredientsConstraint,
+  IngredientsUpdateColumn,
   useGetRecipeByIdQuery,
+  useUpdateRecipeIngredientsMutation,
   useUpdateRecipeMutation,
-  type RecipesSetInput
+  type RecipesSetInput,
+  type UpdateRecipeIngredientsMutationVariables
 } from '../generated/graphql'
-import { RecipeSchema } from '../types'
+import { FORM_DEFAULT_VALUES, RecipeResolver, type RecipeFormData } from '../types'
 import { getFileName } from '../utils'
-
-type RecipeFormData = z.infer<typeof RecipeSchema>
 
 export const EditRecipePage = () => {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const { currentUserId } = useAuth()
+  const [defaultIngredients, setDefaultIngredients] = useState<{
+    ingredientId: string
+    name: string
+    amount: string | null
+  }[]>([])
 
-  const { loading: loadingRecipe, error: recipeError, data } = useGetRecipeByIdQuery({
+  const [updateRecipe] = useUpdateRecipeMutation()
+  const [updateRecipeIngredients] = useUpdateRecipeIngredientsMutation()
+
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  const {
+    loading: loadingRecipe,
+    error: recipeError,
+    data
+  } = useGetRecipeByIdQuery({
     variables: { id: id || '' },
     skip: !id
   })
 
-  const [updateRecipe] = useUpdateRecipeMutation()
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-
   const recipe = data?.recipes_by_pk
+
+  const form = useForm<RecipeFormData>({
+    resolver: RecipeResolver,
+    defaultValues: FORM_DEFAULT_VALUES,
+    mode: 'all',
+    reValidateMode: 'onChange',
+  })
+
+  const ingredients = useWatch({ control: form.control, name: 'ingredients' })
+
+  const changedIngredients = useMemo(() => ingredients?.filter((curr, i) => {
+    const original = defaultIngredients[i]
+    return curr.name !== original?.name || curr.amount !== original?.amount
+  }) || [], [ingredients, defaultIngredients])
 
   useEffect(() => {
     if (recipe && currentUserId && recipe.owner_id !== currentUserId) {
       navigate('/', { replace: true })
     }
   }, [recipe, currentUserId, navigate])
+
+  useEffect(() => {
+    if (recipe) {
+      setDefaultIngredients(recipe.recipe_ingredients?.map(ri => ({
+        ingredientId: ri.ingredient.id,
+        name: ri.ingredient.name,
+        amount: ri.amount || null,
+      })) || [])
+
+      form.reset({
+        title: recipe.title,
+        notes: recipe.notes || undefined,
+        cooking_time: recipe.cooking_time ? parseInt(recipe.cooking_time) : undefined,
+        complexity: recipe.complexity || undefined,
+        portion_size: recipe.portion_size ? parseInt(recipe.portion_size) : 1,
+        image_url: recipe.image_url || '',
+        video_url: recipe.video_url || '',
+        ingredients: recipe.recipe_ingredients?.map(ri => ({
+          ingredientId: ri.ingredient.id || '',
+          name: ri.ingredient.name || '',
+          amount: ri.amount || '',
+        })) || [{ ingredientId: '', name: '', amount: '' }],
+        steps: recipe.steps?.map(step => ({ description: step })) || [{ description: '' }],
+        tags: recipe.tags || [],
+        type: recipe.type || undefined,
+      })
+    }
+  }, [recipe, form])
+
+  const handleUpdateIngredients = async (recipeId: string): Promise<void> => {
+    if (changedIngredients.length === 0) return;
+
+    const updateIngredients: UpdateRecipeIngredientsMutationVariables = {
+      recipeId,
+      oldIngredients: changedIngredients.map(i => i.ingredientId || ''),
+      newIngredients: changedIngredients.map(ingredient => ({
+        recipe_id: recipeId,
+        amount: ingredient.amount || null,
+        ingredient: {
+          data: { name: ingredient.name.toLowerCase().trim() },
+          on_conflict: {
+            constraint: IngredientsConstraint.INGREDIENTS_NAME_KEY,
+            update_columns: [IngredientsUpdateColumn.NAME]
+          }
+        }
+      })),
+    }
+
+    await updateRecipeIngredients({ variables: updateIngredients })
+  }
+
+  const handleUpdateRecipe = async (recipeId: string, data: RecipeFormData, uploadedFile?: File | null): Promise<void> => {
+    const { ingredients, steps, ...recipeData } = data
+
+    const recipeUpdate: RecipesSetInput = {
+      ...recipeData,
+      cooking_time: data.cooking_time ? String(data.cooking_time) : null,
+      portion_size: String(data.portion_size),
+      steps: steps.map(step => step.description)
+    }
+
+    if (uploadedFile) {
+      const filename = getFileName(uploadedFile, recipeData.title)
+      recipeUpdate.image_url = filename
+    }
+
+    await updateRecipe({ variables: { id: recipeId, recipe: recipeUpdate } })
+  }
 
   const handleSubmit = async (data: RecipeFormData, uploadedFile?: File | null): Promise<string | null> => {
     if (!id || !currentUserId) {
@@ -45,25 +140,13 @@ export const EditRecipePage = () => {
     setError(null)
 
     try {
-      const { ingredients, steps, ...recipeData } = data
+      await Promise.all([
+        handleUpdateRecipe(id, data, uploadedFile),
+        handleUpdateIngredients(id)
+      ])
 
-      const recipeUpdate: RecipesSetInput = {
-        ...recipeData,
-        image_url: getFileName(uploadedFile, recipeData.title),
-        cooking_time: data.cooking_time ? String(data.cooking_time) : null,
-        portion_size: String(data.portion_size),
-        steps: steps.map(step => step.description)
-      }
-
-      const result = await updateRecipe({
-        variables: {
-          id,
-          recipe: recipeUpdate
-        }
-      })
-
-      if (result.data?.update_recipes_by_pk?.id) {
-        navigate(`/recipe/${result.data.update_recipes_by_pk.id}`)
+      if (recipe?.id) {
+        navigate(`/recipe/${recipe.id}`)
         return null
       } else {
         return 'Failed to update recipe. You may not have permission to edit this recipe.'
@@ -86,12 +169,14 @@ export const EditRecipePage = () => {
   }
 
   return (
-    <RecipeForm
-      mode="edit"
-      recipe={recipe}
-      onSubmit={handleSubmit}
-      isLoading={isLoading}
-      error={error}
-    />
+    <FormProvider {...form}>
+      <RecipeForm
+        title="Edit Recipe"
+        submitText="Update Recipe"
+        onSubmit={handleSubmit}
+        isLoading={isLoading}
+        error={error}
+      />
+    </FormProvider>
   )
 } 
