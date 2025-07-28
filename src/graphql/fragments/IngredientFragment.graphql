@@ -1,5 +1,6 @@
 fragment RecipeIngredient on recipe_ingredients {
     ingredient {
+        id
         name
     }
     amount

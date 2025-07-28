@@ -108,7 +108,6 @@ export enum CursorOrdering {
 
 /** columns and relationships of "ingredients" */
 export type Ingredients = {
-  __typename?: 'ingredients';
   id: Scalars['uuid']['output'];
   name: Scalars['String']['output'];
   /** An array relationship */
@@ -163,14 +162,12 @@ export type IngredientsUserIngredientsAggregateArgs = {
 
 /** aggregated selection of "ingredients" */
 export type IngredientsAggregate = {
-  __typename?: 'ingredients_aggregate';
   aggregate?: Maybe<IngredientsAggregateFields>;
   nodes: Array<Ingredients>;
 };
 
 /** aggregate fields of "ingredients" */
 export type IngredientsAggregateFields = {
-  __typename?: 'ingredients_aggregate_fields';
   count: Scalars['Int']['output'];
   max?: Maybe<IngredientsMaxFields>;
   min?: Maybe<IngredientsMinFields>;
@@ -214,21 +211,18 @@ export type IngredientsInsertInput = {
 
 /** aggregate max on columns */
 export type IngredientsMaxFields = {
-  __typename?: 'ingredients_max_fields';
   id?: Maybe<Scalars['uuid']['output']>;
   name?: Maybe<Scalars['String']['output']>;
 };
 
 /** aggregate min on columns */
 export type IngredientsMinFields = {
-  __typename?: 'ingredients_min_fields';
   id?: Maybe<Scalars['uuid']['output']>;
   name?: Maybe<Scalars['String']['output']>;
 };
 
 /** response of any mutation on the table "ingredients" */
 export type IngredientsMutationResponse = {
-  __typename?: 'ingredients_mutation_response';
   /** number of rows affected by the mutation */
   affected_rows: Scalars['Int']['output'];
   /** data from the rows affected by the mutation */
@@ -315,7 +309,6 @@ export type MissingIngredientsRecipesArgs = {
 
 /** mutation root */
 export type MutationRoot = {
-  __typename?: 'mutation_root';
   /** delete data from the table: "ingredients" */
   delete_ingredients?: Maybe<IngredientsMutationResponse>;
   /** delete single row from the table: "ingredients" */
@@ -636,7 +629,6 @@ export enum OrderBy {
 }
 
 export type QueryRoot = {
-  __typename?: 'query_root';
   /** fetch data from the table: "ingredients" */
   ingredients: Array<Ingredients>;
   /** fetch aggregated fields from the table: "ingredients" */
@@ -800,7 +792,6 @@ export type RecipeComplexityComparisonExp = {
 
 /** columns and relationships of "recipe_ingredients" */
 export type RecipeIngredients = {
-  __typename?: 'recipe_ingredients';
   amount?: Maybe<Scalars['String']['output']>;
   /** An object relationship */
   ingredient: Ingredients;
@@ -812,7 +803,6 @@ export type RecipeIngredients = {
 
 /** aggregated selection of "recipe_ingredients" */
 export type RecipeIngredientsAggregate = {
-  __typename?: 'recipe_ingredients_aggregate';
   aggregate?: Maybe<RecipeIngredientsAggregateFields>;
   nodes: Array<RecipeIngredients>;
 };
@@ -830,7 +820,6 @@ export type RecipeIngredientsAggregateBoolExpCount = {
 
 /** aggregate fields of "recipe_ingredients" */
 export type RecipeIngredientsAggregateFields = {
-  __typename?: 'recipe_ingredients_aggregate_fields';
   count: Scalars['Int']['output'];
   max?: Maybe<RecipeIngredientsMaxFields>;
   min?: Maybe<RecipeIngredientsMinFields>;
@@ -886,7 +875,6 @@ export type RecipeIngredientsInsertInput = {
 
 /** aggregate max on columns */
 export type RecipeIngredientsMaxFields = {
-  __typename?: 'recipe_ingredients_max_fields';
   amount?: Maybe<Scalars['String']['output']>;
   ingredient_id?: Maybe<Scalars['uuid']['output']>;
   recipe_id?: Maybe<Scalars['uuid']['output']>;
@@ -901,7 +889,6 @@ export type RecipeIngredientsMaxOrderBy = {
 
 /** aggregate min on columns */
 export type RecipeIngredientsMinFields = {
-  __typename?: 'recipe_ingredients_min_fields';
   amount?: Maybe<Scalars['String']['output']>;
   ingredient_id?: Maybe<Scalars['uuid']['output']>;
   recipe_id?: Maybe<Scalars['uuid']['output']>;
@@ -916,7 +903,6 @@ export type RecipeIngredientsMinOrderBy = {
 
 /** response of any mutation on the table "recipe_ingredients" */
 export type RecipeIngredientsMutationResponse = {
-  __typename?: 'recipe_ingredients_mutation_response';
   /** number of rows affected by the mutation */
   affected_rows: Scalars['Int']['output'];
   /** data from the rows affected by the mutation */
@@ -1026,7 +1012,6 @@ export type RecipeTypeComparisonExp = {
 
 /** columns and relationships of "recipes" */
 export type Recipes = {
-  __typename?: 'recipes';
   complexity: Scalars['recipe_complexity']['output'];
   cooking_time?: Maybe<Scalars['String']['output']>;
   created_at: Scalars['timestamptz']['output'];
@@ -1093,7 +1078,6 @@ export type RecipesRecipeIngredientsAggregateArgs = {
 
 /** aggregated selection of "recipes" */
 export type RecipesAggregate = {
-  __typename?: 'recipes_aggregate';
   aggregate?: Maybe<RecipesAggregateFields>;
   nodes: Array<Recipes>;
 };
@@ -1127,7 +1111,6 @@ export type RecipesAggregateBoolExpCount = {
 
 /** aggregate fields of "recipes" */
 export type RecipesAggregateFields = {
-  __typename?: 'recipes_aggregate_fields';
   avg?: Maybe<RecipesAvgFields>;
   count: Scalars['Int']['output'];
   max?: Maybe<RecipesMaxFields>;
@@ -1164,7 +1147,6 @@ export type RecipesArrRelInsertInput = {
 
 /** aggregate avg on columns */
 export type RecipesAvgFields = {
-  __typename?: 'recipes_avg_fields';
   /** A computed field, executes function "missing_count" */
   missing_ingredients_count?: Maybe<Scalars['Int']['output']>;
 };
@@ -1231,7 +1213,6 @@ export type RecipesInsertInput = {
 
 /** aggregate max on columns */
 export type RecipesMaxFields = {
-  __typename?: 'recipes_max_fields';
   complexity?: Maybe<Scalars['recipe_complexity']['output']>;
   cooking_time?: Maybe<Scalars['String']['output']>;
   created_at?: Maybe<Scalars['timestamptz']['output']>;
@@ -1276,7 +1257,6 @@ export type RecipesMaxOrderBy = {
 
 /** aggregate min on columns */
 export type RecipesMinFields = {
-  __typename?: 'recipes_min_fields';
   complexity?: Maybe<Scalars['recipe_complexity']['output']>;
   cooking_time?: Maybe<Scalars['String']['output']>;
   created_at?: Maybe<Scalars['timestamptz']['output']>;
@@ -1321,7 +1301,6 @@ export type RecipesMinOrderBy = {
 
 /** response of any mutation on the table "recipes" */
 export type RecipesMutationResponse = {
-  __typename?: 'recipes_mutation_response';
   /** number of rows affected by the mutation */
   affected_rows: Scalars['Int']['output'];
   /** data from the rows affected by the mutation */
@@ -1435,7 +1414,6 @@ export type RecipesSetInput = {
 
 /** aggregate stddev on columns */
 export type RecipesStddevFields = {
-  __typename?: 'recipes_stddev_fields';
   /** A computed field, executes function "missing_count" */
   missing_ingredients_count?: Maybe<Scalars['Int']['output']>;
 };
@@ -1448,7 +1426,6 @@ export type RecipesStddevFieldsMissingIngredientsCountArgs = {
 
 /** aggregate stddev_pop on columns */
 export type RecipesStddevPopFields = {
-  __typename?: 'recipes_stddev_pop_fields';
   /** A computed field, executes function "missing_count" */
   missing_ingredients_count?: Maybe<Scalars['Int']['output']>;
 };
@@ -1461,7 +1438,6 @@ export type RecipesStddevPopFieldsMissingIngredientsCountArgs = {
 
 /** aggregate stddev_samp on columns */
 export type RecipesStddevSampFields = {
-  __typename?: 'recipes_stddev_samp_fields';
   /** A computed field, executes function "missing_count" */
   missing_ingredients_count?: Maybe<Scalars['Int']['output']>;
 };
@@ -1501,7 +1477,6 @@ export type RecipesStreamCursorValueInput = {
 
 /** aggregate sum on columns */
 export type RecipesSumFields = {
-  __typename?: 'recipes_sum_fields';
   /** A computed field, executes function "missing_count" */
   missing_ingredients_count?: Maybe<Scalars['Int']['output']>;
 };
@@ -1555,7 +1530,6 @@ export type RecipesUpdates = {
 
 /** aggregate var_pop on columns */
 export type RecipesVarPopFields = {
-  __typename?: 'recipes_var_pop_fields';
   /** A computed field, executes function "missing_count" */
   missing_ingredients_count?: Maybe<Scalars['Int']['output']>;
 };
@@ -1568,7 +1542,6 @@ export type RecipesVarPopFieldsMissingIngredientsCountArgs = {
 
 /** aggregate var_samp on columns */
 export type RecipesVarSampFields = {
-  __typename?: 'recipes_var_samp_fields';
   /** A computed field, executes function "missing_count" */
   missing_ingredients_count?: Maybe<Scalars['Int']['output']>;
 };
@@ -1581,7 +1554,6 @@ export type RecipesVarSampFieldsMissingIngredientsCountArgs = {
 
 /** aggregate variance on columns */
 export type RecipesVarianceFields = {
-  __typename?: 'recipes_variance_fields';
   /** A computed field, executes function "missing_count" */
   missing_ingredients_count?: Maybe<Scalars['Int']['output']>;
 };
@@ -1593,7 +1565,6 @@ export type RecipesVarianceFieldsMissingIngredientsCountArgs = {
 };
 
 export type SubscriptionRoot = {
-  __typename?: 'subscription_root';
   /** fetch data from the table: "ingredients" */
   ingredients: Array<Ingredients>;
   /** fetch aggregated fields from the table: "ingredients" */
@@ -1802,7 +1773,6 @@ export type TimestamptzComparisonExp = {
 
 /** columns and relationships of "user_ingredients" */
 export type UserIngredients = {
-  __typename?: 'user_ingredients';
   amount?: Maybe<Scalars['String']['output']>;
   id: Scalars['uuid']['output'];
   /** An object relationship */
@@ -1813,7 +1783,6 @@ export type UserIngredients = {
 
 /** aggregated selection of "user_ingredients" */
 export type UserIngredientsAggregate = {
-  __typename?: 'user_ingredients_aggregate';
   aggregate?: Maybe<UserIngredientsAggregateFields>;
   nodes: Array<UserIngredients>;
 };
@@ -1831,7 +1800,6 @@ export type UserIngredientsAggregateBoolExpCount = {
 
 /** aggregate fields of "user_ingredients" */
 export type UserIngredientsAggregateFields = {
-  __typename?: 'user_ingredients_aggregate_fields';
   count: Scalars['Int']['output'];
   max?: Maybe<UserIngredientsMaxFields>;
   min?: Maybe<UserIngredientsMinFields>;
@@ -1889,7 +1857,6 @@ export type UserIngredientsInsertInput = {
 
 /** aggregate max on columns */
 export type UserIngredientsMaxFields = {
-  __typename?: 'user_ingredients_max_fields';
   amount?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
   ingredient_id?: Maybe<Scalars['uuid']['output']>;
@@ -1906,7 +1873,6 @@ export type UserIngredientsMaxOrderBy = {
 
 /** aggregate min on columns */
 export type UserIngredientsMinFields = {
-  __typename?: 'user_ingredients_min_fields';
   amount?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
   ingredient_id?: Maybe<Scalars['uuid']['output']>;
@@ -1923,7 +1889,6 @@ export type UserIngredientsMinOrderBy = {
 
 /** response of any mutation on the table "user_ingredients" */
 export type UserIngredientsMutationResponse = {
-  __typename?: 'user_ingredients_mutation_response';
   /** number of rows affected by the mutation */
   affected_rows: Scalars['Int']['output'];
   /** data from the rows affected by the mutation */
@@ -2008,7 +1973,6 @@ export type UserIngredientsUpdates = {
 
 /** columns and relationships of "users" */
 export type Users = {
-  __typename?: 'users';
   created_at: Scalars['timestamptz']['output'];
   deleted_at?: Maybe<Scalars['timestamptz']['output']>;
   email: Scalars['String']['output'];
@@ -2043,14 +2007,12 @@ export type UsersRecipesAggregateArgs = {
 
 /** aggregated selection of "users" */
 export type UsersAggregate = {
-  __typename?: 'users_aggregate';
   aggregate?: Maybe<UsersAggregateFields>;
   nodes: Array<Users>;
 };
 
 /** aggregate fields of "users" */
 export type UsersAggregateFields = {
-  __typename?: 'users_aggregate_fields';
   count: Scalars['Int']['output'];
   max?: Maybe<UsersMaxFields>;
   min?: Maybe<UsersMinFields>;
@@ -2099,7 +2061,6 @@ export type UsersInsertInput = {
 
 /** aggregate max on columns */
 export type UsersMaxFields = {
-  __typename?: 'users_max_fields';
   created_at?: Maybe<Scalars['timestamptz']['output']>;
   deleted_at?: Maybe<Scalars['timestamptz']['output']>;
   email?: Maybe<Scalars['String']['output']>;
@@ -2110,7 +2071,6 @@ export type UsersMaxFields = {
 
 /** aggregate min on columns */
 export type UsersMinFields = {
-  __typename?: 'users_min_fields';
   created_at?: Maybe<Scalars['timestamptz']['output']>;
   deleted_at?: Maybe<Scalars['timestamptz']['output']>;
   email?: Maybe<Scalars['String']['output']>;
@@ -2121,7 +2081,6 @@ export type UsersMinFields = {
 
 /** response of any mutation on the table "users" */
 export type UsersMutationResponse = {
-  __typename?: 'users_mutation_response';
   /** number of rows affected by the mutation */
   affected_rows: Scalars['Int']['output'];
   /** data from the rows affected by the mutation */
@@ -2238,20 +2197,20 @@ export type UuidComparisonExp = {
   _nin?: InputMaybe<Array<Scalars['uuid']['input']>>;
 };
 
-export type BaseRecipeFragment = { __typename?: 'recipes', id: string, title: string, type: any, notes?: string | null, complexity: any, portion_size?: string | null, cooking_time?: string | null, video_url?: string | null, image_url?: string | null };
+export type BaseRecipeFragment = { id: string, title: string, type: any, notes?: string | null, complexity: any, portion_size?: string | null, cooking_time?: string | null, video_url?: string | null, image_url?: string | null };
 
-export type RecipeIngredientFragment = { __typename?: 'recipe_ingredients', amount?: string | null, ingredient: { __typename?: 'ingredients', name: string } };
+export type RecipeIngredientFragment = { amount?: string | null, ingredient: { id: string, name: string } };
 
-export type RecipeFragment = { __typename?: 'recipes', steps: Array<string>, tags: Array<any>, owner_id?: string | null, id: string, title: string, type: any, notes?: string | null, complexity: any, portion_size?: string | null, cooking_time?: string | null, video_url?: string | null, image_url?: string | null, recipe_ingredients: Array<{ __typename?: 'recipe_ingredients', amount?: string | null, ingredient: { __typename?: 'ingredients', name: string } }> };
+export type RecipeFragment = { steps: Array<string>, tags: Array<any>, owner_id?: string | null, id: string, title: string, type: any, notes?: string | null, complexity: any, portion_size?: string | null, cooking_time?: string | null, video_url?: string | null, image_url?: string | null, recipe_ingredients: Array<{ amount?: string | null, ingredient: { id: string, name: string } }> };
 
-export type UserFragment = { __typename?: 'users', id: string, email: string, name: string, created_at: string };
+export type UserFragment = { id: string, email: string, name: string, created_at: string };
 
 export type AddRecipeMutationVariables = Exact<{
   recipe: RecipesInsertInput;
 }>;
 
 
-export type AddRecipeMutation = { __typename?: 'mutation_root', insert_recipes_one?: { __typename?: 'recipes', steps: Array<string>, tags: Array<any>, owner_id?: string | null, id: string, title: string, type: any, notes?: string | null, complexity: any, portion_size?: string | null, cooking_time?: string | null, video_url?: string | null, image_url?: string | null, recipe_ingredients: Array<{ __typename?: 'recipe_ingredients', amount?: string | null, ingredient: { __typename?: 'ingredients', name: string } }> } | null };
+export type AddRecipeMutation = { insert_recipes_one?: { steps: Array<string>, tags: Array<any>, owner_id?: string | null, id: string, title: string, type: any, notes?: string | null, complexity: any, portion_size?: string | null, cooking_time?: string | null, video_url?: string | null, image_url?: string | null, recipe_ingredients: Array<{ amount?: string | null, ingredient: { id: string, name: string } }> } | null };
 
 export type AddUserIngredientMutationVariables = Exact<{
   user_id: Scalars['uuid']['input'];
@@ -2259,28 +2218,28 @@ export type AddUserIngredientMutationVariables = Exact<{
 }>;
 
 
-export type AddUserIngredientMutation = { __typename?: 'mutation_root', insert_user_ingredients_one?: { __typename?: 'user_ingredients', id: string, ingredient: { __typename?: 'ingredients', id: string, name: string } } | null };
+export type AddUserIngredientMutation = { insert_user_ingredients_one?: { id: string, ingredient: { id: string, name: string } } | null };
 
 export type CreateUserMutationVariables = Exact<{
   user: UsersInsertInput;
 }>;
 
 
-export type CreateUserMutation = { __typename?: 'mutation_root', insert_users_one?: { __typename?: 'users', id: string, email: string, name: string, created_at: string } | null };
+export type CreateUserMutation = { insert_users_one?: { id: string, email: string, name: string, created_at: string } | null };
 
 export type DeleteRecipeMutationVariables = Exact<{
   id: Scalars['uuid']['input'];
 }>;
 
 
-export type DeleteRecipeMutation = { __typename?: 'mutation_root', delete_recipes_by_pk?: { __typename?: 'recipes', id: string, title: string } | null };
+export type DeleteRecipeMutation = { delete_recipes_by_pk?: { id: string, title: string } | null };
 
 export type RemoveUserIngredientMutationVariables = Exact<{
   id: Scalars['uuid']['input'];
 }>;
 
 
-export type RemoveUserIngredientMutation = { __typename?: 'mutation_root', delete_user_ingredients_by_pk?: { __typename?: 'user_ingredients', id: string, ingredient: { __typename?: 'ingredients', name: string } } | null };
+export type RemoveUserIngredientMutation = { delete_user_ingredients_by_pk?: { id: string, ingredient: { name: string } } | null };
 
 export type UpdateRecipeMutationVariables = Exact<{
   id: Scalars['uuid']['input'];
@@ -2288,7 +2247,16 @@ export type UpdateRecipeMutationVariables = Exact<{
 }>;
 
 
-export type UpdateRecipeMutation = { __typename?: 'mutation_root', update_recipes_by_pk?: { __typename?: 'recipes', steps: Array<string>, tags: Array<any>, owner_id?: string | null, id: string, title: string, type: any, notes?: string | null, complexity: any, portion_size?: string | null, cooking_time?: string | null, video_url?: string | null, image_url?: string | null, recipe_ingredients: Array<{ __typename?: 'recipe_ingredients', amount?: string | null, ingredient: { __typename?: 'ingredients', name: string } }> } | null };
+export type UpdateRecipeMutation = { update_recipes_by_pk?: { steps: Array<string>, tags: Array<any>, owner_id?: string | null, id: string, title: string, type: any, notes?: string | null, complexity: any, portion_size?: string | null, cooking_time?: string | null, video_url?: string | null, image_url?: string | null, recipe_ingredients: Array<{ amount?: string | null, ingredient: { id: string, name: string } }> } | null };
+
+export type UpdateRecipeIngredientsMutationVariables = Exact<{
+  oldIngredients?: Array<Scalars['uuid']['input']> | Scalars['uuid']['input'];
+  newIngredients?: Array<RecipeIngredientsInsertInput> | RecipeIngredientsInsertInput;
+  recipeId: Scalars['uuid']['input'];
+}>;
+
+
+export type UpdateRecipeIngredientsMutation = { delete_recipe_ingredients?: { affected_rows: number } | null, insert_recipe_ingredients?: { affected_rows: number } | null };
 
 export type UpdateUserMutationVariables = Exact<{
   id: Scalars['uuid']['input'];
@@ -2296,47 +2264,47 @@ export type UpdateUserMutationVariables = Exact<{
 }>;
 
 
-export type UpdateUserMutation = { __typename?: 'mutation_root', update_users_by_pk?: { __typename?: 'users', id: string, email: string, name: string, created_at: string } | null };
+export type UpdateUserMutation = { update_users_by_pk?: { id: string, email: string, name: string, created_at: string } | null };
 
 export type GetAllIngredientsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAllIngredientsQuery = { __typename?: 'query_root', ingredients: Array<{ __typename?: 'ingredients', id: string, name: string }> };
+export type GetAllIngredientsQuery = { ingredients: Array<{ id: string, name: string }> };
 
 export type GetRecipeByIdQueryVariables = Exact<{
   id: Scalars['uuid']['input'];
 }>;
 
 
-export type GetRecipeByIdQuery = { __typename?: 'query_root', recipes_by_pk?: { __typename?: 'recipes', steps: Array<string>, tags: Array<any>, owner_id?: string | null, id: string, title: string, type: any, notes?: string | null, complexity: any, portion_size?: string | null, cooking_time?: string | null, video_url?: string | null, image_url?: string | null, recipe_ingredients: Array<{ __typename?: 'recipe_ingredients', amount?: string | null, ingredient: { __typename?: 'ingredients', name: string } }> } | null };
+export type GetRecipeByIdQuery = { recipes_by_pk?: { steps: Array<string>, tags: Array<any>, owner_id?: string | null, id: string, title: string, type: any, notes?: string | null, complexity: any, portion_size?: string | null, cooking_time?: string | null, video_url?: string | null, image_url?: string | null, recipe_ingredients: Array<{ amount?: string | null, ingredient: { id: string, name: string } }> } | null };
 
 export type GetRecipesQueryVariables = Exact<{
   owner_id: Scalars['uuid']['input'];
 }>;
 
 
-export type GetRecipesQuery = { __typename?: 'query_root', recipes: Array<{ __typename?: 'recipes', missing_ingredients_count?: number | null, steps: Array<string>, tags: Array<any>, owner_id?: string | null, id: string, title: string, type: any, notes?: string | null, complexity: any, portion_size?: string | null, cooking_time?: string | null, video_url?: string | null, image_url?: string | null, recipe_ingredients: Array<{ __typename?: 'recipe_ingredients', amount?: string | null, ingredient: { __typename?: 'ingredients', name: string } }> }> };
+export type GetRecipesQuery = { recipes: Array<{ missing_ingredients_count?: number | null, steps: Array<string>, tags: Array<any>, owner_id?: string | null, id: string, title: string, type: any, notes?: string | null, complexity: any, portion_size?: string | null, cooking_time?: string | null, video_url?: string | null, image_url?: string | null, recipe_ingredients: Array<{ amount?: string | null, ingredient: { id: string, name: string } }> }> };
 
 export type GetUserByEmailQueryVariables = Exact<{
   email: Scalars['String']['input'];
 }>;
 
 
-export type GetUserByEmailQuery = { __typename?: 'query_root', users: Array<{ __typename?: 'users', id: string, email: string, name: string, created_at: string }> };
+export type GetUserByEmailQuery = { users: Array<{ id: string, email: string, name: string, created_at: string }> };
 
 export type GetUserByIdQueryVariables = Exact<{
   id: Scalars['uuid']['input'];
 }>;
 
 
-export type GetUserByIdQuery = { __typename?: 'query_root', users_by_pk?: { __typename?: 'users', id: string, email: string, name: string, created_at: string } | null };
+export type GetUserByIdQuery = { users_by_pk?: { id: string, email: string, name: string, created_at: string } | null };
 
 export type GetUserIngredientsQueryVariables = Exact<{
   user_id: Scalars['uuid']['input'];
 }>;
 
 
-export type GetUserIngredientsQuery = { __typename?: 'query_root', user_ingredients: Array<{ __typename?: 'user_ingredients', id: string, ingredient: { __typename?: 'ingredients', id: string, name: string } }> };
+export type GetUserIngredientsQuery = { user_ingredients: Array<{ id: string, ingredient: { id: string, name: string } }> };
 
 export const BaseRecipeFragmentDoc = gql`
     fragment BaseRecipe on recipes {
@@ -2354,6 +2322,7 @@ export const BaseRecipeFragmentDoc = gql`
 export const RecipeIngredientFragmentDoc = gql`
     fragment RecipeIngredient on recipe_ingredients {
   ingredient {
+    id
     name
   }
   amount
@@ -2589,6 +2558,46 @@ export function useUpdateRecipeMutation(baseOptions?: Apollo.MutationHookOptions
 export type UpdateRecipeMutationHookResult = ReturnType<typeof useUpdateRecipeMutation>;
 export type UpdateRecipeMutationResult = Apollo.MutationResult<UpdateRecipeMutation>;
 export type UpdateRecipeMutationOptions = Apollo.BaseMutationOptions<UpdateRecipeMutation, UpdateRecipeMutationVariables>;
+export const UpdateRecipeIngredientsDocument = gql`
+    mutation UpdateRecipeIngredients($oldIngredients: [uuid!]! = [], $newIngredients: [recipe_ingredients_insert_input!]! = [], $recipeId: uuid!) {
+  delete_recipe_ingredients(
+    where: {recipe_id: {_eq: $recipeId}, ingredient_id: {_in: $oldIngredients}}
+  ) {
+    affected_rows
+  }
+  insert_recipe_ingredients(objects: $newIngredients) {
+    affected_rows
+  }
+}
+    `;
+export type UpdateRecipeIngredientsMutationFn = Apollo.MutationFunction<UpdateRecipeIngredientsMutation, UpdateRecipeIngredientsMutationVariables>;
+
+/**
+ * __useUpdateRecipeIngredientsMutation__
+ *
+ * To run a mutation, you first call `useUpdateRecipeIngredientsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateRecipeIngredientsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateRecipeIngredientsMutation, { data, loading, error }] = useUpdateRecipeIngredientsMutation({
+ *   variables: {
+ *      oldIngredients: // value for 'oldIngredients'
+ *      newIngredients: // value for 'newIngredients'
+ *      recipeId: // value for 'recipeId'
+ *   },
+ * });
+ */
+export function useUpdateRecipeIngredientsMutation(baseOptions?: Apollo.MutationHookOptions<UpdateRecipeIngredientsMutation, UpdateRecipeIngredientsMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateRecipeIngredientsMutation, UpdateRecipeIngredientsMutationVariables>(UpdateRecipeIngredientsDocument, options);
+      }
+export type UpdateRecipeIngredientsMutationHookResult = ReturnType<typeof useUpdateRecipeIngredientsMutation>;
+export type UpdateRecipeIngredientsMutationResult = Apollo.MutationResult<UpdateRecipeIngredientsMutation>;
+export type UpdateRecipeIngredientsMutationOptions = Apollo.BaseMutationOptions<UpdateRecipeIngredientsMutation, UpdateRecipeIngredientsMutationVariables>;
 export const UpdateUserDocument = gql`
     mutation UpdateUser($id: uuid!, $user: users_set_input!) {
   update_users_by_pk(pk_columns: {id: $id}, _set: $user) {
