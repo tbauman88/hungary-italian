@@ -35,7 +35,7 @@ const config: CodegenConfig = {
         withHooks: true,
         withHOC: false,
         withComponent: false,
-        skipTypename: false,
+        skipTypename: true,
         namingConvention: {
           typeNames: 'pascal-case#pascalCase',
           enumValues: 'upper-case#upperCase',
