@@ -92,7 +92,7 @@ export const EditRecipePage = () => {
   }, [recipe, form])
 
   const handleUpdateIngredients = async (recipeId: string): Promise<void> => {
-    if (changedIngredients.length === 0) return;
+    if (changedIngredients.length === 0) return Promise.resolve();
 
     const updateIngredients: UpdateRecipeIngredientsMutationVariables = {
       recipeId,

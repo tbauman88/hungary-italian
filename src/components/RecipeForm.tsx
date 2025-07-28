@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
-import { RecipeComplexity, type RecipeFormData, RecipeType } from '../types'
+import { RecipeComplexity, RecipeTag, RecipeType, type RecipeFormData } from '../types'
 import { DynamicFieldArray } from './DynamicFieldArray'
 import { FormContainer } from './FormContainer'
 import { FormInput } from './FormInput'
@@ -201,7 +201,7 @@ export const RecipeForm = ({ title, submitText, onSubmit, isLoading, error }: Re
               render={({ field }) => (
                 <TagSelector
                   label="Tags (optional)"
-                  selectedTags={field.value || [] as any[]}
+                  selectedTags={field.value as RecipeTag[] || []}
                   onTagToggle={(tag) => {
                     const newTags = field.value?.includes(tag)
                       ? field.value.filter(t => t !== tag)
