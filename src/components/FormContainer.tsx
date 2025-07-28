@@ -9,7 +9,6 @@ interface FormContainerProps {
   error?: string | null
 }
 
-// Submit button component
 const SubmitButton = ({ submitText, isLoading, isValid }: {
   submitText: string
   isLoading?: boolean

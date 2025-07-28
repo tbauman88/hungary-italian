@@ -1,9 +1,6 @@
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useEffect, useState } from 'react'
-import { Controller, useFieldArray, useForm } from 'react-hook-form'
-import { z } from 'zod'
-import { type RecipeFragment } from '../generated/graphql'
-import { RecipeComplexity, RecipeSchema, RecipeType } from '../types'
+import { useState } from 'react'
+import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
+import { RecipeComplexity, type RecipeFormData, RecipeType } from '../types'
 import { DynamicFieldArray } from './DynamicFieldArray'
 import { FormContainer } from './FormContainer'
 import { FormInput } from './FormInput'
@@ -12,17 +9,15 @@ import { FormTextarea } from './FormTextarea'
 import { ImageUpload } from './ImageUpload'
 import { TagSelector } from './TagSelector'
 
-type RecipeFormData = z.infer<typeof RecipeSchema>
-
 interface RecipeFormProps {
-  mode: 'add' | 'edit'
-  recipe?: RecipeFragment
+  title: string
+  submitText: string
   onSubmit: (data: RecipeFormData, uploadedFile?: File | null) => Promise<string | null>
   isLoading?: boolean
   error?: string | null
 }
 
-export const RecipeForm = ({ mode, recipe, onSubmit, isLoading, error }: RecipeFormProps) => {
+export const RecipeForm = ({ title, submitText, onSubmit, isLoading, error }: RecipeFormProps) => {
   const [uploadedFile, setUploadedFile] = useState<File | null>(null)
 
   const {
@@ -32,42 +27,7 @@ export const RecipeForm = ({ mode, recipe, onSubmit, isLoading, error }: RecipeF
     watch,
     setValue,
     formState: { errors, isValid },
-    reset
-  } = useForm<RecipeFormData>({
-    resolver: zodResolver(RecipeSchema),
-    defaultValues: {
-      title: '',
-      notes: undefined,
-      cooking_time: undefined,
-      complexity: undefined,
-      portion_size: 1,
-      image_url: '',
-      video_url: '',
-      ingredients: [{ name: '', amount: '' }],
-      steps: [{ description: '' }],
-      tags: [],
-      type: undefined,
-    },
-    mode: 'onBlur'
-  })
-
-  useEffect(() => {
-    if (mode === 'edit' && recipe) {
-      reset({
-        title: recipe.title,
-        notes: recipe.notes || undefined,
-        cooking_time: recipe.cooking_time ? parseInt(recipe.cooking_time) : undefined,
-        complexity: recipe.complexity || undefined,
-        portion_size: recipe.portion_size ? parseInt(recipe.portion_size) : 1,
-        image_url: recipe.image_url || '',
-        video_url: recipe.video_url || '',
-        ingredients: recipe.recipe_ingredients?.map(ri => ({ name: ri.ingredient.name, amount: ri.amount || '' })) || [{ name: '', amount: '' }],
-        steps: recipe.steps?.map(step => ({ description: step })) || [{ description: '' }],
-        tags: recipe.tags || [],
-        type: recipe.type || undefined,
-      })
-    }
-  }, [mode, recipe, reset])
+  } = useFormContext<RecipeFormData>()
 
   const {
     fields: ingredientFields,
@@ -90,9 +50,6 @@ export const RecipeForm = ({ mode, recipe, onSubmit, isLoading, error }: RecipeF
   const handleFormSubmit = async (data: RecipeFormData) => {
     await onSubmit(data, uploadedFile)
   }
-
-  const title = mode === 'add' ? 'Create New Recipe' : 'Edit Recipe'
-  const submitText = mode === 'add' ? 'Create Recipe' : 'Update Recipe'
 
   return (
     <FormContainer
@@ -142,6 +99,7 @@ export const RecipeForm = ({ mode, recipe, onSubmit, isLoading, error }: RecipeF
                 options={Object.values(RecipeComplexity).map(complexity => ({ value: complexity, label: complexity }))}
                 placeholder="Select complexity"
                 error={errors.complexity}
+                required
               />
             </div>
 
@@ -153,6 +111,7 @@ export const RecipeForm = ({ mode, recipe, onSubmit, isLoading, error }: RecipeF
                 type="number"
                 placeholder="30"
                 error={errors.cooking_time}
+                required
               />
 
               <FormInput
@@ -242,7 +201,7 @@ export const RecipeForm = ({ mode, recipe, onSubmit, isLoading, error }: RecipeF
               render={({ field }) => (
                 <TagSelector
                   label="Tags (optional)"
-                  selectedTags={field.value || []}
+                  selectedTags={field.value || [] as any[]}
                   onTagToggle={(tag) => {
                     const newTags = field.value?.includes(tag)
                       ? field.value.filter(t => t !== tag)

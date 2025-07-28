@@ -1,6 +1,6 @@
 import { useState } from 'react'
+import { FormProvider, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
-import { z } from 'zod'
 import { RecipeForm } from '../components/RecipeForm'
 import { useAuth } from '../contexts/AuthContext'
 import {
@@ -9,10 +9,8 @@ import {
   useAddRecipeMutation,
   type RecipesInsertInput
 } from '../generated/graphql'
-import { RecipeSchema } from '../types'
+import { FORM_DEFAULT_VALUES, RecipeResolver, type RecipeFormData } from '../types'
 import { getFileName } from '../utils'
-
-type RecipeFormData = z.infer<typeof RecipeSchema>
 
 export const AddRecipePage = () => {
   const navigate = useNavigate()
@@ -21,6 +19,13 @@ export const AddRecipePage = () => {
 
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  const form = useForm<RecipeFormData>({
+    resolver: RecipeResolver,
+    defaultValues: FORM_DEFAULT_VALUES,
+    mode: 'all',
+    reValidateMode: 'onChange',
+  })
 
   const handleSubmit = async (data: RecipeFormData, uploadedFile?: File | null): Promise<string | null> => {
     setIsLoading(true)
@@ -47,7 +52,7 @@ export const AddRecipePage = () => {
             }
           }))
         },
-        steps: steps.map(step => step.description)
+        steps: steps?.map(step => step.description)
       }
 
       const result = await addRecipe({ variables: { recipe } })
@@ -68,11 +73,14 @@ export const AddRecipePage = () => {
   }
 
   return (
-    <RecipeForm
-      mode="add"
-      onSubmit={handleSubmit}
-      isLoading={isLoading}
-      error={error}
-    />
+    <FormProvider {...form}>
+      <RecipeForm
+        title="Create New Recipe"
+        submitText="Create Recipe"
+        onSubmit={handleSubmit}
+        isLoading={isLoading}
+        error={error}
+      />
+    </FormProvider>
   )
 } 

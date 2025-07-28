@@ -84,6 +84,14 @@ export const DynamicFieldArray = ({
                     className={`w-full px-4 py-3.5 text-base border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200 shadow-sm hover:shadow-md focus:shadow-lg ${isTextarea ? 'resize-none' : ''} border-gray-300 bg-white hover:border-gray-400`}
                     onBlur={register(`${fieldName}.${index}.${isTextarea ? 'description' : 'name'}`).onBlur}
                   />
+                  {errors && errors[index] && errors[index][isTextarea ? 'description' : 'name'] && (
+                    <p className="text-sm text-red-600 font-medium mt-1 flex items-center space-x-1">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <span>{errors[index][isTextarea ? 'description' : 'name'].message}</span>
+                    </p>
+                  )}
                 </div>
               )}
               {fields.length > 1 && (
@@ -101,7 +109,7 @@ export const DynamicFieldArray = ({
         ))}
         <button
           type="button"
-          onClick={() => append(isTextarea ? { description: '' } : { name: '', amount: '' })}
+          onClick={() => append(isTextarea ? { description: '' } : { name: '', amount: '', ingredientId: '' })}
           className="flex items-center justify-center w-full px-4 py-3.5 text-base border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200 shadow-sm hover:shadow-md focus:shadow-lg border-gray-300 bg-white hover:border-gray-400"
         >
           <PlusIcon className="h-5 w-5 mr-2" />
