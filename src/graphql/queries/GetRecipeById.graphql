@@ -1,5 +1,11 @@
-query GetRecipeById($id: uuid!) {
+query GetRecipeById($id: uuid!, $userId: uuid!) {
     recipes_by_pk(id: $id) {
         ...Recipe
+        missing_ingredients_count(args: { user_id: $userId })
+        missing_ingredients(args: { user_id: $userId }) {
+            ingredient {
+                name
+            }
+        }
     }
 }

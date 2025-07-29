@@ -1,4 +1,5 @@
 import { ClockIcon, HeartIcon, PencilSquareIcon, TrashIcon, UserGroupIcon, VideoCameraIcon } from '@heroicons/react/24/outline'
+import { CheckBadgeIcon } from '@heroicons/react/24/solid'
 import { useState } from 'react'
 import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
 import { LoadingSpinner } from '../components/LoadingSpinner'
@@ -60,7 +61,8 @@ export const RecipePage = () => {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
 
   const { loading, error, data } = useGetRecipeByIdQuery({
-    variables: { id: id || '' },
+    skip: !id || !currentUserId,
+    variables: { id: id || '', userId: currentUserId || '' },
   })
 
   const [deleteRecipe] = useDeleteRecipeMutation()
@@ -231,14 +233,18 @@ export const RecipePage = () => {
             </div>
 
             <ul className="space-y-3">
-              {recipe.recipe_ingredients?.map((ingredient, index) => (
-                <li key={index} className="flex items-center p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors duration-200">
-                  <div className="w-2 h-2 bg-primary-500 rounded-full mr-4 flex-shrink-0"></div>
-                  <span className="text-gray-700 font-medium">
-                    {ingredient.amount} <span className="capitalize">{ingredient.ingredient.name}</span>
-                  </span>
-                </li>
-              ))}
+              {recipe.recipe_ingredients?.map((ingredient, index) => {
+                const isMissing = recipe.missing_ingredients?.some(missing => missing.ingredient.name === ingredient.ingredient.name)
+
+                return (
+                  <li key={index} className="flex items-center justify-between p-3 rounded-xl transition-colors duration-200 bg-gray-50 hover:bg-gray-100">
+                    <span className="font-medium text-gray-700">
+                      {ingredient.amount} <span className="capitalize">{ingredient.ingredient.name}</span>
+                    </span>
+                    {!isMissing && <CheckBadgeIcon className="w-6 h-6 text-green-500" />}
+                  </li>
+                )
+              })}
             </ul>
           </div>
         </div>

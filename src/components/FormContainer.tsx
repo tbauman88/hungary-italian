@@ -1,3 +1,5 @@
+import { ChevronLeftIcon } from "@heroicons/react/24/outline"
+
 interface FormContainerProps {
   title: string
   onSubmit?: (e: React.FormEvent) => void
@@ -7,6 +9,10 @@ interface FormContainerProps {
   isLoading?: boolean
   isValid?: boolean
   error?: string | null
+  backButton?: {
+    onClick: () => void
+    label: string
+  }
 }
 
 const SubmitButton = ({ submitText, isLoading, isValid }: {
@@ -40,12 +46,13 @@ export const FormContainer = ({
   submitText,
   isLoading = false,
   isValid = true,
-  error
+  error,
+  backButton
 }: FormContainerProps) => {
   return (
     <div className="min-h-screen bg-white sm:bg-gray-50">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-12">
-        <div className="text-center mb-8 sm:mb-16">
+        <div className="text-center mb-8 sm:mb-12">
           <div className="relative">
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="w-32 h-32 sm:w-48 sm:h-48 bg-gradient-to-br from-primary-100 to-primary-200 rounded-full opacity-20 blur-3xl"></div>
@@ -65,6 +72,18 @@ export const FormContainer = ({
                   )}
                 </p>
               </div>
+
+              {backButton && (
+                <div className="flex justify-center mt-6">
+                  <button
+                    onClick={backButton.onClick}
+                    className="inline-flex items-center space-x-2 px-4 py-2 text-gray-600 hover:text-primary-600 transition-colors duration-200 font-medium rounded-lg hover:bg-primary-50"
+                  >
+                    <ChevronLeftIcon className="w-5 h-5" />
+                    <span>{backButton.label}</span>
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>

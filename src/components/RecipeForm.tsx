@@ -15,9 +15,13 @@ interface RecipeFormProps {
   onSubmit: (data: RecipeFormData, uploadedFile?: File | null) => Promise<string | null>
   isLoading?: boolean
   error?: string | null
+  backButton?: {
+    onClick: () => void
+    label: string
+  }
 }
 
-export const RecipeForm = ({ title, submitText, onSubmit, isLoading, error }: RecipeFormProps) => {
+export const RecipeForm = ({ title, submitText, onSubmit, isLoading, error, backButton }: RecipeFormProps) => {
   const [uploadedFile, setUploadedFile] = useState<File | null>(null)
 
   const {
@@ -59,6 +63,7 @@ export const RecipeForm = ({ title, submitText, onSubmit, isLoading, error }: Re
       isLoading={isLoading}
       isValid={isValid}
       error={error}
+      backButton={backButton}
     >
       {/* Basic Information Section */}
       <div className="space-y-10 sm:space-y-16">

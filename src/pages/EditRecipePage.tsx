@@ -45,8 +45,8 @@ export const EditRecipePage = () => {
     error: recipeError,
     data
   } = useGetRecipeByIdQuery({
-    variables: { id: id || '' },
-    skip: !id
+    variables: { id: id || '', userId: currentUserId || '' },
+    skip: !id || !currentUserId
   })
 
   const recipe = data?.recipes_by_pk
@@ -182,6 +182,10 @@ export const EditRecipePage = () => {
         onSubmit={handleSubmit}
         isLoading={isLoading}
         error={error}
+        backButton={{
+          onClick: () => navigate(`/recipe/${id}`),
+          label: "Back to Recipe"
+        }}
       />
     </FormProvider>
   )

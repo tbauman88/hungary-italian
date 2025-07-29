@@ -2355,10 +2355,11 @@ export type GetAllIngredientsQuery = { ingredients: Array<{ id: string, name: st
 
 export type GetRecipeByIdQueryVariables = Exact<{
   id: Scalars['uuid']['input'];
+  userId: Scalars['uuid']['input'];
 }>;
 
 
-export type GetRecipeByIdQuery = { recipes_by_pk?: { steps: Array<string>, tags: Array<any>, owner_id?: string | null, id: string, title: string, type: any, notes?: string | null, complexity: any, portion_size?: number | null, cooking_time?: number | null, video_url?: string | null, image_url?: string | null, recipe_ingredients: Array<{ amount?: string | null, ingredient: { id: string, name: string } }> } | null };
+export type GetRecipeByIdQuery = { recipes_by_pk?: { missing_ingredients_count?: number | null, steps: Array<string>, tags: Array<any>, owner_id?: string | null, id: string, title: string, type: any, notes?: string | null, complexity: any, portion_size?: number | null, cooking_time?: number | null, video_url?: string | null, image_url?: string | null, missing_ingredients?: Array<{ ingredient: { name: string } }> | null, recipe_ingredients: Array<{ amount?: string | null, ingredient: { id: string, name: string } }> } | null };
 
 export type GetRecipesQueryVariables = Exact<{
   owner_id: Scalars['uuid']['input'];
@@ -2755,9 +2756,15 @@ export type GetAllIngredientsLazyQueryHookResult = ReturnType<typeof useGetAllIn
 export type GetAllIngredientsSuspenseQueryHookResult = ReturnType<typeof useGetAllIngredientsSuspenseQuery>;
 export type GetAllIngredientsQueryResult = Apollo.QueryResult<GetAllIngredientsQuery, GetAllIngredientsQueryVariables>;
 export const GetRecipeByIdDocument = gql`
-    query GetRecipeById($id: uuid!) {
+    query GetRecipeById($id: uuid!, $userId: uuid!) {
   recipes_by_pk(id: $id) {
     ...Recipe
+    missing_ingredients_count(args: {user_id: $userId})
+    missing_ingredients(args: {user_id: $userId}) {
+      ingredient {
+        name
+      }
+    }
   }
 }
     ${RecipeFragmentDoc}`;
@@ -2775,6 +2782,7 @@ export const GetRecipeByIdDocument = gql`
  * const { data, loading, error } = useGetRecipeByIdQuery({
  *   variables: {
  *      id: // value for 'id'
+ *      userId: // value for 'userId'
  *   },
  * });
  */
