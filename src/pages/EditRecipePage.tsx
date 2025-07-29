@@ -121,15 +121,20 @@ export const EditRecipePage = () => {
     await updateRecipeIngredients({ variables: updateIngredients })
   }
 
-  const handleUpdateRecipe = async (recipeId: string, data: RecipeFormData, uploadedFile?: File | null): Promise<void> => {
-    const recipeUpdate = filterDirtyFields<RecipesSetInput>(form.formState.dirtyFields, data)
+  const handleUpdateRecipe = async (recipeId: string, formData: RecipeFormData, uploadedFile?: File | null): Promise<void> => {
+    const { ingredients, ...recipeData } = formData
+    const { ingredients: _, ...dirtyFields } = form.formState.dirtyFields
+
+    const recipe = filterDirtyFields<RecipesSetInput>(dirtyFields, recipeData)
 
     if (uploadedFile) {
-      const filename = getFileName(uploadedFile, data.title)
-      recipeUpdate.image_url = filename
+      const filename = getFileName(uploadedFile, recipeData.title)
+      recipe.image_url = filename
     }
 
-    await updateRecipe({ variables: { id: recipeId, recipe: recipeUpdate } })
+    if (Object.keys(recipe).length === 0) return Promise.resolve()
+
+    await updateRecipe({ variables: { id: recipeId, recipe } })
   }
 
   const handleSubmit = async (data: RecipeFormData, uploadedFile?: File | null): Promise<string | null> => {
