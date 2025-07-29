@@ -51,7 +51,7 @@ export const RecipeSchema = object({
     amount: string().required('Amount is required'),
     ingredientId: string().optional().nullable(),
   })).min(1, 'At least one ingredient is required').default([]),
-  steps: array(object({ description: string().required('Step description is required') })).default([]),
+  steps: array(string().required('Step description is required')).default([]),
   image_url: string().optional(),
   video_url: string().url('Must be a valid URL').optional(),
   tags: array(string()).optional(),
@@ -71,7 +71,7 @@ export const FORM_DEFAULT_VALUES: InferType<typeof RecipeSchema> = {
   image_url: '',
   video_url: '',
   ingredients: [{ ingredientId: '', name: '', amount: '' }],
-  steps: [{ description: '' }],
+  steps: [''],
   tags: [],
   type: RecipeType.SIDES,
 }

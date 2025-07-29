@@ -27,32 +27,29 @@ export const AddRecipePage = () => {
     reValidateMode: 'onChange',
   })
 
+  const setIngredients = (ingredients: RecipeFormData['ingredients']) => ({
+    data: ingredients.map(ingredient => ({
+      amount: ingredient.amount || null,
+      ingredient: {
+        data: { name: ingredient.name.toLowerCase() },
+        on_conflict: {
+          constraint: IngredientsConstraint.INGREDIENTS_NAME_KEY,
+          update_columns: [IngredientsUpdateColumn.NAME]
+        }
+      }
+    }))
+  })
+
   const handleSubmit = async (data: RecipeFormData, uploadedFile?: File | null): Promise<string | null> => {
     setIsLoading(true)
     setError(null)
 
     try {
-      const { ingredients, steps, ...recipeData } = data
-
       const recipe: RecipesInsertInput = {
-        ...recipeData,
-        image_url: getFileName(uploadedFile, recipeData.title),
+        ...data,
         owner_id: currentUserId,
-        cooking_time: data.cooking_time ? String(data.cooking_time) : null,
-        portion_size: String(data.portion_size),
-        recipe_ingredients: {
-          data: ingredients.map(ingredient => ({
-            amount: ingredient.amount || null,
-            ingredient: {
-              data: { name: ingredient.name.toLowerCase() },
-              on_conflict: {
-                constraint: IngredientsConstraint.INGREDIENTS_NAME_KEY,
-                update_columns: [IngredientsUpdateColumn.NAME]
-              }
-            }
-          }))
-        },
-        steps: steps?.map(step => step.description)
+        image_url: getFileName(uploadedFile, data.title),
+        recipe_ingredients: setIngredients(data.ingredients),
       }
 
       const result = await addRecipe({ variables: { recipe } })
