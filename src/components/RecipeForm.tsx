@@ -44,7 +44,7 @@ export const RecipeForm = ({ title, submitText, onSubmit, isLoading, error }: Re
     remove: removeStep
   } = useFieldArray({
     control,
-    name: 'steps'
+    name: 'steps',
   })
 
   const handleFormSubmit = async (data: RecipeFormData) => {
@@ -153,7 +153,7 @@ export const RecipeForm = ({ title, submitText, onSubmit, isLoading, error }: Re
 
             <DynamicFieldArray
               label="Steps"
-              fields={stepFields}
+              fields={stepFields.length === 0 ? [{ id: '' }] : stepFields}
               register={register}
               control={control}
               remove={removeStep}

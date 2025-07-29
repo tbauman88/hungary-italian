@@ -16,6 +16,14 @@ import {
 import { FORM_DEFAULT_VALUES, RecipeResolver, type RecipeFormData } from '../types'
 import { getFileName } from '../utils'
 
+const filterDirtyFields = <T extends object>(
+  dirtyFields: Partial<Record<keyof T, unknown>>,
+  data: T
+): Partial<T> => Object.entries(dirtyFields).reduce((acc, [key]) => {
+  acc[key as keyof T] = data[key as keyof T]
+  return acc
+}, {} as Partial<T>)
+
 export const EditRecipePage = () => {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
@@ -74,9 +82,9 @@ export const EditRecipePage = () => {
       form.reset({
         title: recipe.title,
         notes: recipe.notes || undefined,
-        cooking_time: recipe.cooking_time ? parseInt(recipe.cooking_time) : undefined,
+        cooking_time: recipe.cooking_time || undefined,
         complexity: recipe.complexity || undefined,
-        portion_size: recipe.portion_size ? parseInt(recipe.portion_size) : 1,
+        portion_size: recipe.portion_size || undefined,
         image_url: recipe.image_url || '',
         video_url: recipe.video_url || '',
         ingredients: recipe.recipe_ingredients?.map(ri => ({
@@ -84,7 +92,7 @@ export const EditRecipePage = () => {
           name: ri.ingredient.name || '',
           amount: ri.amount || '',
         })) || [{ ingredientId: '', name: '', amount: '' }],
-        steps: recipe.steps?.map(step => ({ description: step })) || [{ description: '' }],
+        steps: recipe.steps || [],
         tags: recipe.tags || [],
         type: recipe.type || undefined,
       })
@@ -114,17 +122,10 @@ export const EditRecipePage = () => {
   }
 
   const handleUpdateRecipe = async (recipeId: string, data: RecipeFormData, uploadedFile?: File | null): Promise<void> => {
-    const { ingredients, steps, ...recipeData } = data
-
-    const recipeUpdate: RecipesSetInput = {
-      ...recipeData,
-      cooking_time: data.cooking_time ? String(data.cooking_time) : null,
-      portion_size: String(data.portion_size),
-      steps: steps.map(step => step.description)
-    }
+    const recipeUpdate = filterDirtyFields<RecipesSetInput>(form.formState.dirtyFields, data)
 
     if (uploadedFile) {
-      const filename = getFileName(uploadedFile, recipeData.title)
+      const filename = getFileName(uploadedFile, data.title)
       recipeUpdate.image_url = filename
     }
 

@@ -29,8 +29,6 @@ export const DynamicFieldArray = ({
   errors = {},
   control,
 }: DynamicFieldArrayProps) => {
-  const InputComponent = isTextarea ? 'textarea' : 'input'
-
   return (
     <div className="space-y-4">
       <label className="block text-sm font-semibold text-gray-700">
@@ -41,7 +39,7 @@ export const DynamicFieldArray = ({
         {fields.map((field, index) => (
           <div key={field.id} className="group relative">
             <div className="flex gap-3">
-              {fieldName === 'ingredients' && !isTextarea && control ? (
+              {fieldName === 'ingredients' && (
                 <>
                   <div className="w-32">
                     <input
@@ -74,22 +72,23 @@ export const DynamicFieldArray = ({
                     )}
                   </div>
                 </>
-              ) : (
+              )}
+              {fieldName === 'steps' && (
                 <div className="flex-1 relative">
-                  <InputComponent
-                    {...register(`${fieldName}.${index}.${isTextarea ? 'description' : 'name'}`)}
-                    type={isTextarea ? undefined : 'text'}
+                  <textarea
+                    {...register(`${fieldName}.${index}`)}
+                    type='textarea'
                     placeholder={placeholder(index)}
-                    rows={isTextarea ? 4 : undefined}
+                    rows={4}
                     className={`w-full px-4 py-3.5 text-base border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200 shadow-sm hover:shadow-md focus:shadow-lg ${isTextarea ? 'resize-none' : ''} border-gray-300 bg-white hover:border-gray-400`}
-                    onBlur={register(`${fieldName}.${index}.${isTextarea ? 'description' : 'name'}`).onBlur}
+                    onBlur={register(`${fieldName}.${index}`).onBlur}
                   />
-                  {errors && errors[index] && errors[index][isTextarea ? 'description' : 'name'] && (
+                  {errors && errors[index] && errors[index] && (
                     <p className="text-sm text-red-600 font-medium mt-1 flex items-center space-x-1">
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
-                      <span>{errors[index][isTextarea ? 'description' : 'name'].message}</span>
+                      <span>{errors[index].message}</span>
                     </p>
                   )}
                 </div>
@@ -109,7 +108,7 @@ export const DynamicFieldArray = ({
         ))}
         <button
           type="button"
-          onClick={() => append(isTextarea ? { description: '' } : { name: '', amount: '', ingredientId: '' })}
+          onClick={() => append(isTextarea ? '' : { name: '', amount: '', ingredientId: '' })}
           className="flex items-center justify-center w-full px-4 py-3.5 text-base border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200 shadow-sm hover:shadow-md focus:shadow-lg border-gray-300 bg-white hover:border-gray-400"
         >
           <PlusIcon className="h-5 w-5 mr-2" />
