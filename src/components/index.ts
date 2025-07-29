@@ -1,4 +1,4 @@
-export { AddIngredientModal } from './AddIngredientModal'
+export { AddIngredientList } from './AddIngredientList'
 export { AuthForm } from './AuthForm'
 export { AuthFormModern } from './AuthFormModern'
 export { DynamicFieldArray } from './DynamicFieldArray'
@@ -18,3 +18,4 @@ export { RecipeForm } from './RecipeForm'
 export { RecipeSearch } from './RecipeSearch'
 export { RecipeSort } from './RecipeSort'
 export { TagSelector } from './TagSelector'
+
