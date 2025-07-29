@@ -3,19 +3,9 @@ import { defineConfig } from 'vite';
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: '/',
   plugins: [
     react(),
-    {
-      name: 'custom-mime-sw',
-      configureServer(server) {
-        server.middlewares.use((req, res, next) => {
-          if (req.url === '/sw.js') {
-            res.setHeader('Content-Type', 'application/javascript');
-          }
-          next();
-        });
-      },
-    },
   ],
   server: {
     port: 3000,
@@ -41,5 +31,9 @@ export default defineConfig({
         },
       },
     },
+  },
+  preview: {
+    port: 3000,
+    host: true,
   }
 })
