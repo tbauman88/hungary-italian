@@ -2925,7 +2925,10 @@ export type GetUserByIdSuspenseQueryHookResult = ReturnType<typeof useGetUserByI
 export type GetUserByIdQueryResult = Apollo.QueryResult<GetUserByIdQuery, GetUserByIdQueryVariables>;
 export const GetUserIngredientsDocument = gql`
     query GetUserIngredients($user_id: uuid!) {
-  user_ingredients(where: {user_id: {_eq: $user_id}}) {
+  user_ingredients(
+    where: {user_id: {_eq: $user_id}}
+    order_by: {ingredient: {name: asc}}
+  ) {
     id
     ingredient {
       id
