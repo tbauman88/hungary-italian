@@ -45,8 +45,10 @@ export const AddRecipePage = () => {
     setError(null)
 
     try {
+      const { ingredients, ...rest } = data
+
       const recipe: RecipesInsertInput = {
-        ...data,
+        ...rest,
         owner_id: currentUserId,
         image_url: getFileName(uploadedFile, data.title),
         recipe_ingredients: setIngredients(data.ingredients),
