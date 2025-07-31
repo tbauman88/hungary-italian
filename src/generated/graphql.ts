@@ -15,6 +15,7 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
+  jsonb: { input: any; output: any; }
   recipe_complexity: { input: any; output: any; }
   recipe_tag: { input: any; output: any; }
   recipe_type: { input: any; output: any; }
@@ -46,23 +47,6 @@ export type IntComparisonExp = {
   _lte?: InputMaybe<Scalars['Int']['input']>;
   _neq?: InputMaybe<Scalars['Int']['input']>;
   _nin?: InputMaybe<Array<Scalars['Int']['input']>>;
-};
-
-/** Boolean expression to compare columns of type "String". All fields are combined with logical 'AND'. */
-export type StringArrayComparisonExp = {
-  /** is the array contained in the given array value */
-  _contained_in?: InputMaybe<Array<Scalars['String']['input']>>;
-  /** does the array contain the given value */
-  _contains?: InputMaybe<Array<Scalars['String']['input']>>;
-  _eq?: InputMaybe<Array<Scalars['String']['input']>>;
-  _gt?: InputMaybe<Array<Scalars['String']['input']>>;
-  _gte?: InputMaybe<Array<Scalars['String']['input']>>;
-  _in?: InputMaybe<Array<Array<Scalars['String']['input']>>>;
-  _is_null?: InputMaybe<Scalars['Boolean']['input']>;
-  _lt?: InputMaybe<Array<Scalars['String']['input']>>;
-  _lte?: InputMaybe<Array<Scalars['String']['input']>>;
-  _neq?: InputMaybe<Array<Scalars['String']['input']>>;
-  _nin?: InputMaybe<Array<Array<Scalars['String']['input']>>>;
 };
 
 /** Boolean expression to compare columns of type "String". All fields are combined with logical 'AND'. */
@@ -297,6 +281,34 @@ export type IngredientsUpdates = {
   _set?: InputMaybe<IngredientsSetInput>;
   /** filter the rows which have to be updated */
   where: IngredientsBoolExp;
+};
+
+export type JsonbCastExp = {
+  String?: InputMaybe<StringComparisonExp>;
+};
+
+/** Boolean expression to compare columns of type "jsonb". All fields are combined with logical 'AND'. */
+export type JsonbComparisonExp = {
+  _cast?: InputMaybe<JsonbCastExp>;
+  /** is the column contained in the given json value */
+  _contained_in?: InputMaybe<Scalars['jsonb']['input']>;
+  /** does the column contain the given json value at the top level */
+  _contains?: InputMaybe<Scalars['jsonb']['input']>;
+  _eq?: InputMaybe<Scalars['jsonb']['input']>;
+  _gt?: InputMaybe<Scalars['jsonb']['input']>;
+  _gte?: InputMaybe<Scalars['jsonb']['input']>;
+  /** does the string exist as a top-level key in the column */
+  _has_key?: InputMaybe<Scalars['String']['input']>;
+  /** do all of these strings exist as top-level keys in the column */
+  _has_keys_all?: InputMaybe<Array<Scalars['String']['input']>>;
+  /** do any of these strings exist as top-level keys in the column */
+  _has_keys_any?: InputMaybe<Array<Scalars['String']['input']>>;
+  _in?: InputMaybe<Array<Scalars['jsonb']['input']>>;
+  _is_null?: InputMaybe<Scalars['Boolean']['input']>;
+  _lt?: InputMaybe<Scalars['jsonb']['input']>;
+  _lte?: InputMaybe<Scalars['jsonb']['input']>;
+  _neq?: InputMaybe<Scalars['jsonb']['input']>;
+  _nin?: InputMaybe<Array<Scalars['jsonb']['input']>>;
 };
 
 export type MissingIngredientsCountRecipesArgs = {
@@ -555,7 +567,12 @@ export type MutationRootUpdateRecipeIngredientsManyArgs = {
 
 /** mutation root */
 export type MutationRootUpdateRecipesArgs = {
+  _append?: InputMaybe<RecipesAppendInput>;
+  _delete_at_path?: InputMaybe<RecipesDeleteAtPathInput>;
+  _delete_elem?: InputMaybe<RecipesDeleteElemInput>;
+  _delete_key?: InputMaybe<RecipesDeleteKeyInput>;
   _inc?: InputMaybe<RecipesIncInput>;
+  _prepend?: InputMaybe<RecipesPrependInput>;
   _set?: InputMaybe<RecipesSetInput>;
   where: RecipesBoolExp;
 };
@@ -563,7 +580,12 @@ export type MutationRootUpdateRecipesArgs = {
 
 /** mutation root */
 export type MutationRootUpdateRecipesByPkArgs = {
+  _append?: InputMaybe<RecipesAppendInput>;
+  _delete_at_path?: InputMaybe<RecipesDeleteAtPathInput>;
+  _delete_elem?: InputMaybe<RecipesDeleteElemInput>;
+  _delete_key?: InputMaybe<RecipesDeleteKeyInput>;
   _inc?: InputMaybe<RecipesIncInput>;
+  _prepend?: InputMaybe<RecipesPrependInput>;
   _set?: InputMaybe<RecipesSetInput>;
   pk_columns: RecipesPkColumnsInput;
 };
@@ -1033,7 +1055,7 @@ export type Recipes = {
   recipe_ingredients: Array<RecipeIngredients>;
   /** An aggregate relationship */
   recipe_ingredients_aggregate: RecipeIngredientsAggregate;
-  steps: Array<Scalars['String']['output']>;
+  steps: Scalars['jsonb']['output'];
   tags: Array<Scalars['recipe_tag']['output']>;
   title: Scalars['String']['output'];
   type: Scalars['recipe_type']['output'];
@@ -1076,6 +1098,12 @@ export type RecipesRecipeIngredientsAggregateArgs = {
   offset?: InputMaybe<Scalars['Int']['input']>;
   order_by?: InputMaybe<Array<RecipeIngredientsOrderBy>>;
   where?: InputMaybe<RecipeIngredientsBoolExp>;
+};
+
+
+/** columns and relationships of "recipes" */
+export type RecipesStepsArgs = {
+  path?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** aggregated selection of "recipes" */
@@ -1148,6 +1176,11 @@ export type RecipesAggregateOrderBy = {
   variance?: InputMaybe<RecipesVarianceOrderBy>;
 };
 
+/** append existing jsonb value of filtered columns with new jsonb value */
+export type RecipesAppendInput = {
+  steps?: InputMaybe<Scalars['jsonb']['input']>;
+};
+
 /** input type for inserting array relation for remote table "recipes" */
 export type RecipesArrRelInsertInput = {
   data: Array<RecipesInsertInput>;
@@ -1192,7 +1225,7 @@ export type RecipesBoolExp = {
   portion_size?: InputMaybe<IntComparisonExp>;
   recipe_ingredients?: InputMaybe<RecipeIngredientsBoolExp>;
   recipe_ingredients_aggregate?: InputMaybe<RecipeIngredientsAggregateBoolExp>;
-  steps?: InputMaybe<StringArrayComparisonExp>;
+  steps?: InputMaybe<JsonbComparisonExp>;
   tags?: InputMaybe<RecipeTagArrayComparisonExp>;
   title?: InputMaybe<StringComparisonExp>;
   type?: InputMaybe<RecipeTypeComparisonExp>;
@@ -1207,6 +1240,21 @@ export enum RecipesConstraint {
   /** unique or primary key constraint on columns "title" */
   RECIPES_TITLE_KEY = 'recipes_title_key'
 }
+
+/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+export type RecipesDeleteAtPathInput = {
+  steps?: InputMaybe<Array<Scalars['String']['input']>>;
+};
+
+/** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
+export type RecipesDeleteElemInput = {
+  steps?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+export type RecipesDeleteKeyInput = {
+  steps?: InputMaybe<Scalars['String']['input']>;
+};
 
 /** input type for incrementing numeric columns in table "recipes" */
 export type RecipesIncInput = {
@@ -1227,7 +1275,7 @@ export type RecipesInsertInput = {
   owner_id?: InputMaybe<Scalars['uuid']['input']>;
   portion_size?: InputMaybe<Scalars['Int']['input']>;
   recipe_ingredients?: InputMaybe<RecipeIngredientsArrRelInsertInput>;
-  steps?: InputMaybe<Array<Scalars['String']['input']>>;
+  steps?: InputMaybe<Scalars['jsonb']['input']>;
   tags?: InputMaybe<Array<Scalars['recipe_tag']['input']>>;
   title?: InputMaybe<Scalars['String']['input']>;
   type?: InputMaybe<Scalars['recipe_type']['input']>;
@@ -1247,7 +1295,6 @@ export type RecipesMaxFields = {
   notes?: Maybe<Scalars['String']['output']>;
   owner_id?: Maybe<Scalars['uuid']['output']>;
   portion_size?: Maybe<Scalars['Int']['output']>;
-  steps?: Maybe<Array<Scalars['String']['output']>>;
   tags?: Maybe<Array<Scalars['recipe_tag']['output']>>;
   title?: Maybe<Scalars['String']['output']>;
   type?: Maybe<Scalars['recipe_type']['output']>;
@@ -1271,7 +1318,6 @@ export type RecipesMaxOrderBy = {
   notes?: InputMaybe<OrderBy>;
   owner_id?: InputMaybe<OrderBy>;
   portion_size?: InputMaybe<OrderBy>;
-  steps?: InputMaybe<OrderBy>;
   tags?: InputMaybe<OrderBy>;
   title?: InputMaybe<OrderBy>;
   type?: InputMaybe<OrderBy>;
@@ -1291,7 +1337,6 @@ export type RecipesMinFields = {
   notes?: Maybe<Scalars['String']['output']>;
   owner_id?: Maybe<Scalars['uuid']['output']>;
   portion_size?: Maybe<Scalars['Int']['output']>;
-  steps?: Maybe<Array<Scalars['String']['output']>>;
   tags?: Maybe<Array<Scalars['recipe_tag']['output']>>;
   title?: Maybe<Scalars['String']['output']>;
   type?: Maybe<Scalars['recipe_type']['output']>;
@@ -1315,7 +1360,6 @@ export type RecipesMinOrderBy = {
   notes?: InputMaybe<OrderBy>;
   owner_id?: InputMaybe<OrderBy>;
   portion_size?: InputMaybe<OrderBy>;
-  steps?: InputMaybe<OrderBy>;
   tags?: InputMaybe<OrderBy>;
   title?: InputMaybe<OrderBy>;
   type?: InputMaybe<OrderBy>;
@@ -1369,6 +1413,11 @@ export type RecipesOrderBy = {
 /** primary key columns input for table: recipes */
 export type RecipesPkColumnsInput = {
   id: Scalars['uuid']['input'];
+};
+
+/** prepend existing jsonb value of filtered columns with new jsonb value */
+export type RecipesPrependInput = {
+  steps?: InputMaybe<Scalars['jsonb']['input']>;
 };
 
 /** select columns of table "recipes" */
@@ -1428,7 +1477,7 @@ export type RecipesSetInput = {
   notes?: InputMaybe<Scalars['String']['input']>;
   owner_id?: InputMaybe<Scalars['uuid']['input']>;
   portion_size?: InputMaybe<Scalars['Int']['input']>;
-  steps?: InputMaybe<Array<Scalars['String']['input']>>;
+  steps?: InputMaybe<Scalars['jsonb']['input']>;
   tags?: InputMaybe<Array<Scalars['recipe_tag']['input']>>;
   title?: InputMaybe<Scalars['String']['input']>;
   type?: InputMaybe<Scalars['recipe_type']['input']>;
@@ -1515,7 +1564,7 @@ export type RecipesStreamCursorValueInput = {
   notes?: InputMaybe<Scalars['String']['input']>;
   owner_id?: InputMaybe<Scalars['uuid']['input']>;
   portion_size?: InputMaybe<Scalars['Int']['input']>;
-  steps?: InputMaybe<Array<Scalars['String']['input']>>;
+  steps?: InputMaybe<Scalars['jsonb']['input']>;
   tags?: InputMaybe<Array<Scalars['recipe_tag']['input']>>;
   title?: InputMaybe<Scalars['String']['input']>;
   type?: InputMaybe<Scalars['recipe_type']['input']>;
@@ -1578,8 +1627,18 @@ export enum RecipesUpdateColumn {
 }
 
 export type RecipesUpdates = {
+  /** append existing jsonb value of filtered columns with new jsonb value */
+  _append?: InputMaybe<RecipesAppendInput>;
+  /** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+  _delete_at_path?: InputMaybe<RecipesDeleteAtPathInput>;
+  /** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
+  _delete_elem?: InputMaybe<RecipesDeleteElemInput>;
+  /** delete key/value pair or string element. key/value pairs are matched based on their key value */
+  _delete_key?: InputMaybe<RecipesDeleteKeyInput>;
   /** increments the numeric columns with given value of the filtered values */
   _inc?: InputMaybe<RecipesIncInput>;
+  /** prepend existing jsonb value of filtered columns with new jsonb value */
+  _prepend?: InputMaybe<RecipesPrependInput>;
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<RecipesSetInput>;
   /** filter the rows which have to be updated */
@@ -2283,7 +2342,7 @@ export type BaseRecipeFragment = { id: string, title: string, type: any, notes?:
 
 export type RecipeIngredientFragment = { amount?: string | null, ingredient: { id: string, name: string } };
 
-export type RecipeFragment = { steps: Array<string>, tags: Array<any>, owner_id?: string | null, id: string, title: string, type: any, notes?: string | null, complexity: any, portion_size?: number | null, cooking_time?: number | null, video_url?: string | null, image_url?: string | null, recipe_ingredients: Array<{ amount?: string | null, ingredient: { id: string, name: string } }> };
+export type RecipeFragment = { steps: any, tags: Array<any>, owner_id?: string | null, id: string, title: string, type: any, notes?: string | null, complexity: any, portion_size?: number | null, cooking_time?: number | null, video_url?: string | null, image_url?: string | null, recipe_ingredients: Array<{ amount?: string | null, ingredient: { id: string, name: string } }> };
 
 export type UserFragment = { id: string, email: string, name: string, created_at: string };
 
@@ -2292,7 +2351,7 @@ export type AddRecipeMutationVariables = Exact<{
 }>;
 
 
-export type AddRecipeMutation = { insert_recipes_one?: { steps: Array<string>, tags: Array<any>, owner_id?: string | null, id: string, title: string, type: any, notes?: string | null, complexity: any, portion_size?: number | null, cooking_time?: number | null, video_url?: string | null, image_url?: string | null, recipe_ingredients: Array<{ amount?: string | null, ingredient: { id: string, name: string } }> } | null };
+export type AddRecipeMutation = { insert_recipes_one?: { steps: any, tags: Array<any>, owner_id?: string | null, id: string, title: string, type: any, notes?: string | null, complexity: any, portion_size?: number | null, cooking_time?: number | null, video_url?: string | null, image_url?: string | null, recipe_ingredients: Array<{ amount?: string | null, ingredient: { id: string, name: string } }> } | null };
 
 export type AddUserIngredientMutationVariables = Exact<{
   user_id: Scalars['uuid']['input'];
@@ -2329,7 +2388,7 @@ export type UpdateRecipeMutationVariables = Exact<{
 }>;
 
 
-export type UpdateRecipeMutation = { update_recipes_by_pk?: { steps: Array<string>, tags: Array<any>, owner_id?: string | null, id: string, title: string, type: any, notes?: string | null, complexity: any, portion_size?: number | null, cooking_time?: number | null, video_url?: string | null, image_url?: string | null, recipe_ingredients: Array<{ amount?: string | null, ingredient: { id: string, name: string } }> } | null };
+export type UpdateRecipeMutation = { update_recipes_by_pk?: { steps: any, tags: Array<any>, owner_id?: string | null, id: string, title: string, type: any, notes?: string | null, complexity: any, portion_size?: number | null, cooking_time?: number | null, video_url?: string | null, image_url?: string | null, recipe_ingredients: Array<{ amount?: string | null, ingredient: { id: string, name: string } }> } | null };
 
 export type UpdateRecipeIngredientsMutationVariables = Exact<{
   oldIngredients?: Array<Scalars['uuid']['input']> | Scalars['uuid']['input'];
@@ -2359,14 +2418,14 @@ export type GetRecipeByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetRecipeByIdQuery = { recipes_by_pk?: { missing_ingredients_count?: number | null, steps: Array<string>, tags: Array<any>, owner_id?: string | null, id: string, title: string, type: any, notes?: string | null, complexity: any, portion_size?: number | null, cooking_time?: number | null, video_url?: string | null, image_url?: string | null, missing_ingredients?: Array<{ ingredient: { name: string } }> | null, recipe_ingredients: Array<{ amount?: string | null, ingredient: { id: string, name: string } }> } | null };
+export type GetRecipeByIdQuery = { recipes_by_pk?: { missing_ingredients_count?: number | null, steps: any, tags: Array<any>, owner_id?: string | null, id: string, title: string, type: any, notes?: string | null, complexity: any, portion_size?: number | null, cooking_time?: number | null, video_url?: string | null, image_url?: string | null, missing_ingredients?: Array<{ ingredient: { name: string } }> | null, recipe_ingredients: Array<{ amount?: string | null, ingredient: { id: string, name: string } }> } | null };
 
 export type GetRecipesQueryVariables = Exact<{
   owner_id: Scalars['uuid']['input'];
 }>;
 
 
-export type GetRecipesQuery = { recipes: Array<{ missing_ingredients_count?: number | null, steps: Array<string>, tags: Array<any>, owner_id?: string | null, id: string, title: string, type: any, notes?: string | null, complexity: any, portion_size?: number | null, cooking_time?: number | null, video_url?: string | null, image_url?: string | null, recipe_ingredients: Array<{ amount?: string | null, ingredient: { id: string, name: string } }> }> };
+export type GetRecipesQuery = { recipes: Array<{ missing_ingredients_count?: number | null, steps: any, tags: Array<any>, owner_id?: string | null, id: string, title: string, type: any, notes?: string | null, complexity: any, portion_size?: number | null, cooking_time?: number | null, video_url?: string | null, image_url?: string | null, recipe_ingredients: Array<{ amount?: string | null, ingredient: { id: string, name: string } }> }> };
 
 export type GetUserByEmailQueryVariables = Exact<{
   email: Scalars['String']['input'];
