@@ -196,33 +196,8 @@ export const RecipePage = () => {
 
         {/* Recipe Content */}
         <div className="grid lg:grid-cols-2 gap-8">
-          {/* Instructions */}
-          <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8">
-            <div className="flex items-center space-x-3 mb-6">
-              <div className="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center">
-                <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Instructions</h2>
-            </div>
-
-            <ol className="space-y-4">
-              {recipe.steps?.map((instruction: string, index: number) => (
-                <li key={index} className="flex items-start group">
-                  <div className="bg-primary-600 text-white text-sm font-bold rounded-full w-8 h-8 flex items-center justify-center mr-4 mt-0.5 flex-shrink-0 shadow-sm group-hover:scale-110 transition-transform duration-200">
-                    {index + 1}
-                  </div>
-                  <div className="flex-1 pt-1">
-                    <p className="text-gray-700 leading-relaxed">{instruction}</p>
-                  </div>
-                </li>
-              ))}
-            </ol>
-          </div>
-
-          {/* Ingredients */}
-          <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8">
+          {/* Ingredients - Show first on mobile, second on desktop */}
+          <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8 order-1 lg:order-2">
             <div className="flex items-center space-x-3 mb-6">
               <div className="w-10 h-10 bg-orange-100 rounded-xl flex items-center justify-center">
                 <svg className="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -246,6 +221,31 @@ export const RecipePage = () => {
                 )
               })}
             </ul>
+          </div>
+
+          {/* Instructions - Show second on mobile, first on desktop */}
+          <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8 order-2 lg:order-1">
+            <div className="flex items-center space-x-3 mb-6">
+              <div className="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center">
+                <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Instructions</h2>
+            </div>
+
+            <ol className="space-y-4">
+              {recipe.steps?.map((instruction: string, index: number) => (
+                <li key={index} className="flex items-start group">
+                  <div className="bg-primary-600 text-white text-sm font-bold rounded-full w-8 h-8 flex items-center justify-center mr-4 mt-0.5 flex-shrink-0 shadow-sm group-hover:scale-110 transition-transform duration-200">
+                    {index + 1}
+                  </div>
+                  <div className="flex-1 pt-1">
+                    <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">{instruction}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
           </div>
         </div>
       </div>
