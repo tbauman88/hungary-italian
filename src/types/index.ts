@@ -11,6 +11,8 @@ export enum RecipeType {
   SOUPS = 'Soups',
   MAINS = 'Mains',
   DESSERTS = 'Desserts',
+  BREAD = 'Bread',
+  SAUCES = 'Sauces'
 }
 
 export enum RecipeComplexity {

@@ -17,6 +17,8 @@ const sortOptions = [
   { value: RecipeType.APPETIZERS, label: RecipeType.APPETIZERS },
   { value: RecipeType.SALADS, label: RecipeType.SALADS },
   { value: RecipeType.SOUPS, label: RecipeType.SOUPS },
+  { value: RecipeType.BREAD, label: RecipeType.BREAD },
+  { value: RecipeType.SAUCES, label: RecipeType.SAUCES },
   { value: RecipeType.DESSERTS, label: RecipeType.DESSERTS },
 ] as const
 
