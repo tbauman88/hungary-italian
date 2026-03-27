@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
 import { RecipeComplexity, RecipeTag, RecipeType, type RecipeFormData } from '../types'
 import { DynamicFieldArray } from './DynamicFieldArray'
@@ -23,6 +23,7 @@ interface RecipeFormProps {
 
 export const RecipeForm = ({ title, submitText, onSubmit, isLoading, error, backButton }: RecipeFormProps) => {
   const [uploadedFile, setUploadedFile] = useState<File | null>(null)
+  const [cookingTimeDisplay, setCookingTimeDisplay] = useState('')
 
   const {
     register,
@@ -33,11 +34,35 @@ export const RecipeForm = ({ title, submitText, onSubmit, isLoading, error, back
     formState: { errors, isValid },
   } = useFormContext<RecipeFormData>()
 
+  const cookingTime = watch('cooking_time')
+
+  // Sync display value from cooking_time when form loads or resets
+  useEffect(() => {
+    if (cookingTime !== undefined && cookingTime !== null && cookingTime > 0) {
+      const hours = Math.floor(cookingTime / 60)
+      const minutes = cookingTime % 60
+      setCookingTimeDisplay(`${hours}:${minutes.toString().padStart(2, '0')}`)
+    }
+  }, [cookingTime])
+
+  // Parse "H:MM" or "HH:MM" format and update cooking_time
+  const handleCookingTimeInput = (value: string) => {
+    setCookingTimeDisplay(value)
+
+    const match = value.match(/^(\d+):(\d{1,2})$/)
+    if (match) {
+      const hours = parseInt(match[1], 10)
+      const minutes = Math.min(59, parseInt(match[2], 10))
+      const totalMinutes = (hours * 60) + minutes
+      setValue('cooking_time', totalMinutes, { shouldValidate: true, shouldDirty: true })
+    }
+  }
+
   const {
     fields: ingredientFields,
     append: appendIngredient,
     remove: removeIngredient
-  } = useFieldArray({
+  } = useFieldArray<RecipeFormData, 'ingredients'>({
     control,
     name: 'ingredients'
   })
@@ -46,7 +71,7 @@ export const RecipeForm = ({ title, submitText, onSubmit, isLoading, error, back
     fields: stepFields,
     append: appendStep,
     remove: removeStep
-  } = useFieldArray({
+  } = useFieldArray<RecipeFormData, 'steps'>({
     control,
     name: 'steps',
   })
@@ -110,11 +135,12 @@ export const RecipeForm = ({ title, submitText, onSubmit, isLoading, error, back
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
               <FormInput
-                {...register('cooking_time', { valueAsNumber: true })}
-                name="cooking_time"
-                label="Cooking Time (minutes)"
-                type="number"
-                placeholder="30"
+                name="cooking_time_display"
+                label="Cooking Time (H:MM)"
+                type="text"
+                placeholder="1:30"
+                value={cookingTimeDisplay}
+                onChange={(e) => handleCookingTimeInput(e.target.value)}
                 error={errors.cooking_time}
                 required
               />

@@ -110,7 +110,7 @@ export const RecipePage = () => {
             <img
               src={getImageUrl(recipe.image_url ?? '')}
               alt={recipe.title}
-              className="w-full h-64 sm:h-80 lg:h-96 object-cover"
+              className="w-full h-64 sm:h-80 lg:h-[500px] object-cover"
               onError={e => handleImageError(e, recipe.title)}
             />
 
